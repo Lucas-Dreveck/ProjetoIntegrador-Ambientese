@@ -5,5 +5,3 @@
 ## Issues Relacionadas
 
 [Lista de issues relacionadas a este merge request]
-
-/assign me
