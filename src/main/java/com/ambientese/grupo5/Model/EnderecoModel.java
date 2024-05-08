@@ -1,4 +1,4 @@
-    package com.Ambientese.Empresa.Model;
+    package com.ambientese.grupo5.Model;
     import jakarta.persistence.Entity;
     import jakarta.persistence.GeneratedValue;
     import jakarta.persistence.GenerationType;

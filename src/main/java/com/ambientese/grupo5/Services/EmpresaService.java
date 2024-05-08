@@ -1,10 +1,10 @@
-package com.Ambientese.Empresa.Services;
+package com.ambientese.grupo5.Services;
 
-import com.Ambientese.Empresa.DTO.EmpresaRequest;
-import com.Ambientese.Empresa.Repository.EmpresaRepository;
-import com.Ambientese.Empresa.Exception.ValidacaoException;
-import com.Ambientese.Empresa.Model.EmpresaModel;
-import com.Ambientese.Empresa.Model.EnderecoModel;
+import com.ambientese.grupo5.DTO.EmpresaRequest;
+import com.ambientese.grupo5.Repository.EmpresaRepository;
+import com.ambientese.grupo5.Exception.ValidacaoException;
+import com.ambientese.grupo5.Model.EmpresaModel;
+import com.ambientese.grupo5.Model.EnderecoModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

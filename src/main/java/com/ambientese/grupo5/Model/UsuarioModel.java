@@ -1,4 +1,4 @@
-package com.Ambientese.Empresa.Model;
+package com.ambientese.grupo5.Model;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

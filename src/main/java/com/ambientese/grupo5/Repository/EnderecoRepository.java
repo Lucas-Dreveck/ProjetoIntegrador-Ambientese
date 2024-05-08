@@ -1,6 +1,6 @@
-    package com.Ambientese.Empresa.Repository;
+    package com.ambientese.grupo5.Repository;
 
-    import com.Ambientese.Empresa.Model.EnderecoModel;
+    import com.ambientese.grupo5.Model.EnderecoModel;
     import org.springframework.data.jpa.repository.JpaRepository;
     import org.springframework.stereotype.Repository;
 

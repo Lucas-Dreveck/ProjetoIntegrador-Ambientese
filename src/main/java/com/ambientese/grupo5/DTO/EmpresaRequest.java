@@ -1,7 +1,7 @@
-    package com.Ambientese.Empresa.DTO;
+    package com.ambientese.grupo5.DTO;
 
-    import com.Ambientese.Empresa.Model.EnderecoModel;
-    import com.Ambientese.Empresa.Model.Enums.PorteEnum;
+    import com.ambientese.grupo5.Model.EnderecoModel;
+    import com.ambientese.grupo5.Model.Enums.PorteEnum;
 
     public class EmpresaRequest {
 

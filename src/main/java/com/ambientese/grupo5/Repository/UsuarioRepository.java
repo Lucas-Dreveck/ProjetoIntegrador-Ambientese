@@ -1,7 +1,7 @@
-package com.Ambientese.Empresa.Repository;
+package com.ambientese.grupo5.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.Ambientese.Empresa.Model.UsuarioModel;
+import com.ambientese.grupo5.Model.UsuarioModel;
 
 public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
 

@@ -1,9 +1,9 @@
-package com.Ambientese.Empresa.Services;
+package com.ambientese.grupo5.Services;
 
-import com.Ambientese.Empresa.Model.UsuarioModel;
+import com.ambientese.grupo5.Model.UsuarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.Ambientese.Empresa.Repository.UsuarioRepository;
+import com.ambientese.grupo5.Repository.UsuarioRepository;
 
 import java.util.List;
 import java.util.Optional;
