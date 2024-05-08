@@ -1,9 +1,9 @@
-package com.Ambientese.Empresa.Controller;
+package com.ambientese.grupo5.Controller;
 
-import com.Ambientese.Empresa.DTO.EmpresaRequest;
-import com.Ambientese.Empresa.Model.EmpresaModel;
-import com.Ambientese.Empresa.Repository.EmpresaRepository;
-import com.Ambientese.Empresa.Services.EmpresaService;
+import com.ambientese.grupo5.DTO.EmpresaRequest;
+import com.ambientese.grupo5.Model.EmpresaModel;
+import com.ambientese.grupo5.Repository.EmpresaRepository;
+import com.ambientese.grupo5.Services.EmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

@@ -1,4 +1,4 @@
-    package com.Ambientese.Empresa.Exception;
+    package com.ambientese.grupo5.Exception;
 
     public class ValidacaoException extends RuntimeException {
 

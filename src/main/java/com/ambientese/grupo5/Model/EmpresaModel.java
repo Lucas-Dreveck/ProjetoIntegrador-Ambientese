@@ -1,11 +1,11 @@
-        package com.Ambientese.Empresa.Model;
+        package com.ambientese.grupo5.Model;
         import java.util.Objects;
         import javax.validation.constraints.Email;
         import javax.validation.constraints.NotBlank;
         import javax.validation.constraints.NotNull;
         import javax.validation.constraints.Pattern;
 
-        import com.Ambientese.Empresa.Model.Enums.PorteEnum;
+        import com.ambientese.grupo5.Model.Enums.PorteEnum;
         import jakarta.persistence.*;
 
         @Entity

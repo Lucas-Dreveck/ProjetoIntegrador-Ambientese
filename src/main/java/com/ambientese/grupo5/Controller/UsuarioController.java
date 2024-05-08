@@ -1,11 +1,11 @@
-package com.Ambientese.Empresa.Controller;
+package com.ambientese.grupo5.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.Ambientese.Empresa.Model.UsuarioModel;
-import com.Ambientese.Empresa.Services.UsuarioService;
+import com.ambientese.grupo5.Model.UsuarioModel;
+import com.ambientese.grupo5.Services.UsuarioService;
 
 import javax.validation.Valid;
 import java.util.List;
