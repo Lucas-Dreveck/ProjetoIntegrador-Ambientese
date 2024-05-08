@@ -25,9 +25,8 @@ public class Pages {
         return "pages/ranking";
     }
 
-    @GetMapping("/avaliacao")
-    public String pageAvaliacao(Model model) throws InterruptedException {
-        Thread.sleep(2000); // Simulated Lag
-        return "pages/avaliacao";
+    @GetMapping("/start-avaliacao")
+    public String pageStartAvaliacao(Model model) throws InterruptedException {
+        return "pages/avaliacao/selecao-empresa";
     }
 }

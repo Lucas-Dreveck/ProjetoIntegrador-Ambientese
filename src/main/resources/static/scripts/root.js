@@ -10,6 +10,12 @@ const loading = document.querySelector(".loading");
 
 function loadSelectedPageScript(page) {
 switch (page) {
+        case "start-avaliacao":
+            onOpenSelecaoEmpresa();
+            break;
+        case "avaliacao":
+            onOpenAvaliacao();
+            break;
         default:
 //        implement cases to start page js
             break;
@@ -18,7 +24,7 @@ switch (page) {
     mainContent.classList.remove("hidden");
 }
 
-function getMainFrameContent(page) {
+function getMainFrameContent(page, props = {}) {
     fetch(`${URL}/${page}`)
         .then(response => {
             if (!response.ok) {
