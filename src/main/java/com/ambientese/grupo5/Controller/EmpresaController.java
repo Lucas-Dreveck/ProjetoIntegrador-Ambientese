@@ -4,6 +4,8 @@ import com.ambientese.grupo5.DTO.EmpresaRequest;
 import com.ambientese.grupo5.Model.EmpresaModel;
 import com.ambientese.grupo5.Repository.EmpresaRepository;
 import com.ambientese.grupo5.Services.EmpresaService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,14 +46,17 @@ public class EmpresaController {
             @RequestParam(required = false) String razaoSocial) {
         List<EmpresaModel> empresas;
         if (nomeFantasia != null && !nomeFantasia.isEmpty()) {
-            empresas = empresaRepository.findByNomeFantasiaContainingIgnoreCase(nomeFantasia);
+            empresas = empresaRepository.findFirst10ByNomeFantasiaContainingIgnoreCase(nomeFantasia);
         } else if (razaoSocial != null && !razaoSocial.isEmpty()) {
-            empresas = empresaRepository.findByRazaoSocialContainingIgnoreCase(razaoSocial);
+            empresas = empresaRepository.findFirst10ByRazaoSocialContainingIgnoreCase(razaoSocial);
         } else {
-            empresas = empresaRepository.findAll();
+            Page<EmpresaModel> empresasPage = empresaRepository.findAll(PageRequest.of(0, 25));
+            empresas = empresasPage.getContent();
         }
+
         return ResponseEntity.ok(empresas);
     }
+
 
     @PostMapping("/Criar")
     public EmpresaModel criarEmpresa (@Valid @RequestBody EmpresaRequest empresaRequest) {
