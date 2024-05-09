@@ -79,4 +79,5 @@ public class UsuarioModel {
     public void setCargo(String cargo) {
         this.cargo = cargo;
     }
+
 }

@@ -1,13 +1,13 @@
     package com.ambientese.grupo5.Model;
-    import jakarta.persistence.Entity;
-    import jakarta.persistence.GeneratedValue;
-    import jakarta.persistence.GenerationType;
-    import jakarta.persistence.Id;
+    import jakarta.persistence.*;
 
     import javax.validation.constraints.NotBlank;
     import javax.validation.constraints.NotNull;
 
+    import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
     @Entity
+    @Table (name = ("Endereco"))
     public class EnderecoModel {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,5 +88,12 @@
             UF = uF;
         }
 
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
     }
 
