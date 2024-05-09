@@ -3,6 +3,7 @@ const URL = "http://localhost:8080";
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
 const expandButton = document.querySelector(".expand-menu");
+const sidebar = document.querySelector(".sidebar");
 const menu = document.querySelector(".menu");
 const menuItems = document.querySelectorAll(".main-list > li");
 const allMenuButtons = document.querySelectorAll('.menu li');
@@ -86,6 +87,14 @@ function menuButtonClicked(event) {
 }
 
 function frameSetup() {
+    document.addEventListener("click", function(event) {
+        if (!sidebar.contains(event.target)) {
+            if (expandButton.classList.contains("active")) {
+                expandButton.classList.remove("active");
+                menu.classList.remove("expanded");
+            }
+        }
+    })
     expandButton.addEventListener("click", expandButtonClicked);
     menuItems.forEach(item => {
         const subList = item.nextElementSibling;

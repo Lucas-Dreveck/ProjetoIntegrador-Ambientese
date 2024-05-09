@@ -3,6 +3,8 @@ package com.ambientese.grupo5.View;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class Pages {
@@ -29,4 +31,10 @@ public class Pages {
     public String pageStartAvaliacao(Model model) throws InterruptedException {
         return "pages/avaliacao/selecao-empresa";
     }
+
+    @GetMapping("/avaliacao")
+    public String pageAvaliacao(Model model) throws InterruptedException {
+        return "pages/avaliacao/avaliacao";
+    }
+    
 }

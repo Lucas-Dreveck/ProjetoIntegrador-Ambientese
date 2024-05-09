@@ -41,6 +41,7 @@ const fetchEmpresas = (input, dropdown) => {
 const onOpenSelecaoEmpresa = () => {
     const input = document.querySelector('.search');
     const dropdown = document.querySelector('.dropdown-content');
+    const content = document.querySelector('.content-container');
 
     input.addEventListener('input', () => {
         fetchEmpresas(input, dropdown)
@@ -65,7 +66,7 @@ const onOpenSelecaoEmpresa = () => {
         }
     });
 
-    document.addEventListener('click', function(event) {
+    content.addEventListener('click', function(event) {
         if (!input.contains(event.target) && !dropdown.contains(event.target)) {
             dropdown.innerHTML = '';
             isDropdownOpened = false;
