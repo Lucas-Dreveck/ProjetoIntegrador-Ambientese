@@ -2,20 +2,63 @@
 
     import com.ambientese.grupo5.Model.EnderecoModel;
     import com.ambientese.grupo5.Model.Enums.PorteEnum;
+    import jakarta.persistence.Column;
+    import jakarta.persistence.JoinColumn;
+    import jakarta.persistence.OneToOne;
+    import org.hibernate.annotations.Cascade;
+    import org.hibernate.annotations.CascadeType;
+    import javax.validation.constraints.NotBlank;
+    import javax.validation.constraints.NotNull;
+    import javax.validation.constraints.Pattern;
 
     public class EmpresaRequest {
 
-        private String nomeFantasia;
-        private String nomeSolicitante;
-        private String telefoneSolicitante;
-        private String razaoSocial;
-        private String cnpj;
+            @NotNull
+            @NotBlank
+            private String nomeFantasia;
+
+            @NotNull
+            @NotBlank
+            private String nomeSolicitante;
+
+            @NotNull
+            @NotBlank
+            @Pattern(regexp = "^[0-9]+$")
+            private String telefoneSolicitante;
+
+            @NotNull
+            @NotBlank
+            private String razaoSocial;
+
+            @NotNull
+            @NotBlank
+            @Pattern(regexp = "^[0-9]+$")
+            private String cnpj;
+
+        @Column(length = 20)
         private String inscricaoSocial;
-        private String email;
-        private String telefoneEmpresas;
-        private String ramo;
-        private PorteEnum porteEmpresas;
-        private EnderecoModel enderecoModel;
+
+        @OneToOne
+        @JoinColumn(name = "enderecoId")
+        @Cascade(CascadeType.ALL)
+        private EnderecoModel endereco;
+
+            @NotNull
+            @NotBlank
+            private String email;
+
+            @NotNull
+            @NotBlank
+            @Pattern(regexp = "^[0-9]+$")
+            private String telefoneEmpresas;
+
+            @NotNull
+            @NotBlank
+            private String ramo;
+
+            @NotNull
+            @NotBlank
+            private PorteEnum porteEmpresas;
 
         public String getNomeFantasia() {
             return nomeFantasia;
@@ -97,11 +140,11 @@
             this.porteEmpresas = porteEmpresas;
         }
 
-        public EnderecoModel getEnderecoModel() {
-            return enderecoModel;
+        public EnderecoModel getEndereco() {
+            return endereco;
         }
 
-        public void setEnderecoModel(EnderecoModel enderecoModel) {
-            this.enderecoModel = enderecoModel;
+        public void setEndereco(EnderecoModel enderecoModel) {
+            this.endereco = enderecoModel;
         }
     }

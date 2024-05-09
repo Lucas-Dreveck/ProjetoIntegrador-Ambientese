@@ -1,6 +1,7 @@
 package com.ambientese.grupo5.Services;
 
 import com.ambientese.grupo5.DTO.EmpresaRequest;
+import com.ambientese.grupo5.Model.EnderecoModel;
 import com.ambientese.grupo5.Repository.EmpresaRepository;
 import com.ambientese.grupo5.Exception.ValidacaoException;
 import com.ambientese.grupo5.Model.EmpresaModel;
@@ -69,17 +70,20 @@ public class EmpresaService {
         return telefone == null || !telefone.matches("\\d{10,11}");
     }
 
-    private void validarCnpjUnico(String cnpj) {
+    private void validarCnpjUnico(String cnpj, Long empresaId) {
         Optional<EmpresaModel> empresaExistente = empresaRepository.findByCnpj(cnpj);
         empresaExistente.ifPresent(empresa -> {
+            if (!empresa.getId().equals(empresaId)) {
                 throw new ValidacaoException("Já existe uma empresa cadastrada com este CNPJ");
+            }
         });
     }
 
-    /*private boolean isValidCep(String cep) {
+
+    private boolean isValidCep(String cep) {
         String cepRegex = "\\d{8}";
         return cep != null && cep.matches(cepRegex);
-        }*/
+        }
 
     private boolean isValidEmail(String email) {
         String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
@@ -88,14 +92,14 @@ public class EmpresaService {
     private boolean isEmptyOrNull(String str) {
         return str == null || str.isEmpty();
     }
-   /* private boolean enderecoEstaVazio(EnderecoModel endereco) {
+   private boolean enderecoEstaVazio(EnderecoModel endereco) {
         return isEmptyOrNull(String.valueOf(endereco.getLogradouro())) &&
                 isEmptyOrNull(endereco.getNumero() == null ? null : String.valueOf(endereco.getNumero())) &&
                 isEmptyOrNull(endereco.getBairro()) &&
                 isEmptyOrNull(endereco.getCidade()) &&
                 isEmptyOrNull(endereco.getUF()) &&
                 isEmptyOrNull(endereco.getCep());
-    }*/
+    }
 
     private void validarCamposObrigatorios(EmpresaRequest empresaRequest) {
         if (empresaRequest == null) {
@@ -128,16 +132,16 @@ public class EmpresaService {
         if (empresaRequest.getPorteEmpresas() == null) {
             throw new ValidacaoException("O porte da empresa não pode estar em branco");
         }
-        /*if (empresaRequest.getEnderecoModel() == null || enderecoEstaVazio(empresaRequest.getEnderecoModel())) {
+        if (empresaRequest.getEndereco() == null || enderecoEstaVazio(empresaRequest.getEndereco())) {
             throw new ValidacaoException("É necessário associar um endereço à empresa");
-        }*/
+        }
         if (!isValidEmail(empresaRequest.getEmail())) {
             throw new ValidacaoException("O e-mail inserido não é válido");
         }
 
-       /* if (!isValidCep(empresaRequest.getEnderecoModel().getCep())) {
+        if (!isValidCep(empresaRequest.getEndereco().getCep())) {
             throw new ValidacaoException("O CEP inserido não é válido");
-        }*/
+        }
 
         if (isValidTelefone(empresaRequest.getTelefoneEmpresas())) {
             throw new ValidacaoException("O telefone da empresa não é válido");
@@ -158,12 +162,12 @@ public class EmpresaService {
         empresaModel.setTelefoneEmpresas(empresaRequest.getTelefoneEmpresas());
         empresaModel.setRamo(empresaRequest.getRamo());
         empresaModel.setPorteEmpresas(empresaRequest.getPorteEmpresas());
-        empresaModel.setEndereco(empresaRequest.getEnderecoModel());
+        empresaModel.setEndereco(empresaRequest.getEndereco());
     }
 
     public EmpresaModel criarEmpresa(EmpresaRequest empresaRequest) {
         validarCamposObrigatorios(empresaRequest);
-        validarCnpjUnico(empresaRequest.getCnpj()); // Passa null como ID, pois é uma nova empresa
+        validarCnpjUnico(empresaRequest.getCnpj(), null); // Passa null como ID, pois é uma nova empresa
         EmpresaModel empresaModel = new EmpresaModel(); // Criar novo objeto EmpresaModel
         mapearEmpresa(empresaModel, empresaRequest); // Passar o objeto para o método mapearEmpresa
         return empresaRepository.save(empresaModel);
@@ -173,10 +177,11 @@ public class EmpresaService {
         EmpresaModel empresaModel = empresaRepository.findById(id)
                 .orElseThrow(() -> new ValidacaoException("Empresa não encontrada com o ID: " + id));
         validarCamposObrigatorios(empresaRequest);
-        validarCnpjUnico(empresaRequest.getCnpj());
+        validarCnpjUnico(empresaRequest.getCnpj(), id); // Passa o ID da empresa sendo atualizada
         mapearEmpresa(empresaModel, empresaRequest);
         return empresaRepository.save(empresaModel);
     }
+
 
     public List<EmpresaModel> getAllEmpresas() {
         return empresaRepository.findAll();

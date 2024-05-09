@@ -7,6 +7,8 @@
 
         import com.ambientese.grupo5.Model.Enums.PorteEnum;
         import jakarta.persistence.*;
+        import org.hibernate.annotations.Cascade;
+        import org.hibernate.annotations.CascadeType;
 
         @Entity
         @Table (name = ("Empresa"))
@@ -14,43 +16,55 @@
             @Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             private Long id;
+
             @NotNull
-            @NotBlank(message = "O nome fantasia não pode estar em branco")
+            @NotBlank
             private String nomeFantasia;
+
             @NotNull
-            @NotBlank(message = "O nome do Solicitante não pode estar em branco")
+            @NotBlank
             private String nomeSolicitante;
+
             @Column(length = 15)
             @Pattern(regexp = "^[0-9]+$")
             @NotNull
-            @NotBlank(message = "O Telefone do Solicitante não pode estar em branco")
+            @NotBlank
             private String telefoneSolicitante;
+
             @NotNull
-            @NotBlank(message = "A Razão Social não pode estar em branco")
+            @NotBlank
             private String razaoSocial;
+
             @Column(length = 14)
             @Pattern(regexp = "^[0-9]+$")
             @NotNull
-            @NotBlank(message = "O CNPJ não pode estar em branco")
+            @NotBlank
             private String cnpj;
+
             @Column(length = 20)
             private String inscricaoSocial;
+
             @OneToOne
             @JoinColumn(name = "enderecoId")
-            private EnderecoModel endereco; // Renomeado o atributo para ser mais descritivo
+            @Cascade(CascadeType.ALL)
+            private EnderecoModel endereco;
+
             @Email
-            @NotBlank(message = "O email não pode estar em branco")
+            @NotBlank
             private String email;
+
             @Column(length = 15)
             @Pattern(regexp = "^[0-9]+$")
             @NotNull
-            @NotBlank(message = "O Telefone da Empresa não pode estar em branco")
+            @NotBlank
             private String telefoneEmpresas;
+
             @NotNull
-            @NotBlank(message = "O Ramo não pode estar em branco")
+            @NotBlank
             private String ramo;
+
             @NotNull
-            @NotBlank(message = "O Porte da Empresa não pode estar em branco")
+            @NotBlank
             private PorteEnum porteEmpresas;
 
             @Override

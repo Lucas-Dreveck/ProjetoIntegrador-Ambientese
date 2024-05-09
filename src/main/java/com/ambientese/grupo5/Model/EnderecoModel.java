@@ -1,10 +1,7 @@
     package com.ambientese.grupo5.Model;
     import jakarta.persistence.*;
-
     import javax.validation.constraints.NotBlank;
     import javax.validation.constraints.NotNull;
-
-    import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
     @Entity
     @Table (name = ("Endereco"))
