@@ -9,6 +9,7 @@
         import jakarta.persistence.*;
 
         @Entity
+        @Table (name = ("Empresa"))
         public class EmpresaModel {
             @Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +35,9 @@
             private String cnpj;
             @Column(length = 20)
             private String inscricaoSocial;
-            @OneToOne(cascade = CascadeType.ALL)
-            @JoinColumn(name = "endereco_id", referencedColumnName = "id")
-            private EnderecoModel enderecoModel;
+            @OneToOne
+            @JoinColumn(name = "enderecoId")
+            private EnderecoModel endereco; // Renomeado o atributo para ser mais descritivo
             @Email
             @NotBlank(message = "O email não pode estar em branco")
             private String email;
@@ -118,11 +119,11 @@
             }
 
             public EnderecoModel getEndereco() {
-                return enderecoModel;
+                return endereco;
             }
 
             public void setEndereco(EnderecoModel enderecoModel) {
-                this.enderecoModel = enderecoModel;
+                this.endereco = enderecoModel;
             }
 
             public String getEmail() {
@@ -155,5 +156,13 @@
 
             public void setPorteEmpresas(PorteEnum porteEmpresas) {
                 this.porteEmpresas = porteEmpresas;
+            }
+
+            public Long getId() {
+                return id;
+            }
+
+            public void setId(Long id) {
+                this.id = id;
             }
         }

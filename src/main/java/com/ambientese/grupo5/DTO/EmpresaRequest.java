@@ -17,8 +17,6 @@
         private PorteEnum porteEmpresas;
         private EnderecoModel enderecoModel;
 
-        // Getters e Setters
-
         public String getNomeFantasia() {
             return nomeFantasia;
         }
@@ -99,11 +97,11 @@
             this.porteEmpresas = porteEmpresas;
         }
 
-        public EnderecoModel getEndereco() {
+        public EnderecoModel getEnderecoModel() {
             return enderecoModel;
         }
 
-        public void setEndereco(EnderecoModel enderecoModel) {
+        public void setEnderecoModel(EnderecoModel enderecoModel) {
             this.enderecoModel = enderecoModel;
         }
     }
