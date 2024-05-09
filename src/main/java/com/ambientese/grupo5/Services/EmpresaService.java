@@ -1,19 +1,26 @@
 package com.ambientese.grupo5.Services;
 
 import com.ambientese.grupo5.DTO.EmpresaRequest;
+import com.ambientese.grupo5.Model.EnderecoModel;
 import com.ambientese.grupo5.Repository.EmpresaRepository;
 import com.ambientese.grupo5.Exception.ValidacaoException;
 import com.ambientese.grupo5.Model.EmpresaModel;
-import com.ambientese.grupo5.Model.EnderecoModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class EmpresaService {
 
+    private final EmpresaRepository empresaRepository;
+
     @Autowired
-    private EmpresaRepository empresaRepository;
+    public EmpresaService(EmpresaRepository empresaRepository) {
+        this.empresaRepository = empresaRepository;
+    }
 
     private boolean isValidCnpj(String cnpj) {
         if (cnpj == null || cnpj.length() != 14) {
@@ -60,65 +67,91 @@ public class EmpresaService {
         return digitos[13] == dv2;    }
 
     private boolean isValidTelefone(String telefone) {
-        return telefone != null && telefone.matches("\\d{10,11}");
+        return telefone == null || !telefone.matches("\\d{10,11}");
     }
 
-    private boolean empresaJaExiste(String cnpj) {
-        return empresaRepository.existsByCnpj(cnpj);
+    private void validarCnpjUnico(String cnpj, Long empresaId) {
+        Optional<EmpresaModel> empresaExistente = empresaRepository.findByCnpj(cnpj);
+        empresaExistente.ifPresent(empresa -> {
+            if (!empresa.getId().equals(empresaId)) {
+                throw new ValidacaoException("Já existe uma empresa cadastrada com este CNPJ");
+            }
+        });
     }
+
 
     private boolean isValidCep(String cep) {
         String cepRegex = "\\d{8}";
-        return cep != null && cep.matches(cepRegex);    }
+        return cep != null && cep.matches(cepRegex);
+        }
 
     private boolean isValidEmail(String email) {
         String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(regex);    }
 
+    private boolean isEmptyOrNull(String str) {
+        return str == null || str.isEmpty();
+    }
+   private boolean enderecoEstaVazio(EnderecoModel endereco) {
+        return isEmptyOrNull(String.valueOf(endereco.getLogradouro())) &&
+                isEmptyOrNull(endereco.getNumero() == null ? null : String.valueOf(endereco.getNumero())) &&
+                isEmptyOrNull(endereco.getBairro()) &&
+                isEmptyOrNull(endereco.getCidade()) &&
+                isEmptyOrNull(endereco.getUF()) &&
+                isEmptyOrNull(endereco.getCep());
+    }
+
     private void validarCamposObrigatorios(EmpresaRequest empresaRequest) {
-        if (empresaRequest.getNomeFantasia() == null || empresaRequest.getNomeFantasia().isEmpty()) {
+        if (empresaRequest == null) {
+            throw new ValidacaoException("Os dados da empresa não podem estar em branco");
+        }
+        if (isEmptyOrNull(empresaRequest.getNomeFantasia())) {
             throw new ValidacaoException("O nome fantasia não pode estar em branco");
         }
-        if (empresaRequest.getNomeSolicitante() == null || empresaRequest.getNomeSolicitante().isEmpty()) {
+        if (isEmptyOrNull(empresaRequest.getNomeSolicitante())) {
             throw new ValidacaoException("O nome do solicitante não pode estar em branco");
         }
-        if (empresaRequest.getTelefoneSolicitante() == null || empresaRequest.getTelefoneSolicitante().isEmpty()) {
+        if (isEmptyOrNull(empresaRequest.getTelefoneSolicitante())) {
             throw new ValidacaoException("O telefone do solicitante não pode estar em branco");
         }
-        if (empresaRequest.getRazaoSocial() == null || empresaRequest.getRazaoSocial().isEmpty()) {
+        if (isEmptyOrNull(empresaRequest.getRazaoSocial())) {
             throw new ValidacaoException("A razão social não pode estar em branco");
         }
-        if (empresaRequest.getCnpj() == null || empresaRequest.getCnpj().isEmpty()) {
+        if (isEmptyOrNull(empresaRequest.getCnpj())) {
             throw new ValidacaoException("O CNPJ não pode estar em branco");
         }
         if (!isValidCnpj(empresaRequest.getCnpj())) {
             throw new ValidacaoException("O CNPJ inserido não é válido");
         }
-        if (empresaJaExiste(empresaRequest.getCnpj())) {
-            throw new ValidacaoException("Já existe uma empresa cadastrada com este CNPJ");
-        }
-        if (empresaRequest.getTelefoneEmpresas() == null || empresaRequest.getTelefoneEmpresas().isEmpty()) {
+        if (isEmptyOrNull(empresaRequest.getTelefoneEmpresas())) {
             throw new ValidacaoException("O telefone da empresa não pode estar em branco");
         }
-        if (empresaRequest.getRamo() == null || empresaRequest.getRamo().isEmpty()) {
+        if (isEmptyOrNull(empresaRequest.getRamo())) {
             throw new ValidacaoException("O ramo não pode estar em branco");
         }
         if (empresaRequest.getPorteEmpresas() == null) {
             throw new ValidacaoException("O porte da empresa não pode estar em branco");
         }
-        EnderecoModel enderecoModel = empresaRequest.getEndereco();
-        if (enderecoModel == null) {
+        if (empresaRequest.getEndereco() == null || enderecoEstaVazio(empresaRequest.getEndereco())) {
             throw new ValidacaoException("É necessário associar um endereço à empresa");
-        } else {
-            if (enderecoModel.getUF() == null || enderecoModel.getUF().isEmpty()) {
-                throw new ValidacaoException("O campo UF do endereço é obrigatório e não pode estar em branco");
-            }
+        }
+        if (!isValidEmail(empresaRequest.getEmail())) {
+            throw new ValidacaoException("O e-mail inserido não é válido");
+        }
+
+        if (!isValidCep(empresaRequest.getEndereco().getCep())) {
+            throw new ValidacaoException("O CEP inserido não é válido");
+        }
+
+        if (isValidTelefone(empresaRequest.getTelefoneEmpresas())) {
+            throw new ValidacaoException("O telefone da empresa não é válido");
+        }
+        if (isValidTelefone(empresaRequest.getTelefoneSolicitante())) {
+            throw new ValidacaoException("O telefone da empresa não é válido");
         }
     }
 
-    public EmpresaModel criarEmpresa(EmpresaRequest empresaRequest) {
-        validarCamposObrigatorios(empresaRequest);
-        EmpresaModel empresaModel = new EmpresaModel();
+    private void mapearEmpresa(EmpresaModel empresaModel, EmpresaRequest empresaRequest) {
         empresaModel.setNomeFantasia(empresaRequest.getNomeFantasia());
         empresaModel.setNomeSolicitante(empresaRequest.getNomeSolicitante());
         empresaModel.setTelefoneSolicitante(empresaRequest.getTelefoneSolicitante());
@@ -130,6 +163,13 @@ public class EmpresaService {
         empresaModel.setRamo(empresaRequest.getRamo());
         empresaModel.setPorteEmpresas(empresaRequest.getPorteEmpresas());
         empresaModel.setEndereco(empresaRequest.getEndereco());
+    }
+
+    public EmpresaModel criarEmpresa(EmpresaRequest empresaRequest) {
+        validarCamposObrigatorios(empresaRequest);
+        validarCnpjUnico(empresaRequest.getCnpj(), null); // Passa null como ID, pois é uma nova empresa
+        EmpresaModel empresaModel = new EmpresaModel(); // Criar novo objeto EmpresaModel
+        mapearEmpresa(empresaModel, empresaRequest); // Passar o objeto para o método mapearEmpresa
         return empresaRepository.save(empresaModel);
     }
 
@@ -137,17 +177,13 @@ public class EmpresaService {
         EmpresaModel empresaModel = empresaRepository.findById(id)
                 .orElseThrow(() -> new ValidacaoException("Empresa não encontrada com o ID: " + id));
         validarCamposObrigatorios(empresaRequest);
-        empresaModel.setNomeFantasia(empresaRequest.getNomeFantasia());
-        empresaModel.setNomeSolicitante(empresaRequest.getNomeSolicitante());
-        empresaModel.setTelefoneSolicitante(empresaRequest.getTelefoneSolicitante());
-        empresaModel.setRazaoSocial(empresaRequest.getRazaoSocial());
-        empresaModel.setCnpj(empresaRequest.getCnpj());
-        empresaModel.setInscricaoSocial(empresaRequest.getInscricaoSocial());
-        empresaModel.setEmail(empresaRequest.getEmail());
-        empresaModel.setTelefoneEmpresas(empresaRequest.getTelefoneEmpresas());
-        empresaModel.setRamo(empresaRequest.getRamo());
-        empresaModel.setPorteEmpresas(empresaRequest.getPorteEmpresas());
-        empresaModel.setEndereco(empresaRequest.getEndereco());
+        validarCnpjUnico(empresaRequest.getCnpj(), id); // Passa o ID da empresa sendo atualizada
+        mapearEmpresa(empresaModel, empresaRequest);
         return empresaRepository.save(empresaModel);
+    }
+
+
+    public List<EmpresaModel> getAllEmpresas() {
+        return empresaRepository.findAll();
     }
 }

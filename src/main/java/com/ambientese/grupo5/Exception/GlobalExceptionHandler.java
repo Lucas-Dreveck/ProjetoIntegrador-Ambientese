@@ -28,8 +28,6 @@
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
 
-        // Adicione outros manipuladores de exceção conforme necessário
-
         @ExceptionHandler(Exception.class)
         public ResponseEntity<Object> handleGenericException(Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno do servidor");

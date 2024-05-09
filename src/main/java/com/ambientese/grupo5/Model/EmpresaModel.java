@@ -7,49 +7,64 @@
 
         import com.ambientese.grupo5.Model.Enums.PorteEnum;
         import jakarta.persistence.*;
+        import org.hibernate.annotations.Cascade;
+        import org.hibernate.annotations.CascadeType;
 
         @Entity
+        @Table (name = ("Empresa"))
         public class EmpresaModel {
             @Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
             private Long id;
+
             @NotNull
-            @NotBlank(message = "O nome fantasia não pode estar em branco")
+            @NotBlank
             private String nomeFantasia;
+
             @NotNull
-            @NotBlank(message = "O nome do Solicitante não pode estar em branco")
+            @NotBlank
             private String nomeSolicitante;
+
             @Column(length = 15)
             @Pattern(regexp = "^[0-9]+$")
             @NotNull
-            @NotBlank(message = "O Telefone do Solicitante não pode estar em branco")
+            @NotBlank
             private String telefoneSolicitante;
+
             @NotNull
-            @NotBlank(message = "A Razão Social não pode estar em branco")
+            @NotBlank
             private String razaoSocial;
+
             @Column(length = 14)
             @Pattern(regexp = "^[0-9]+$")
             @NotNull
-            @NotBlank(message = "O CNPJ não pode estar em branco")
+            @NotBlank
             private String cnpj;
+
             @Column(length = 20)
             private String inscricaoSocial;
-            @OneToOne(cascade = CascadeType.ALL)
-            @JoinColumn(name = "endereco_id", referencedColumnName = "id")
-            private EnderecoModel enderecoModel;
+
+            @OneToOne
+            @JoinColumn(name = "enderecoId")
+            @Cascade(CascadeType.ALL)
+            private EnderecoModel endereco;
+
             @Email
-            @NotBlank(message = "O email não pode estar em branco")
+            @NotBlank
             private String email;
+
             @Column(length = 15)
             @Pattern(regexp = "^[0-9]+$")
             @NotNull
-            @NotBlank(message = "O Telefone da Empresa não pode estar em branco")
+            @NotBlank
             private String telefoneEmpresas;
+
             @NotNull
-            @NotBlank(message = "O Ramo não pode estar em branco")
+            @NotBlank
             private String ramo;
+
             @NotNull
-            @NotBlank(message = "O Porte da Empresa não pode estar em branco")
+            @NotBlank
             private PorteEnum porteEmpresas;
 
             @Override
@@ -118,11 +133,11 @@
             }
 
             public EnderecoModel getEndereco() {
-                return enderecoModel;
+                return endereco;
             }
 
             public void setEndereco(EnderecoModel enderecoModel) {
-                this.enderecoModel = enderecoModel;
+                this.endereco = enderecoModel;
             }
 
             public String getEmail() {
@@ -155,5 +170,13 @@
 
             public void setPorteEmpresas(PorteEnum porteEmpresas) {
                 this.porteEmpresas = porteEmpresas;
+            }
+
+            public Long getId() {
+                return id;
+            }
+
+            public void setId(Long id) {
+                this.id = id;
             }
         }
