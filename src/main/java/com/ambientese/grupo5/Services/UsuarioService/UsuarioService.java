@@ -1,4 +1,4 @@
-package com.ambientese.grupo5.Services;
+package com.ambientese.grupo5.Services.UsuarioService;
 
 import com.ambientese.grupo5.Model.UsuarioModel;
 import org.springframework.beans.factory.annotation.Autowired;

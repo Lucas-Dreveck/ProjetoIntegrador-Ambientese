@@ -1,35 +1,35 @@
-package com.ambientese.grupo5.Controller;
+package com.ambientese.grupo5.Controller.EmpresaController;
 
-import com.ambientese.grupo5.DTO.EmpresaRequest;
 import com.ambientese.grupo5.Model.EmpresaModel;
 import com.ambientese.grupo5.Repository.EmpresaRepository;
-import com.ambientese.grupo5.Services.EmpresaService;
+import com.ambientese.grupo5.Services.EmpresaService.ListarEmpresaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/Empresa")
+@RequestMapping("/BuscarEmpresa")
 @Validated
-public class EmpresaController {
+public class BuscarEmpresaController {
 
     private final EmpresaRepository empresaRepository;
-    private final EmpresaService empresaService;
+    private final ListarEmpresaService listarEmpresaService;
 
-    public EmpresaController(EmpresaRepository empresaRepository, EmpresaService empresaService) {
+    public BuscarEmpresaController(EmpresaRepository empresaRepository, ListarEmpresaService listarEmpresaService)
+    {
         this.empresaRepository = empresaRepository;
-        this.empresaService = empresaService;
+        this.listarEmpresaService = listarEmpresaService;
+
     }
 
     @GetMapping
     public ResponseEntity<List<EmpresaModel>> getAllEmpresas() {
-        List<EmpresaModel> empresaModels = empresaService.getAllEmpresas();
+        List<EmpresaModel> empresaModels = listarEmpresaService.getAllEmpresas();
         return ResponseEntity.ok(empresaModels);
     }
 
@@ -57,20 +57,4 @@ public class EmpresaController {
         return ResponseEntity.ok(empresas);
     }
 
-
-    @PostMapping("/Criar")
-    public EmpresaModel criarEmpresa (@Valid @RequestBody EmpresaRequest empresaRequest) {
-        return empresaService.criarEmpresa(empresaRequest);
-    }
-
-    @PutMapping("/Atualizar/{id}")
-    public EmpresaModel atualizarEmpresa(@PathVariable Long id, @Valid @RequestBody EmpresaRequest empresaRequest) {
-        return empresaService.atualizarEmpresa(id, empresaRequest);
-    }
-
-    @DeleteMapping("/Deletar/{id}")
-    public ResponseEntity<?> deletarEmpresa(@PathVariable Long id) {
-        empresaService.deleteEmpresa(id);
-        return ResponseEntity.ok().build();
-    }
 }
