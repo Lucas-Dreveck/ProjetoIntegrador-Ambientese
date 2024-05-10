@@ -5,9 +5,10 @@ import com.ambientese.grupo5.Model.EnderecoModel;
 import com.ambientese.grupo5.Repository.EmpresaRepository;
 import com.ambientese.grupo5.Exception.ValidacaoException;
 import com.ambientese.grupo5.Model.EmpresaModel;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,8 +68,11 @@ public class EmpresaService {
         return digitos[13] == dv2;    }
 
     private boolean isValidTelefone(String telefone) {
-        return telefone == null || !telefone.matches("\\d{10,11}");
+        // Verifica se o telefone é nulo ou se não corresponde ao padrão XXXXXXXXXXX
+        return telefone == null || telefone.matches("\\d{10,11}");
     }
+
+
 
     private void validarCnpjUnico(String cnpj, Long empresaId) {
         Optional<EmpresaModel> empresaExistente = empresaRepository.findByCnpj(cnpj);
@@ -150,7 +154,6 @@ public class EmpresaService {
             throw new ValidacaoException("O telefone da empresa não é válido");
         }
     }
-
     private void mapearEmpresa(EmpresaModel empresaModel, EmpresaRequest empresaRequest) {
         empresaModel.setNomeFantasia(empresaRequest.getNomeFantasia());
         empresaModel.setNomeSolicitante(empresaRequest.getNomeSolicitante());
@@ -164,7 +167,9 @@ public class EmpresaService {
         empresaModel.setPorteEmpresas(empresaRequest.getPorteEmpresas());
         empresaModel.setEndereco(empresaRequest.getEndereco());
     }
-
+    public List<EmpresaModel> getAllEmpresas() {
+        return empresaRepository.findAll();
+    }
     public EmpresaModel criarEmpresa(EmpresaRequest empresaRequest) {
         validarCamposObrigatorios(empresaRequest);
         validarCnpjUnico(empresaRequest.getCnpj(), null); // Passa null como ID, pois é uma nova empresa
@@ -172,7 +177,6 @@ public class EmpresaService {
         mapearEmpresa(empresaModel, empresaRequest); // Passar o objeto para o método mapearEmpresa
         return empresaRepository.save(empresaModel);
     }
-
     public EmpresaModel atualizarEmpresa(Long id, EmpresaRequest empresaRequest) {
         EmpresaModel empresaModel = empresaRepository.findById(id)
                 .orElseThrow(() -> new ValidacaoException("Empresa não encontrada com o ID: " + id));
@@ -181,9 +185,7 @@ public class EmpresaService {
         mapearEmpresa(empresaModel, empresaRequest);
         return empresaRepository.save(empresaModel);
     }
-
-
-    public List<EmpresaModel> getAllEmpresas() {
-        return empresaRepository.findAll();
+    public void deleteEmpresa(Long id) {
+        empresaRepository.findById(id).ifPresent(empresaRepository::delete);
     }
 }
