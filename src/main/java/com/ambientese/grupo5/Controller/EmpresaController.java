@@ -70,9 +70,7 @@ public class EmpresaController {
 
     @DeleteMapping("/Deletar/{id}")
     public ResponseEntity<?> deletarEmpresa(@PathVariable Long id) {
-        return empresaRepository.findById(id).map(empresaModel -> {
-            empresaRepository.delete(empresaModel);
-            return ResponseEntity.ok().build();
-        }).orElse(ResponseEntity.notFound().build());
+        empresaService.deleteEmpresa(id);
+        return ResponseEntity.ok().build();
     }
 }
