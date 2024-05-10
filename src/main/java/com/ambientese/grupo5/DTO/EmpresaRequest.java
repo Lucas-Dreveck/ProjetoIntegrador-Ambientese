@@ -56,9 +56,10 @@
             @NotBlank
             private String ramo;
 
-            @NotNull
-            @NotBlank
-            private PorteEnum porteEmpresas;
+        @NotNull
+        @NotBlank
+        private PorteEnum porteEmpresas;
+
 
         public String getNomeFantasia() {
             return nomeFantasia;

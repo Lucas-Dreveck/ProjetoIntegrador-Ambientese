@@ -54,7 +54,7 @@ public class ValidacaoCamposObrigatoriosService {
         if (!validacaoisEmptyorNullService.isEmptyOrNull(empresaRequest.getRamo())) {
             throw new ValidacaoException("O ramo não pode estar em branco");
         }
-        if (empresaRequest.getPorteEmpresas() == null) {
+        if (!validacaoisEmptyorNullService.isEmptyOrNull(empresaRequest.getPorteEmpresas())) {
             throw new ValidacaoException("O porte da empresa não pode estar em branco");
         }
         if (empresaRequest.getEndereco() == null || validacaoEnderecoService.enderecoEstaVazio(empresaRequest.getEndereco())) {
