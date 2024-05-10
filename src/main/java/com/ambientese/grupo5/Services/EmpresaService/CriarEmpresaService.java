@@ -26,9 +26,9 @@ public class CriarEmpresaService {
 
     public EmpresaModel criarEmpresa(EmpresaRequest empresaRequest) {
         validacaoCamposObrigatoriosService.validarCamposObrigatorios(empresaRequest);
-        validacaoCNPJService.validarCnpjUnico(empresaRequest.getCnpj(), null); // Passa null como ID, pois é uma nova empresa
-        EmpresaModel empresaModel = new EmpresaModel(); // Criar novo objeto EmpresaModel
-        mapearEmpresaService.mapearEmpresa(empresaModel, empresaRequest); // Passar o objeto para o método mapearEmpresa
+        validacaoCNPJService.validarCnpjUnico(empresaRequest.getCnpj(), null);
+        EmpresaModel empresaModel = new EmpresaModel();
+        mapearEmpresaService.mapearEmpresa(empresaModel, empresaRequest);
         return empresaRepository.save(empresaModel);
     }
 }
