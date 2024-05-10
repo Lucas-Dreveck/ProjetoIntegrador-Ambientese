@@ -65,7 +65,7 @@ public class UsuarioController {
         if ("usuario_correto".equals(username) && "senha_correta".equals(password)) {
             return ResponseEntity.ok("Login bem-sucedido!");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha incorretos!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválido!");
         }
     }
 }
