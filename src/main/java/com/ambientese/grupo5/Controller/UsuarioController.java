@@ -51,4 +51,26 @@ public class UsuarioController {
         boolean deleted = usuarioService.deleteUsuario(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
+    @PostMapping("/login")
+        public ResponseEntity<String> login(@RequestBody UsuarioModel usuarioModel) {
+        String username = usuarioModel.getUsername();
+        String password = usuarioModel.getPassword();
+
+
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            // Se o nome de usuário ou senha estiver vazio, retorna um erro de solicitação inválida
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome de usuário e senha são obrigatórios!");
+        }
+
+        // Lógica de autenticação simples para verificar se o nome de usuário e senha correspondem a um usuário específico
+        if ("usuario_correto".equals(username) && "senha_correta".equals(password)) {
+            // Se o login for bem-sucedido, você pode retornar um token JWT ou apenas uma mensagem de sucesso
+            // Neste exemplo, estou retornando uma mensagem simples
+            return ResponseEntity.ok("Login bem-sucedido!");
+        } else {
+            // Se as credenciais estiverem incorretas, você pode retornar uma mensagem de erro
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha incorretos!");
+        }
+    }
 }
