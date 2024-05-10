@@ -1,41 +1,39 @@
-const users = [
-    {
-        id: 1,
-        name: 'João',
-        email: 'joao@example.com',
-        company: 'ACME Inc.'
-    },
-    {
-        id: 2,
-        name: 'Maria',
-        email: 'maria@example.com',
-        company: 'ACME Inc.'
-    },
-    {
-        id: 3,
-        name: 'José',
-        email: 'jose@example.com',
-        company: 'ACME Inc.'
-    },
-]
-
 let isDropdownOpened = false;
+
+let settedCompany = null;
 
 const fetchEmpresas = (input, dropdown) => {
     const filter = input.value.toLowerCase();
-    dropdown.innerHTML = '';
-    const filteredUsers = users.filter(user => {
-        return user.name.toLowerCase().includes(filter)
-    });
-    filteredUsers.slice(0, 10).forEach(user => {
-        const li = document.createElement('li');
-        li.textContent = user.name;
-        li.addEventListener('click', () => {
-            input.value = user.name;
+    const queryParams = new URLSearchParams();
+    queryParams.append('nomeFantasia', filter ? filter : 'a')
+    const fullUrl = `${URL}/Empresa/search?${queryParams.toString()}`;
+    fetch(fullUrl)
+        .then (response => {
+            if (!response.ok) {
+                throw new Error('Erro ao buscar empresas');
+            }
+            return response.json();
+        })
+        .then (response => {
             dropdown.innerHTML = '';
+            response.forEach(empresa => {
+                const li = document.createElement('li');
+                li.textContent = empresa.nomeFantasia;
+                li.addEventListener('click', () => {
+                    input.value = empresa.nomeFantasia;
+                    settedCompany = empresa
+                    dropdown.innerHTML = '';
+                });
+                dropdown.appendChild(li);
+            });
         });
-        dropdown.appendChild(li);
-    });
+}
+
+function clearSelectedCompanyIfNotMatch(input) {
+    const inputValue = input.value.toLowerCase();
+    if (settedCompany && settedCompany.nomeFantasia.toLowerCase() !== inputValue) {
+        settedCompany = null;
+    }
 }
 
 const onOpenSelecaoEmpresa = () => {
@@ -46,12 +44,14 @@ const onOpenSelecaoEmpresa = () => {
     input.addEventListener('input', () => {
         fetchEmpresas(input, dropdown)
         isDropdownOpened = true;
+        clearSelectedCompanyIfNotMatch(input);
     });
 
     input.addEventListener('focus', () => {
         if (!isDropdownOpened) {
             fetchEmpresas(input, dropdown);
             isDropdownOpened = true;
+            clearSelectedCompanyIfNotMatch(input);
         }
     });
 
@@ -62,6 +62,7 @@ const onOpenSelecaoEmpresa = () => {
                 input.value = selected.textContent;
                 dropdown.innerHTML = '';
                 isDropdownOpened = false;
+                clearSelectedCompanyIfNotMatch(input);
             }
         }
     });
@@ -70,15 +71,17 @@ const onOpenSelecaoEmpresa = () => {
         if (!input.contains(event.target) && !dropdown.contains(event.target)) {
             dropdown.innerHTML = '';
             isDropdownOpened = false;
+            clearSelectedCompanyIfNotMatch(input);
         }
     });
 
     const btnNext = document.querySelector('.btn-next');
     btnNext.addEventListener('click', () => {
-        const selected = users.find(user => user.name === input.value);
-        if (selected) {
-            console.log(selected);
-            getMainFrameContent('avaliacao', selected);
+        if (settedCompany) {
+            getMainFrameContent('avaliacao', settedCompany);
+            settedCompany = null;
+        } else {
+            toastAlert('Por favor, selecione uma empresa antes de avançar', 'error');
         }
     });
 }

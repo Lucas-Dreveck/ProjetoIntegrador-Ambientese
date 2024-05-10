@@ -9,13 +9,13 @@ const menuItems = document.querySelectorAll(".main-list > li");
 const allMenuButtons = document.querySelectorAll('.menu li');
 const loading = document.querySelector(".loading");
 
-function loadSelectedPageScript(page) {
+function loadSelectedPageScript(page, props) {
 switch (page) {
         case "start-avaliacao":
             onOpenSelecaoEmpresa();
             break;
         case "avaliacao":
-            onOpenAvaliacao();
+            onOpenAvaliacao(props);
             break;
         default:
 //        implement cases to start page js
@@ -25,7 +25,7 @@ switch (page) {
     mainContent.classList.remove("hidden");
 }
 
-function getMainFrameContent(page, props = {}) {
+function getMainFrameContent(page, props) {
     fetch(`${URL}/${page}`)
         .then(response => {
             if (!response.ok) {
@@ -42,7 +42,7 @@ function getMainFrameContent(page, props = {}) {
 
             if (contentDiv) {
                 mainContent.innerHTML = contentDiv.innerHTML;
-                loadSelectedPageScript(page);
+                loadSelectedPageScript(page, props);
             }
 
             if (stylesDiv) {
@@ -84,6 +84,24 @@ function menuButtonClicked(event) {
     button.classList.add("active");
 
     getMainFrameContent(page);
+}
+
+function toastAlert(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.classList.add('toast', type);
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
 }
 
 function frameSetup() {

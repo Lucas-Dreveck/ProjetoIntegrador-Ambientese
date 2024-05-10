@@ -118,15 +118,16 @@ const renderQuestion = (question) => {
                 <input type="radio" name="answer-${question.idPerguntas}" value="nao aplicavel">
                 <p>Não aplicavel</p>
             </label>
-            <div class="add-file">
+            <!-- <div class="add-file">
                 <button class="btn-file" onClick="addFile()">Adicionar Arquivo</button>
-            </div>
+            </div> -->
         </div>
     `;
     return form.appendChild(div);
 }
 
-const onOpenAvaliacao = () => {
+const onOpenAvaliacao = (props) => {
+    console.log(props)
     const form = document.querySelector('.form-avaliacao')
     form.addEventListener('submit', (event) => {
         if (event.explicitOriginalTarget !== document.getElementById("btn-submit")) {
