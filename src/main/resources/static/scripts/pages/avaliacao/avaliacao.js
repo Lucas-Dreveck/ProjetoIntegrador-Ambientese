@@ -138,17 +138,20 @@ const renderQuestion = (question) => {
     return form.appendChild(div);
 }
 
-const isAllQuestionsAnswered = () => {
-    const unansweredQuestions = questions.filter(question => {
-        const answer = document.querySelector(`input[name="answer-${question.idPerguntas}"]:checked`);
-        return !answer;
-    });
+const isAllQuestionsAnswered = (governamental, ambiental, social) => {
+    const allQuestions = [...governamental, ...ambiental, ...social];
 
-    return unansweredQuestions.length === 0;
+    for (let i = 0; i < allQuestions.length; i++) {
+        const answer = document.querySelector(`input[name="answer-${allQuestions[i].idPerguntas}"]:checked`);
+        if (!answer) {
+            return true;
+        }
+    }
+
+    return false;
 };
 
 const onOpenAvaliacao = (props) => {
-    console.log(props)
     const form = document.querySelector('.form-avaliacao')
     form.addEventListener('submit', (event) => {
         if (event.explicitOriginalTarget !== document.getElementById("btn-submit")) {
@@ -195,7 +198,7 @@ const onOpenAvaliacao = (props) => {
             btnSubmit.classList.add('btn-submit');
             btnSubmit.textContent = 'Próximo';
             btnSubmit.addEventListener('click', () => {
-                if (isAllQuestionsAnswered()) {
+                if (!isAllQuestionsAnswered(governamental, ambiental, social)) {
                     const answers = [];
                     questions.forEach(question => {
                         const answer = document.querySelector(`input[name="answer-${question.idPerguntas}"]:checked`);
