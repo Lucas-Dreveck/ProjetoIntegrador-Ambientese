@@ -37,4 +37,8 @@ public class Pages {
         return "pages/avaliacao/avaliacao";
     }
     
+    @GetMapping("/result-avaliacao")
+    public String pageResultAvaliacao(Model model) throws InterruptedException {
+        return "pages/avaliacao/result-avaliacao";
+    }
 }

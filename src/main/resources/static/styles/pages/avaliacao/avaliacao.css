@@ -16,7 +16,6 @@
     border-radius: 4px;
     background-color: var(--white);
     overflow-y: auto;
-    scrollbar-width: thin;
     scroll-behavior: smooth;
     box-sizing: border-box;
 }

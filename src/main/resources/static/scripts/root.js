@@ -1,5 +1,6 @@
 // FUNCTIONS
 const URL = "http://localhost:8080";
+const questionNumbers = 10;
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
 const expandButton = document.querySelector(".expand-menu");
@@ -17,6 +18,8 @@ switch (page) {
         case "avaliacao":
             onOpenAvaliacao(props);
             break;
+        case "result-avaliacao":
+            onOpenResultAvaliacao(props);
         default:
 //        implement cases to start page js
             break;

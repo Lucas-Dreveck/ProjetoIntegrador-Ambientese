@@ -100,22 +100,34 @@ const addFile = () => {
 const renderQuestion = (question) => {
     const form = document.querySelector('.form-avaliacao');
     const div = document.createElement('div');
+    const FwhatsChecked = () => {
+        const randomNumber = Math.random();
+
+        if (randomNumber < 0.4) {
+            return 1; // Retorna 1 com 40% de probabilidade
+        } else if (randomNumber < 0.8) {
+            return -1; // Retorna -1 com 40% de probabilidade
+        } else {
+            return 0; // Retorna 0 com 20% de probabilidade
+        }
+    }
+    const whatsChecked = FwhatsChecked();
     div.classList.add('form-question');
     div.innerHTML = `
         <h2>${question.descricao}</h2>
         <div class="form-answer">
             <label>
-                <input type="radio" name="answer-${question.idPerguntas}" value="conforme">
+                <input type="radio" name="answer-${question.idPerguntas}" value="1" ${whatsChecked === 1 ? 'checked' : null}>
                 <p>Conforme</p>
             </label>
             <br>
             <label>
-                <input type="radio" name="answer-${question.idPerguntas}" value="nao conforme">
+                <input type="radio" name="answer-${question.idPerguntas}" value="-1" ${whatsChecked === -1 ? 'checked' : null}>
                 <p>Não conforme</p>
             </label>
             <br>
             <label>
-                <input type="radio" name="answer-${question.idPerguntas}" value="nao aplicavel">
+                <input type="radio" name="answer-${question.idPerguntas}" value="0" ${whatsChecked === 0 ? 'checked' : null}>
                 <p>Não aplicavel</p>
             </label>
             <!-- <div class="add-file">
@@ -125,6 +137,15 @@ const renderQuestion = (question) => {
     `;
     return form.appendChild(div);
 }
+
+const isAllQuestionsAnswered = () => {
+    const unansweredQuestions = questions.filter(question => {
+        const answer = document.querySelector(`input[name="answer-${question.idPerguntas}"]:checked`);
+        return !answer;
+    });
+
+    return unansweredQuestions.length === 0;
+};
 
 const onOpenAvaliacao = (props) => {
     console.log(props)
@@ -148,16 +169,16 @@ const onOpenAvaliacao = (props) => {
         })
         .then(data => {
             data.forEach(item => {
-                if (item.Eixo === 'governamental') {
-                    if (governamental.length <= 20) {
+                if (item.eixo === 'governamental') {
+                    if (governamental.length < questionNumbers) {
                         governamental.push(item);
                     }
                 } else if (item.eixo === 'ambiental') {
-                    if (ambiental.length <= 20) {
+                    if (ambiental.length < questionNumbers) {
                         ambiental.push(item);
                     }    
                 } else if (item.eixo === 'social') {
-                    if (social.length <= 20) {
+                    if (social.length < questionNumbers) {
                         social.push(item);
                     }
                 }
@@ -174,17 +195,23 @@ const onOpenAvaliacao = (props) => {
             btnSubmit.classList.add('btn-submit');
             btnSubmit.textContent = 'Próximo';
             btnSubmit.addEventListener('click', () => {
-                const answers = [];
-                questions.forEach(question => {
-                    const answer = document.querySelector(`input[name="answer-${question.idPerguntas}"]:checked`);
-                    if (answer) {
-                        answers.push({
-                            idPerguntas: question.idPerguntas,
-                            resposta: answer.value
-                        });
-                    }
-                });
-                console.log(answers);
+                if (isAllQuestionsAnswered()) {
+                    const answers = [];
+                    questions.forEach(question => {
+                        const answer = document.querySelector(`input[name="answer-${question.idPerguntas}"]:checked`);
+                        if (answer) {
+                            answers.push({
+                                idPerguntas: question.idPerguntas,
+                                pergunta: question.descricao,
+                                resposta: answer.value,
+                                eixo: question.eixo,
+                            });
+                        }
+                    });
+                    getMainFrameContent('result-avaliacao', {answers: answers, company: props});
+                } else {
+                    toastAlert('Por favor, responda todas as perguntas antes de prosseguir', 'error');
+                }
             });
             form.appendChild(btnSubmit);
         })
