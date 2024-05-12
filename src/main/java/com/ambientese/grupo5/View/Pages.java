@@ -30,4 +30,10 @@ public class Pages {
         Thread.sleep(2000); // Simulated Lag
         return "pages/avaliacao";
     }
+
+    @GetMapping("/login")
+    public String pageLogin(Model model) throws InterruptedException {
+        Thread.sleep(2000); // Simulated Lag
+        return "pages/login";
+    }
 }
