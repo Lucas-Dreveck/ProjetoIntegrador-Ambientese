@@ -1,15 +1,25 @@
 // FUNCTIONS
 const URL = "http://localhost:8080";
+const questionNumbers = 10;
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
 const expandButton = document.querySelector(".expand-menu");
+const sidebar = document.querySelector(".sidebar");
 const menu = document.querySelector(".menu");
 const menuItems = document.querySelectorAll(".main-list > li");
 const allMenuButtons = document.querySelectorAll('.menu li');
 const loading = document.querySelector(".loading");
 
-function loadSelectedPageScript(page) {
+function loadSelectedPageScript(page, props) {
 switch (page) {
+        case "start-avaliacao":
+            onOpenSelecaoEmpresa();
+            break;
+        case "avaliacao":
+            onOpenAvaliacao(props);
+            break;
+        case "result-avaliacao":
+            onOpenResultAvaliacao(props);
         default:
 //        implement cases to start page js
             break;
@@ -18,7 +28,7 @@ switch (page) {
     mainContent.classList.remove("hidden");
 }
 
-function getMainFrameContent(page) {
+function getMainFrameContent(page, props) {
     fetch(`${URL}/${page}`)
         .then(response => {
             if (!response.ok) {
@@ -35,7 +45,7 @@ function getMainFrameContent(page) {
 
             if (contentDiv) {
                 mainContent.innerHTML = contentDiv.innerHTML;
-                loadSelectedPageScript(page);
+                loadSelectedPageScript(page, props);
             }
 
             if (stylesDiv) {
@@ -79,7 +89,33 @@ function menuButtonClicked(event) {
     getMainFrameContent(page);
 }
 
+function toastAlert(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.classList.add('toast', type);
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
 function frameSetup() {
+    document.addEventListener("click", function(event) {
+        if (!sidebar.contains(event.target)) {
+            if (expandButton.classList.contains("active")) {
+                expandButton.classList.remove("active");
+                menu.classList.remove("expanded");
+            }
+        }
+    })
     expandButton.addEventListener("click", expandButtonClicked);
     menuItems.forEach(item => {
         const subList = item.nextElementSibling;
