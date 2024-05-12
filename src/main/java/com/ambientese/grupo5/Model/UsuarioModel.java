@@ -2,6 +2,7 @@ package com.ambientese.grupo5.Model;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,15 @@ public class UsuarioModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    @NotBlank
+    private String Username;
+
+    @NotNull
+    @NotBlank
+    private String Password;
+
 
     @NotBlank(message = "O nome não pode estar em branco")
     private String nome;
@@ -78,6 +88,22 @@ public class UsuarioModel {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public String getUsername() {
+        return Username;
+    }
+
+    public void setUsername(String username) {
+        Username = username;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
     }
 
 }
