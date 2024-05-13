@@ -41,9 +41,10 @@
                     <!-- <li page="pergunta">Cadastrar Pergunta</li> -->
                 </ul>
                 <li page="ranking">Ranking</li>
-                <li page="avaliacao">Avaliação</li>
+                <li page="start-avaliacao">Avaliação</li>
                 <!-- <li page="historico">Histórico</li> -->
             </ul>
+            <h2 class="login-logout" page="login">Sair</h2>
         </div>
     </section>
 
@@ -62,7 +63,11 @@
 </div>
 
 <div id="allScripts">
-    <script type="text/javascript" th:src="@{/scripts/frame.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/root.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/login.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/pages/avaliacao/selecao-empresa.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/pages/avaliacao/avaliacao.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/pages/avaliacao/result-avaliacao.js}"></script>
 <!--Add others js files to this div-->
 </div>
 </body>

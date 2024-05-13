@@ -1,25 +1,61 @@
 // FUNCTIONS
 const URL = "http://localhost:8080";
+let isAuthenticated = sessionStorage.getItem("auth") ? sessionStorage.getItem("auth") === 'true' : false;
+sessionStorage.setItem('auth', isAuthenticated);
+
+const headers = new Headers();
+headers.append('X-Requested-With', 'InsideApplication');
+
+const options = {
+    method: 'GET',
+    headers: headers
+};
+
+const questionNumbers = 10;
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
 const expandButton = document.querySelector(".expand-menu");
+const sidebar = document.querySelector(".sidebar");
 const menu = document.querySelector(".menu");
 const menuItems = document.querySelectorAll(".main-list > li");
 const allMenuButtons = document.querySelectorAll('.menu li');
+const loginLogout = document.querySelector('.login-logout');
 const loading = document.querySelector(".loading");
 
-function loadSelectedPageScript(page) {
-switch (page) {
-        default:
-//        implement cases to start page js
+function loadSelectedPageScript(page, props) {
+    switch (page) {
+        case "login":
+            onOpenLogin();
             break;
+        case "start-avaliacao":
+            onOpenSelecaoEmpresa();
+            break;
+        case "avaliacao":
+            onOpenAvaliacao(props);
+            break;
+        case "result-avaliacao":
+            onOpenResultAvaliacao(props);
+        default:
+    //        implement cases to start page js
+        break;
     }
     loading.classList.add("hidden");
     mainContent.classList.remove("hidden");
 }
 
-function getMainFrameContent(page) {
-    fetch(`${URL}/${page}`)
+function getMainFrameContent(page, props) {
+    if (page === 'login') {
+        isAuthenticated = false;
+        sessionStorage.setItem('auth', isAuthenticated)
+    }
+
+    if (isAuthenticated) {
+        loginLogout.textContent = "Sair";
+    } else {
+        loginLogout.textContent = "Login";
+    }
+
+    fetch(`${URL}/${page}`, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Erro ao recuperar tela: ${page}`);
@@ -35,7 +71,7 @@ function getMainFrameContent(page) {
 
             if (contentDiv) {
                 mainContent.innerHTML = contentDiv.innerHTML;
-                loadSelectedPageScript(page);
+                loadSelectedPageScript(page, props);
             }
 
             if (stylesDiv) {
@@ -63,6 +99,11 @@ function menuButtonClicked(event) {
     const button = event.currentTarget;
     const page = button.getAttribute("page");
 
+    if(!isAuthenticated && (page !== 'ranking' && page !== 'login')) {
+        toastAlert("Você precisa estar logado para acessar essa página", "error");
+        return;
+    }
+
     if (button.classList.contains("active")) {
         return;
     }
@@ -74,12 +115,40 @@ function menuButtonClicked(event) {
         button.classList.remove("active");
     });
 
-    button.classList.add("active");
+    if (page !== 'login') {
+        button.classList.add("active");
+    }
 
     getMainFrameContent(page);
 }
 
+function toastAlert(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.classList.add('toast', type);
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
 function frameSetup() {
+    document.addEventListener("click", function(event) {
+        if (!sidebar.contains(event.target)) {
+            if (expandButton.classList.contains("active")) {
+                expandButton.classList.remove("active");
+                menu.classList.remove("expanded");
+            }
+        }
+    })
     expandButton.addEventListener("click", expandButtonClicked);
     menuItems.forEach(item => {
         const subList = item.nextElementSibling;
@@ -97,8 +166,16 @@ function frameSetup() {
         } else {
             item.addEventListener("click", menuButtonClicked);
         }
+
+        loginLogout.addEventListener("click", menuButtonClicked);
+
     });
     
+    if (!isAuthenticated) {
+        getMainFrameContent("login");
+    } else {
+        getMainFrameContent("ranking");
+    }
 }
 
 frameSetup();

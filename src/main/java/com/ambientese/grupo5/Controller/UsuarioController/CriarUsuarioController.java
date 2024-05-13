@@ -28,20 +28,4 @@ public class CriarUsuarioController {
         UsuarioModel createdUsuarioModel = usuarioService.createUsuario(usuarioModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUsuarioModel);
     }
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UsuarioModel usuarioModel) {
-        String username = usuarioModel.getUsername();
-        String password = usuarioModel.getPassword();
-
-
-        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nome de usuário e senha são obrigatórios!");
-        }
-
-        if ("usuario_correto".equals(username) && "senha_correta".equals(password)) {
-            return ResponseEntity.ok("Login bem-sucedido!");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválido!");
-        }
-    }
 }
