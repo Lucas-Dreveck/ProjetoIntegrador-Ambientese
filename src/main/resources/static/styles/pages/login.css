@@ -15,12 +15,6 @@ html, body {
     align-items: center;
 }
 
-.header {
-    width: 100%;
-    height: 10%;
-    background-color: #0077C8;
-}
-
 .box {
     width: 60%;
     height: 80%;
@@ -35,6 +29,10 @@ html, body {
 .boxLeft {
     width: 50%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .divInputs {

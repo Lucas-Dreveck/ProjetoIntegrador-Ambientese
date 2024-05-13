@@ -44,14 +44,21 @@
     width: 100%;
 }
 
-.main .sidebar .menu .main-list li {
+.main .sidebar .menu .main-list li,
+.main .sidebar .menu .login-logout {
     font-size: 2em;
     font-weight: bold;
     cursor: pointer;
     line-height: 1.4;
 }
 
-.main .sidebar .menu li:hover {
+.main .sidebar .menu .login-logout {
+    margin-top: 50vh;
+    list-style: none;
+}
+
+.main .sidebar .menu li:hover,
+.main .sidebar .menu .login-logout:hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -80,4 +87,3 @@
     flex-direction: column;
     height: 100vh;
 }
-
