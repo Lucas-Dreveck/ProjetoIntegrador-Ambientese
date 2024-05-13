@@ -2,6 +2,15 @@
 const URL = "http://localhost:8080";
 let isAuthenticated = sessionStorage.getItem("auth") ? sessionStorage.getItem("auth") === 'true' : false;
 sessionStorage.setItem('auth', isAuthenticated);
+
+const headers = new Headers();
+headers.append('X-Requested-With', 'InsideApplication');
+
+const options = {
+    method: 'GET',
+    headers: headers
+};
+
 const questionNumbers = 10;
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
@@ -46,7 +55,7 @@ function getMainFrameContent(page, props) {
         loginLogout.textContent = "Login";
     }
 
-    fetch(`${URL}/${page}`)
+    fetch(`${URL}/${page}`, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Erro ao recuperar tela: ${page}`);
@@ -164,6 +173,8 @@ function frameSetup() {
     
     if (!isAuthenticated) {
         getMainFrameContent("login");
+    } else {
+        getMainFrameContent("ranking");
     }
 }
 
