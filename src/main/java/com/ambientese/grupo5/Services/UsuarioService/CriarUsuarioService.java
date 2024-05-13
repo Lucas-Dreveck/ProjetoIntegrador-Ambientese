@@ -16,4 +16,5 @@ public class CriarUsuarioService {
     public UsuarioModel createUsuario(UsuarioModel usuarioModel) {
         return usuarioRepository.save(usuarioModel);
     }
+
 }
