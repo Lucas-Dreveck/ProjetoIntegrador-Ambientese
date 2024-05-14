@@ -2,11 +2,11 @@
 
     import com.ambientese.grupo5.Model.EnderecoModel;
     import com.ambientese.grupo5.Model.Enums.PorteEnum;
+    import jakarta.persistence.CascadeType;
     import jakarta.persistence.Column;
     import jakarta.persistence.JoinColumn;
     import jakarta.persistence.OneToOne;
-    import org.hibernate.annotations.Cascade;
-    import org.hibernate.annotations.CascadeType;
+
     import javax.validation.constraints.NotBlank;
     import javax.validation.constraints.NotNull;
     import javax.validation.constraints.Pattern;
@@ -38,12 +38,11 @@
         @Column(length = 20)
         private String inscricaoSocial;
 
-        @OneToOne
-        @JoinColumn(name = "enderecoId")
-        @Cascade(CascadeType.ALL)
+        @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "endereco_id")
         private EnderecoModel endereco;
 
-            @NotNull
+        @NotNull
             @NotBlank
             private String email;
 
@@ -56,9 +55,9 @@
             @NotBlank
             private String ramo;
 
-        @NotNull
-        @NotBlank
-        private PorteEnum porteEmpresas;
+             @NotNull
+         @NotBlank
+         private PorteEnum porteEmpresas;
 
 
         public String getNomeFantasia() {

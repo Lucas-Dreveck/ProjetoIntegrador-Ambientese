@@ -7,8 +7,6 @@
 
         import com.ambientese.grupo5.Model.Enums.PorteEnum;
         import jakarta.persistence.*;
-        import org.hibernate.annotations.Cascade;
-        import org.hibernate.annotations.CascadeType;
 
         @Entity
         @Table (name = ("Empresa"))
@@ -44,12 +42,12 @@
             @Column(length = 20)
             private String inscricaoSocial;
 
-            @OneToOne
-            @JoinColumn(name = "enderecoId")
-            @Cascade(CascadeType.ALL)
+            @OneToOne(cascade = CascadeType.ALL)
+            @JoinColumn(name = "endereco_id")
             private EnderecoModel endereco;
 
             @Email
+            @NotNull
             @NotBlank
             private String email;
 
