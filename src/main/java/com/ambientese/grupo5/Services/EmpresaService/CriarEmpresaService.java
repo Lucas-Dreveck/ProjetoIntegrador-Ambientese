@@ -43,6 +43,4 @@ public class CriarEmpresaService {
         empresaModel.setEndereco(enderecoSalvo);
         return empresaRepository.save(empresaModel);
     }
-
-
 }
