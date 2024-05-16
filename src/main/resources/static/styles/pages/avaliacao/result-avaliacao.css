@@ -29,7 +29,6 @@
     background-color: var(--white);
     overflow-y: auto;
     scroll-behavior: smooth;
-    box-sizing: border-box;
 }
 
 .result-content {
