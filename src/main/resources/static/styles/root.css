@@ -37,11 +37,12 @@ header {
 
 .toast {
     position: fixed;
-    top: 20px;
+    top: 15vh;
     right: 20px;
     background-color: #333;
+    font-size: 20px;
     color: #fff;
-    padding: 10px;
+    padding: 20px;
     border-radius: 5px;
     z-index: 9999;
     opacity: 0;
