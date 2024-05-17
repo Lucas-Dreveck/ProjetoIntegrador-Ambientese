@@ -27,6 +27,9 @@ function loadSelectedPageScript(page, props) {
         case "login":
             onOpenLogin();
             break;
+        case "ranking":
+            onOpenRanking();
+            break;
         case "start-avaliacao":
             onOpenSelecaoEmpresa();
             break;
@@ -170,12 +173,7 @@ function frameSetup() {
         loginLogout.addEventListener("click", menuButtonClicked);
 
     });
-    
-    if (!isAuthenticated) {
-        getMainFrameContent("login");
-    } else {
-        getMainFrameContent("ranking");
-    }
+    getMainFrameContent("ranking");
 }
 
 frameSetup();
