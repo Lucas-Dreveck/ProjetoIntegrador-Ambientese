@@ -19,7 +19,7 @@ public class AtualizarUsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/Edit/{id}")
     public ResponseEntity<UsuarioModel> updateUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioModel usuarioModel) {
         Optional<UsuarioModel> updatedUsuario = usuarioService.updateUsuario(id, usuarioModel);
         return updatedUsuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

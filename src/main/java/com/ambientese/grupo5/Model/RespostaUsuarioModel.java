@@ -33,11 +33,11 @@ public class RespostaUsuarioModel {
         this.id = id;
     }
 
-    public @NotNull @NotBlank RespostasEnum getRespostas() {
+    public RespostasEnum getRespostas() {
         return Respostas;
     }
 
-    public void setRespostas(@NotNull @NotBlank RespostasEnum respostas) {
+    public void setRespostas(RespostasEnum respostas) {
         Respostas = respostas;
     }
 

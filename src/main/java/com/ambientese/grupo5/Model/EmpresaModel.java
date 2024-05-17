@@ -13,6 +13,7 @@
         public class EmpresaModel {
             @Id
             @GeneratedValue(strategy = GenerationType.IDENTITY)
+            @Column(name = "empresa_id")
             private Long id;
 
             @NotNull

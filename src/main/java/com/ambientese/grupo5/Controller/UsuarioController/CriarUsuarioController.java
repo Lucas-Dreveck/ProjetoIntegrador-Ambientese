@@ -5,10 +5,8 @@ import com.ambientese.grupo5.Services.UsuarioService.CriarUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 @RestController
@@ -23,7 +21,7 @@ public class CriarUsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @PostMapping
+    @PostMapping("/Add")
     public ResponseEntity<UsuarioModel> createUsuario(@Valid @RequestBody UsuarioModel usuarioModel) {
         UsuarioModel createdUsuarioModel = usuarioService.createUsuario(usuarioModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUsuarioModel);

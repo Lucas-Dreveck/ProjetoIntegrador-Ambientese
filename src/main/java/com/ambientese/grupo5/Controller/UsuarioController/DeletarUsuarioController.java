@@ -19,7 +19,7 @@ public class DeletarUsuarioController {
             this.usuarioService = usuarioService;
         }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/Delete/{id}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
         boolean deleted = usuarioService.deleteUsuario(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
