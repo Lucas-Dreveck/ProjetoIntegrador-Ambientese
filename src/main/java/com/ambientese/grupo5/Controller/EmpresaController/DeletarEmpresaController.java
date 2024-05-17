@@ -19,7 +19,7 @@ public class DeletarEmpresaController {
         this.deletarEmpresa = deletarEmpresa;
     }
 
-    @DeleteMapping("/Deletar/{id}")
+    @DeleteMapping("/Delete/{id}")
     public ResponseEntity<?> deletarEmpresa(@PathVariable Long id) {
         deletarEmpresa.deleteEmpresa(id);
         return ResponseEntity.ok().build();

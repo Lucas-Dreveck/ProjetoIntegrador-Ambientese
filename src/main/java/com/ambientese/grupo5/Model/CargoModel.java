@@ -15,10 +15,6 @@ public class CargoModel {
 
     @NotNull
     @NotBlank
-    private Integer cod;
-
-    @NotNull
-    @NotBlank
     private String descricao;
 
     public Long getId() {
@@ -27,14 +23,6 @@ public class CargoModel {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getCod() {
-        return cod;
-    }
-
-    public void setCod(Integer cod) {
-        this.cod = cod;
     }
 
     public String getDescricao() {

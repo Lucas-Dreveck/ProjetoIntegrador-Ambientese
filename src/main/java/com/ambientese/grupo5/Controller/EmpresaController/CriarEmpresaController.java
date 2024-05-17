@@ -20,7 +20,7 @@ public class CriarEmpresaController {
     {
         this.criarEmpresa = criarEmpresa;
     }
-    @PostMapping("/Criar")
+    @PostMapping("/Add")
     public EmpresaModel criarEmpresa (@RequestBody EmpresaRequest empresaModel) {
         return criarEmpresa.criarEmpresa(empresaModel);
     }
