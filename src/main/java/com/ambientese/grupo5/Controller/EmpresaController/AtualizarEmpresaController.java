@@ -18,7 +18,7 @@ public class AtualizarEmpresaController {
         this.atualizarEmpresa = atualizarEmpresa;
 
     }
-    @PutMapping("/Atualizar/{id}")
+    @PutMapping("/Edit/{id}")
     public EmpresaModel atualizarEmpresa(@PathVariable Long id, @Valid @RequestBody EmpresaRequest empresaRequest) {
         return atualizarEmpresa.atualizarEmpresa(id, empresaRequest);
     }
