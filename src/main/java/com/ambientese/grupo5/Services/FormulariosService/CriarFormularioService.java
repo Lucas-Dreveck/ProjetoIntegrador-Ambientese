@@ -1,62 +1,65 @@
 package com.ambientese.grupo5.Services.FormulariosService;
 
-import com.ambientese.grupo5.Model.FormularioModel;
+import com.ambientese.grupo5.DTO.FormularioRequest;
+import com.ambientese.grupo5.DTO.PerguntasRequest;
+import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import com.ambientese.grupo5.Model.PerguntasModel;
 import com.ambientese.grupo5.Repository.PerguntasRepository;
-import com.ambientese.grupo5.Model.Enums.EixoEnum;
+import com.ambientese.grupo5.Services.PerguntasService.MapearPerguntasService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class FormularioService {
+public class CriarFormularioService {
 
     private final PerguntasRepository perguntasRepository;
+    private final MapearPerguntasService mapearPerguntasService;
 
-    public FormularioService(PerguntasRepository perguntasRepository) {
+    @Autowired
+    public CriarFormularioService(PerguntasRepository perguntasRepository, MapearPerguntasService mapearPerguntasService) {
         this.perguntasRepository = perguntasRepository;
+        this.mapearPerguntasService = mapearPerguntasService;
     }
 
-    public FormularioModel criarFormularioAleatorio(int perguntasPorEixo) {
-        FormularioModel formulario = new FormularioModel();
+    public List<FormularioRequest> criarFormulario
+            (List<PerguntasRequest> perguntas) {
+        List<FormularioRequest> formularioRequestList = new ArrayList<>();
 
-        // Lista para armazenar perguntas selecionadas
-        List<PerguntasModel> perguntasSelecionadas = new ArrayList<>();
+        // Mapeia as perguntas para objetos PerguntasModel usando o serviço
+        List<PerguntasModel> perguntasMapeadas = mapearPerguntasService.mapearPerguntas(perguntas);
 
-        // Obter todas as perguntas do repositório
-        List<PerguntasModel> todasPerguntas = perguntasRepository.findAll();
-
-        // Iterar pelos eixos
-        for (EixoEnum eixo : EixoEnum.values()) {
-            // Filtrar as perguntas por eixo
-            List<PerguntasModel> perguntasPorEixo = todasPerguntas.stream()
-                    .filter(pergunta -> pergunta.getEixo() == eixo)
-                    .collect(Collectors.toList());
-
-            // Embaralhar as perguntas
-            Collections.shuffle(perguntasPorEixo);
-
-            // Adicionar um número específico de perguntas por eixo às perguntas selecionadas
-            perguntasSelecionadas.addAll(perguntasPorEixo.subList(0, Math.min(perguntasPorEixo.size(), perguntasPorEixo.size())));
+        // Gera o formulário com base nas perguntas mapeadas
+        for (PerguntasModel pergunta : perguntasMapeadas) {
+            FormularioRequest formularioRequest = new FormularioRequest();
+            formularioRequest.setNumeroPergunta(pergunta.getId());
+            formularioRequest.setPerguntaDescricao(pergunta.getDescricao());
+            formularioRequest.setRespostaUsuario(null); // Definir respostas como nulas inicialmente
+            formularioRequestList.add(formularioRequest);
         }
 
-        // Embaralhar novamente as perguntas selecionadas
-        Collections.shuffle(perguntasSelecionadas);
+        return formularioRequestList;
+    }
 
-        // Selecionar as primeiras perguntasPorEixo * número de eixos perguntas para o formulário
-        perguntasSelecionadas = perguntasSelecionadas.subList(0, Math.min(perguntasPorEixo * EixoEnum.values().length, perguntasSelecionadas.size()));
+    // Método para calcular pontuação com base nas respostas do usuário
+    public double calcularPontuacao(List<FormularioRequest> respostas) {
+        int totalPerguntas = respostas.size();
+        int perguntasConforme = 0;
 
-        // Definir as perguntas selecionadas no formulário
-        // Supondo que você tenha um método setPerguntas no FormularioModel
-        formulario.setPerguntas(perguntasSelecionadas);
+        for (FormularioRequest resposta : respostas) {
+            // Verifica se a resposta do usuário é Conforme
+            if (resposta.getRespostaUsuario() != null && resposta.getRespostaUsuario() == RespostasEnum.Conforme) {
+                perguntasConforme++;
+            }
+        }
 
-        // Definir a data de respostas como a data atual
-        formulario.setDataRespostas(new Date());
-
-        return formulario;
+        // Calcula a pontuação com base nas perguntas respondidas conforme e no total de perguntas
+        if (totalPerguntas > 0) {
+            return ((double) perguntasConforme / totalPerguntas) * 100.0;
+        } else {
+            return 0.0; // Retorna 0 se não houver perguntas no formulário
+        }
     }
 }

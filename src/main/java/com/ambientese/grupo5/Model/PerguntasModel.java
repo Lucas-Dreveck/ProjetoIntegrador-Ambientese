@@ -12,11 +12,14 @@ import javax.validation.constraints.NotNull;
 public class PerguntasModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "perguntas_id")
     private long id;
 
     @NotNull
     @NotBlank
     private String descricao;
+
+    private String Nivel;
 
     @NotNull
     @NotBlank
@@ -36,6 +39,14 @@ public class PerguntasModel {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getNivel() {
+        return Nivel;
+    }
+
+    public void setNivel(String nivel) {
+        Nivel = nivel;
     }
 
     public EixoEnum getEixo() {

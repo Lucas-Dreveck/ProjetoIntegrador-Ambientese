@@ -1,5 +1,6 @@
 package com.ambientese.grupo5.Model;
 
+import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import jakarta.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -14,6 +15,10 @@ public class FormularioModel {
     private long id;
 
     @OneToOne
+    @JoinColumn (name = "perguntas_id")
+    private PerguntasModel perguntas;
+
+    @OneToOne
     @JoinColumn(name = "certificado_id")
     private CertificadoModel certificado;
 
@@ -22,6 +27,23 @@ public class FormularioModel {
     private EmpresaModel empresa;
 
     @NotNull
+    @Enumerated(EnumType.STRING) // Mapeamento do enum como string
+    private RespostasEnum respostas;
+
+    @Column(name = "pontuacao_final")
+    private Integer pontuacaoFinal;
+
+    @Column(name = "pontuacao_social")
+    private Integer pontuacaoSocial;
+
+    @Column(name = "pontuacao_ambiental")
+    private Integer pontuacaoAmbiental;
+
+    @Column(name = "pontuacao_economico")
+    private Integer pontuacaoEconomico;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_respostas")
     private Date dataRespostas;
 
     public long getId() {
@@ -31,6 +53,15 @@ public class FormularioModel {
     public void setId(long id) {
         this.id = id;
     }
+
+    public PerguntasModel getPerguntas() {
+        return perguntas;
+    }
+
+    public void setPerguntas(List<PerguntasModel> perguntas) {
+        this.perguntas = (PerguntasModel) perguntas;
+    }
+
 
     public CertificadoModel getCertificado() {
         return certificado;
@@ -48,32 +79,51 @@ public class FormularioModel {
         this.empresa = empresa;
     }
 
-    public @NotNull Date getDataRespostas() {
+    public @NotNull RespostasEnum getRespostas() {
+        return respostas;
+    }
+
+    public void setRespostas(RespostasEnum respostas) {
+        this.respostas = respostas;
+    }
+
+    public Integer getPontuacaoFinal() {
+        return pontuacaoFinal;
+    }
+
+    public void setPontuacaoFinal(Integer pontuacaoFinal) {
+        this.pontuacaoFinal = pontuacaoFinal;
+    }
+
+    public Integer getPontuacaoSocial() {
+        return pontuacaoSocial;
+    }
+
+    public void setPontuacaoSocial(Integer pontuacaoSocial) {
+        this.pontuacaoSocial = pontuacaoSocial;
+    }
+
+    public Integer getPontuacaoAmbiental() {
+        return pontuacaoAmbiental;
+    }
+
+    public void setPontuacaoAmbiental(Integer pontuacaoAmbiental) {
+        this.pontuacaoAmbiental = pontuacaoAmbiental;
+    }
+
+    public Integer getPontuacaoEconomico() {
+        return pontuacaoEconomico;
+    }
+
+    public void setPontuacaoEconomico(Integer pontuacaoEconomico) {
+        this.pontuacaoEconomico = pontuacaoEconomico;
+    }
+
+    public Date getDataRespostas() {
         return dataRespostas;
     }
 
     public void setDataRespostas(Date dataRespostas) {
         this.dataRespostas = dataRespostas;
-    }
-
-    @Transient
-    private List<PerguntasModel> perguntas;
-    @Transient
-    private List<RespostaUsuarioModel> respostas;
-
-    public List<PerguntasModel> getPerguntas() {
-        return perguntas;
-    }
-
-    public void setPerguntas(List<PerguntasModel> perguntas) {
-        this.perguntas = perguntas;
-    }
-
-    public List<RespostaUsuarioModel> getRespostas() {
-        return respostas;
-    }
-
-    public void setRespostas(List<RespostaUsuarioModel> respostas) {
-        this.respostas = respostas;
     }
 }
