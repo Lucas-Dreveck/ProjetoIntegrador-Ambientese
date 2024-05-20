@@ -1,11 +1,9 @@
 package com.ambientese.grupo5.Services.FormulariosService;
 
 import com.ambientese.grupo5.DTO.FormularioRequest;
-import com.ambientese.grupo5.DTO.PerguntasRequest;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import com.ambientese.grupo5.Model.PerguntasModel;
-import com.ambientese.grupo5.Repository.PerguntasRepository;
-import com.ambientese.grupo5.Services.PerguntasService.MapearPerguntasService;
+import com.ambientese.grupo5.Services.PerguntasService.ListarPerguntasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,24 +13,21 @@ import java.util.List;
 @Service
 public class CriarFormularioService {
 
-    private final PerguntasRepository perguntasRepository;
-    private final MapearPerguntasService mapearPerguntasService;
+    private final ListarPerguntasService listarPerguntasService;
 
     @Autowired
-    public CriarFormularioService(PerguntasRepository perguntasRepository, MapearPerguntasService mapearPerguntasService) {
-        this.perguntasRepository = perguntasRepository;
-        this.mapearPerguntasService = mapearPerguntasService;
+    public CriarFormularioService(ListarPerguntasService listarPerguntasService) {
+        this.listarPerguntasService = listarPerguntasService;
     }
 
-    public List<FormularioRequest> criarFormulario
-            (List<PerguntasRequest> perguntas) {
+    public List<FormularioRequest> criarFormulario() {
         List<FormularioRequest> formularioRequestList = new ArrayList<>();
 
-        // Mapeia as perguntas para objetos PerguntasModel usando o serviço
-        List<PerguntasModel> perguntasMapeadas = mapearPerguntasService.mapearPerguntas(perguntas);
+        // Obtém as perguntas do serviço de listagem
+        List<PerguntasModel> perguntas = listarPerguntasService.listarPerguntas();
 
-        // Gera o formulário com base nas perguntas mapeadas
-        for (PerguntasModel pergunta : perguntasMapeadas) {
+        // Gera o formulário com base nas perguntas obtidas
+        for (PerguntasModel pergunta : perguntas) {
             FormularioRequest formularioRequest = new FormularioRequest();
             formularioRequest.setNumeroPergunta(pergunta.getId());
             formularioRequest.setPerguntaDescricao(pergunta.getDescricao());
