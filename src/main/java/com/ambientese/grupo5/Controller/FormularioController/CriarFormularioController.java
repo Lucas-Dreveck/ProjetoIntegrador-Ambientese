@@ -4,7 +4,10 @@ import com.ambientese.grupo5.DTO.FormularioRequest;
 import com.ambientese.grupo5.DTO.PerguntasRequest;
 import com.ambientese.grupo5.Services.FormulariosService.CriarFormularioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,6 +24,6 @@ public class CriarFormularioController {
 
     @PostMapping("/add")
     public List<FormularioRequest> criarFormulario(@RequestBody List<PerguntasRequest> perguntas) {
-        return criarFormularioService.criarFormulario(perguntas);
+        return criarFormularioService.criarFormulario();
     }
 }
