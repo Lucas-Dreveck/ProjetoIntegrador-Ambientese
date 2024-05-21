@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 public class PerguntasModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "perguntas_id")
     private long id;
 
     @NotNull
