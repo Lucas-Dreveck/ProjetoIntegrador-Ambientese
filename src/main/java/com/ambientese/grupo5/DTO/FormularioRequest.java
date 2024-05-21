@@ -1,12 +1,14 @@
 package com.ambientese.grupo5.DTO;
 
 
+import com.ambientese.grupo5.Model.Enums.EixoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 
 public class FormularioRequest {
     private Long NumeroPergunta;
     private String perguntaDescricao;
     private RespostasEnum respostaUsuario;
+    private EixoEnum perguntaEixo;
 
     public Long getNumeroPergunta() {
         return NumeroPergunta;
@@ -30,5 +32,12 @@ public class FormularioRequest {
 
     public void setRespostaUsuario(RespostasEnum respostaUsuario) {
         this.respostaUsuario = respostaUsuario;
+    }
+    public EixoEnum getPerguntaEixo() {
+        return perguntaEixo;
+    }
+
+    public void setPerguntaEixo(EixoEnum perguntaEixo) {
+        this.perguntaEixo = perguntaEixo;
     }
 }

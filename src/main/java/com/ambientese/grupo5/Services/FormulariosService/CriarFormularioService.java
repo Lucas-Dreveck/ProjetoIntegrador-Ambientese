@@ -1,60 +1,57 @@
 package com.ambientese.grupo5.Services.FormulariosService;
 
 import com.ambientese.grupo5.DTO.FormularioRequest;
-import com.ambientese.grupo5.Model.Enums.RespostasEnum;
+import com.ambientese.grupo5.Model.Enums.EixoEnum;
+import com.ambientese.grupo5.Model.FormularioModel;
 import com.ambientese.grupo5.Model.PerguntasModel;
-import com.ambientese.grupo5.Services.PerguntasService.ListarPerguntasService;
+import com.ambientese.grupo5.Services.PerguntasService.ListarPerguntasPorEixoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class CriarFormularioService {
 
-    private final ListarPerguntasService listarPerguntasService;
+    private final ListarPerguntasPorEixoService listarPerguntasPorEixoService;
+    private final ObterFormularioService obterFormularioService;
+    private final CalculoPontuacaoService calculoPontuacaoService;
 
     @Autowired
-    public CriarFormularioService(ListarPerguntasService listarPerguntasService) {
-        this.listarPerguntasService = listarPerguntasService;
+    public CriarFormularioService(ListarPerguntasPorEixoService listarPerguntasPorEixoService,
+                                  ObterFormularioService obterFormularioService,
+                                  CalculoPontuacaoService calculoPontuacaoService) {
+        this.listarPerguntasPorEixoService = listarPerguntasPorEixoService;
+        this.obterFormularioService = obterFormularioService;
+        this.calculoPontuacaoService = calculoPontuacaoService;
     }
 
-    public List<FormularioRequest> criarFormulario() {
+    public List<FormularioRequest> criarFormularioComEixos(List<EixoEnum> eixos, int perguntasPorEixo) {
         List<FormularioRequest> formularioRequestList = new ArrayList<>();
 
-        // Obtém as perguntas do serviço de listagem
-        List<PerguntasModel> perguntas = listarPerguntasService.listarPerguntas();
-
-        // Gera o formulário com base nas perguntas obtidas
-        for (PerguntasModel pergunta : perguntas) {
-            FormularioRequest formularioRequest = new FormularioRequest();
-            formularioRequest.setNumeroPergunta(pergunta.getId());
-            formularioRequest.setPerguntaDescricao(pergunta.getDescricao());
-            formularioRequest.setRespostaUsuario(null); // Definir respostas como nulas inicialmente
-            formularioRequestList.add(formularioRequest);
+        for (EixoEnum eixo : eixos) {
+            List<PerguntasModel> perguntas = listarPerguntasPorEixoService.listarPerguntasPorEixo(eixo);
+            Collections.shuffle(perguntas);
+            for (int i = 0; i < Math.min(perguntasPorEixo, perguntas.size()); i++) {
+                PerguntasModel pergunta = perguntas.get(i);
+                FormularioRequest formularioRequest = new FormularioRequest();
+                formularioRequest.setNumeroPergunta(pergunta.getId());
+                formularioRequest.setPerguntaDescricao(pergunta.getDescricao());
+                formularioRequest.setPerguntaEixo(pergunta.getPerguntasEixo());
+                formularioRequest.setRespostaUsuario(null); // Definir respostas como nulas inicialmente
+                formularioRequestList.add(formularioRequest);
+            }
         }
 
         return formularioRequestList;
     }
 
-    // Método para calcular pontuação com base nas respostas do usuário
-    public double calcularPontuacao(List<FormularioRequest> respostas) {
-        int totalPerguntas = respostas.size();
-        int perguntasConforme = 0;
+    public void salvarRespostasECalcularPontuacao(List<FormularioRequest> respostas, long formularioId) {
+        FormularioModel formulario = obterFormularioService.obterFormularioPorId(formularioId);
+        calculoPontuacaoService.calcularPontuacoes(respostas, formulario);
+        obterFormularioService.salvarFormulario(formulario);
 
-        for (FormularioRequest resposta : respostas) {
-            // Verifica se a resposta do usuário é Conforme
-            if (resposta.getRespostaUsuario() != null && resposta.getRespostaUsuario() == RespostasEnum.Conforme) {
-                perguntasConforme++;
-            }
-        }
-
-        // Calcula a pontuação com base nas perguntas respondidas conforme e no total de perguntas
-        if (totalPerguntas > 0) {
-            return ((double) perguntasConforme / totalPerguntas) * 100.0;
-        } else {
-            return 0.0; // Retorna 0 se não houver perguntas no formulário
-        }
     }
 }
