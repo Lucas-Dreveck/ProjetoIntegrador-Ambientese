@@ -5,9 +5,8 @@ import javax.validation.constraints.NotNull;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = ("Usuario"))
+@Table(name = "Usuario")
 public class UsuarioModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

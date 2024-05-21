@@ -12,7 +12,6 @@ import java.util.Date;
 public class FormularioModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "formulario_id")
     private long id;
 
     @OneToOne
