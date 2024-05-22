@@ -19,11 +19,15 @@ public class PerguntasModel {
     @NotBlank
     private String descricao;
 
-    private String Nivel;
-
     @NotNull
     @NotBlank
-    private EixoEnum Eixo;
+    @Enumerated(EnumType.STRING)
+    private EixoEnum perguntasEixo;
+
+    @ManyToOne
+    @JoinColumn(name = "formulario_id")
+    private FormularioModel formulario;
+
 
     public long getId() {
         return id;
@@ -41,19 +45,19 @@ public class PerguntasModel {
         this.descricao = descricao;
     }
 
-    public String getNivel() {
-        return Nivel;
+    public EixoEnum getPerguntasEixo() {
+        return perguntasEixo;
     }
 
-    public void setNivel(String nivel) {
-        Nivel = nivel;
+    public void setPerguntasEixo(EixoEnum perguntasEixo) {
+        this.perguntasEixo = perguntasEixo;
     }
 
-    public EixoEnum getEixo() {
-        return Eixo;
+    public FormularioModel getFormulario() {
+        return formulario;
     }
 
-    public void setEixo(EixoEnum eixo) {
-        Eixo = eixo;
+    public void setFormulario(FormularioModel formulario) {
+        this.formulario = formulario;
     }
 }
