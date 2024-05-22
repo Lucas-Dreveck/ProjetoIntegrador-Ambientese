@@ -7,10 +7,11 @@ import com.ambientese.grupo5.Services.FormulariosService.BuscarPerguntasDoBancoS
 import com.ambientese.grupo5.Services.FormulariosService.ProcessarFormularioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -27,17 +28,15 @@ public class QuestionarioController {
     }
 
     @GetMapping("/questionario")
-    public String exibirQuestionario(Model model) {
-        List<PerguntasModel> perguntas = buscarPerguntasService.buscarPerguntasDoBanco();
-        model.addAttribute("perguntas", perguntas);
-        return "questionario";
+    @ResponseBody
+    public List<PerguntasModel> exibirQuestionario() {
+        return buscarPerguntasService.buscarPerguntasDoBanco();
     }
 
     @PostMapping("/processarRespostas")
-    public String processarRespostas(@RequestParam("empresa_id") Long empresa_id, List<FormularioRequest> respostas, Model model) {
-        FormularioModel resultado = processarFormularioService.criarProcessarEGerarCertificado(empresa_id, respostas);
-        model.addAttribute("resultado", resultado);
-        return "resultado";
+    @ResponseBody
+    public FormularioModel processarRespostas(@RequestParam("empresa_id") Long empresa_id, @RequestBody List<FormularioRequest> respostas) {
+        return processarFormularioService.criarProcessarEGerarCertificado(empresa_id, respostas);
     }
 
 }
