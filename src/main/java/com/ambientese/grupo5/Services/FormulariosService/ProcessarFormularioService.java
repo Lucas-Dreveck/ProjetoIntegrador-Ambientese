@@ -12,21 +12,31 @@ import com.ambientese.grupo5.DTO.FormularioRequest;
 import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import com.ambientese.grupo5.Model.FormularioModel;
+import com.ambientese.grupo5.Model.PerguntasModel;
+import com.ambientese.grupo5.Model.RespostaModel;
 import com.ambientese.grupo5.Repository.FormularioRepository;
+import com.ambientese.grupo5.Repository.PerguntasRepository;
+import com.ambientese.grupo5.Repository.RespostaRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProcessarFormularioService {
 
-    private final FormularioRepository formularioRepository;
-    private final EmpresaRepository empresaRepository;
+    @Autowired
+    private FormularioRepository formularioRepository;
 
     @Autowired
-    public ProcessarFormularioService(FormularioRepository formularioRepository, EmpresaRepository empresaRepository) {
-        this.formularioRepository = formularioRepository;
-        this.empresaRepository = empresaRepository;
-    }
+    private PerguntasRepository perguntasRepository;
 
-    public FormularioModel criarProcessarEGerarCertificado(Long empresa_id, List<FormularioRequest> formularioRequestList) {
+    @Autowired
+    private RespostaRepository respostaRepository;
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
+
+    @Transactional
+    public FormularioModel criarProcessarEGerarCertificado(Long empresaId, List<FormularioRequest> formularioRequestList) {
         int totalPerguntas = formularioRequestList.size();
         int perguntasConforme = 0;
         int pontuacaoSocial = 0;
@@ -51,6 +61,9 @@ public class ProcessarFormularioService {
                         break;
                 }
             }
+            if (resposta.getRespostaUsuario() == null && resposta.getRespostaUsuario() == RespostasEnum.NãoSeAdequa){
+                totalPerguntas--;
+            }
         }
 
         double pontuacaoFinal = (double) perguntasConforme / totalPerguntas * 100.0;
@@ -59,9 +72,7 @@ public class ProcessarFormularioService {
         NivelCertificadoEnum nivelCertificado = calcularNivelCertificado(pontuacaoFinal);
 
         // Verificar a existência da empresa
-        EmpresaModel empresa = empresaRepository.findById(empresa_id)
-                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
-
+        EmpresaModel empresa = empresaRepository.findById(empresaId).orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
 
         // Criar o objeto de modelo de formulário e definir suas propriedades
         FormularioModel formularioModel = new FormularioModel();
@@ -70,21 +81,23 @@ public class ProcessarFormularioService {
         formularioModel.setPontuacaoAmbiental(pontuacaoAmbiental);
         formularioModel.setPontuacaoGovernamental(pontuacaoGovernamental);
         formularioModel.setCertificado(nivelCertificado);
-        formularioModel.setEmpresa(empresa); // Definir a empresa no formulário
-
-
-        // Adicionar a hora das respostas
+        formularioModel.setEmpresa(empresa);
         formularioModel.setDataRespostas(new Date());
 
-        // Crie uma lista de respostas associadas às perguntas
-        List<RespostasEnum> respostas = new ArrayList<>();
+        // Criação e associação das respostas
+        List<RespostaModel> respostaModels = new ArrayList<>();
         for (FormularioRequest entry : formularioRequestList) {
-            respostas.add(entry.getRespostaUsuario());
+            RespostaModel respostaModel = new RespostaModel();
+            PerguntasModel pergunta = perguntasRepository.findById(entry.getPerguntaId()).orElseThrow(() -> new RuntimeException("Pergunta não encontrada"));
+            respostaModel.setFormulario(formularioModel);
+            respostaModel.setPergunta(pergunta);
+            respostaModel.setResposta(entry.getRespostaUsuario());
+            respostaModels.add(respostaModel);
         }
-        formularioModel.setRespostas(respostas);
 
-        // Salvar o formulário
-        formularioRepository.save(formularioModel);
+        formularioModel.setRespostas(respostaModels);
+        formularioModel = formularioRepository.save(formularioModel);
+        respostaRepository.saveAll(respostaModels);
 
         return formularioModel;
     }

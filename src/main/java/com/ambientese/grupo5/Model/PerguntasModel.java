@@ -4,6 +4,8 @@ package com.ambientese.grupo5.Model;
 import com.ambientese.grupo5.Model.Enums.EixoEnum;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -23,9 +25,11 @@ public class PerguntasModel {
     @Enumerated(EnumType.STRING)
     private EixoEnum perguntasEixo;
 
-    @ManyToOne
-    @JoinColumn(name = "formulario_id")
-    private FormularioModel formulario;
+    @ManyToMany(mappedBy = "perguntas")
+    private List<FormularioModel> formularios;
+
+    @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL)
+    private List<RespostaModel> respostas;
 
     public PerguntasModel(String s, EixoEnum eixoEnum) {
 
@@ -60,11 +64,19 @@ public class PerguntasModel {
         this.perguntasEixo = perguntasEixo;
     }
 
-    public FormularioModel getFormulario() {
-        return formulario;
+    public List<FormularioModel> getFormularios() {
+        return formularios;
     }
 
-    public void setFormulario(FormularioModel formulario) {
-        this.formulario = formulario;
+    public void setFormularios(List<FormularioModel> formularios) {
+        this.formularios = formularios;
+    }
+
+    public List<RespostaModel> getRespostas() {
+        return respostas;
+    }
+
+    public void setRespostas(List<RespostaModel> respostas) {
+        this.respostas = respostas;
     }
 }
