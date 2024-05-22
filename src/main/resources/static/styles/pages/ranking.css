@@ -105,13 +105,14 @@
 
 .content-container .ranking-content .ranking-table {
     display: flex;
+    margin-top: 20px;
     flex-direction: column;
     align-items: center;
     width: 80%;
     border-radius: 10px;
     overflow: hidden;
     border: 2px solid var(--main-blue);
-    font-size: x-large;
+    font-size: large;
 }
 
 .content-container .ranking-content .ranking-table tbody {
