@@ -28,9 +28,9 @@ public class BuscarPerguntasDoBancoService {
 
             Collections.shuffle(perguntasEixo, random);
 
-            todasPerguntas.addAll(perguntasEixo.subList(0, Math.min(perguntasEixo.size(), 5)));
+            todasPerguntas.addAll(perguntasEixo.subList(0, Math.min(perguntasEixo.size(), 10)));
         }
-        if (todasPerguntas.size() != 15) {
+        if (todasPerguntas.size() != 30) {
             throw new RuntimeException("Não foi possível encontrar o número necessário de perguntas");
         }
         return todasPerguntas;

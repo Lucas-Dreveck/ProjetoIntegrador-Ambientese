@@ -14,14 +14,6 @@ public class FormularioModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToMany
-    @JoinTable(
-        name = "formulario_perguntas",
-        joinColumns = @JoinColumn(name = "formulario_id"),
-        inverseJoinColumns = @JoinColumn(name = "pergunta_id")
-    )
-    private List<PerguntasModel> perguntas;
-
     @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL)
     private List<RespostaModel> respostas;
 
@@ -49,8 +41,6 @@ public class FormularioModel {
     @Column(name = "data_respostas")
     private Date dataRespostas;
 
-    // Getters and Setters
-
     public Integer getPontuacaoFinal() {
         return pontuacaoFinal;
     }
@@ -65,14 +55,6 @@ public class FormularioModel {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public List<PerguntasModel> getPerguntas() {
-        return perguntas;
-    }
-
-    public void setPerguntas(List<PerguntasModel> perguntas) {
-        this.perguntas = perguntas;
     }
 
     public NivelCertificadoEnum getCertificado() {

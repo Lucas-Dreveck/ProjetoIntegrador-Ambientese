@@ -160,10 +160,8 @@ public class InitialDataLoader implements CommandLineRunner {
                 perguntasSelecionadas.addAll(getRandomQuestions(perguntasGovernamentalList, 10));
 
                 for (PerguntasModel pergunta : perguntasSelecionadas) {
-                    RespostaModel resposta = new RespostaModel();
-                    resposta.setFormulario(formulario);
-                    resposta.setPergunta(pergunta);
-                    resposta.setResposta(RespostasEnum.values()[faker.number().numberBetween(0, RespostasEnum.values().length)]);
+                    RespostaId respostaId = new RespostaId(formulario.getId(), pergunta.getId());
+                    RespostaModel resposta = new RespostaModel(respostaId, formulario, pergunta, RespostasEnum.values()[faker.number().numberBetween(0, RespostasEnum.values().length)]);
                     respostaRepository.save(resposta);
                 }
             }

@@ -7,15 +7,16 @@ import jakarta.persistence.*;
 @Table(name = "Resposta")
 public class RespostaModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @EmbeddedId
+    private RespostaId id;
 
     @ManyToOne
+    @MapsId("formularioId")
     @JoinColumn(name = "formulario_id")
     private FormularioModel formulario;
 
     @ManyToOne
+    @MapsId("perguntaId")
     @JoinColumn(name = "pergunta_id")
     private PerguntasModel pergunta;
 
@@ -23,12 +24,20 @@ public class RespostaModel {
     @Column(name = "resposta")
     private RespostasEnum resposta;
 
-    // Getters and Setters
-    public long getId() {
+    public RespostaModel() {}
+
+    public RespostaModel(RespostaId id, FormularioModel formulario, PerguntasModel pergunta, RespostasEnum resposta) {
+        this.id = id;
+        this.formulario = formulario;
+        this.pergunta = pergunta;
+        this.resposta = resposta;
+    }
+
+    public RespostaId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(RespostaId id) {
         this.id = id;
     }
 
