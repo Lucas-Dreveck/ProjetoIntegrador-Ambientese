@@ -50,7 +50,7 @@ public class FormularioRequest {
         this.idFormulario = idFormulario;
     }
 
-    public FormularioRequest(EixoEnum perguntaEixo, RespostasEnum respostaUsuario) {
+    public FormularioRequest() {
         this.perguntaEixo = perguntaEixo;
         this.respostaUsuario = respostaUsuario;
     }

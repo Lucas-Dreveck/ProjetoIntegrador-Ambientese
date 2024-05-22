@@ -3,6 +3,9 @@ package com.ambientese.grupo5.Services.FormulariosService;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ambientese.grupo5.Model.EmpresaModel;
+import com.ambientese.grupo5.Repository.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ambientese.grupo5.DTO.FormularioRequest;
@@ -15,13 +18,15 @@ import com.ambientese.grupo5.Repository.FormularioRepository;
 public class ProcessarFormularioService {
 
     private final FormularioRepository formularioRepository;
+    private final EmpresaRepository empresaRepository;
 
     @Autowired
-    public ProcessarFormularioService(FormularioRepository formularioRepository) {
+    public ProcessarFormularioService(FormularioRepository formularioRepository, EmpresaRepository empresaRepository) {
         this.formularioRepository = formularioRepository;
+        this.empresaRepository = empresaRepository;
     }
 
-    public FormularioModel criarProcessarEGerarCertificado(List<FormularioRequest> formularioRequestList) {
+    public FormularioModel criarProcessarEGerarCertificado(Long empresa_id, List<FormularioRequest> formularioRequestList) {
         int totalPerguntas = formularioRequestList.size();
         int perguntasConforme = 0;
         int pontuacaoSocial = 0;
@@ -53,6 +58,11 @@ public class ProcessarFormularioService {
         // Gerar certificado
         NivelCertificadoEnum nivelCertificado = calcularNivelCertificado(pontuacaoFinal);
 
+        // Verificar a existência da empresa
+        EmpresaModel empresa = empresaRepository.findById(empresa_id)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+
+
         // Criar o objeto de modelo de formulário e definir suas propriedades
         FormularioModel formularioModel = new FormularioModel();
         formularioModel.setPontuacaoFinal((int) pontuacaoFinal);
@@ -60,6 +70,8 @@ public class ProcessarFormularioService {
         formularioModel.setPontuacaoAmbiental(pontuacaoAmbiental);
         formularioModel.setPontuacaoGovernamental(pontuacaoGovernamental);
         formularioModel.setCertificado(nivelCertificado);
+        formularioModel.setEmpresa(empresa); // Definir a empresa no formulário
+
 
         // Adicionar a hora das respostas
         formularioModel.setDataRespostas(new Date());
