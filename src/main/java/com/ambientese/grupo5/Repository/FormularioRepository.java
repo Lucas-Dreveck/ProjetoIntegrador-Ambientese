@@ -6,5 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FormularioRepository extends JpaRepository<FormularioModel, Long> {
-    /*List<FormularioModel> findAllOrderByPontuacaoFinal();*/
+    List<FormularioModel> findAllOrderByPontuacaoFinal();
+    List<FormularioModel> findAllByOrderByPontuacaoSocial();
+    List<FormularioModel> findAllByOrderByPontuacaoAmbiental();
+    List<FormularioModel> findAllByOrderByPontuacaoGovernamental();
 }

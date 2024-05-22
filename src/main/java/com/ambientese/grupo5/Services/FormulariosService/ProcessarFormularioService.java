@@ -1,23 +1,23 @@
 package com.ambientese.grupo5.Services.FormulariosService;
 
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.ambientese.grupo5.DTO.FormularioRequest;
 import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import com.ambientese.grupo5.Model.FormularioModel;
 import com.ambientese.grupo5.Repository.FormularioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
-public class CriarFormularioService {
+public class ProcessarFormularioService {
 
     private final FormularioRepository formularioRepository;
 
     @Autowired
-    public CriarFormularioService(FormularioRepository formularioRepository) {
+    public ProcessarFormularioService(FormularioRepository formularioRepository) {
         this.formularioRepository = formularioRepository;
     }
 
@@ -26,7 +26,7 @@ public class CriarFormularioService {
         int perguntasConforme = 0;
         int pontuacaoSocial = 0;
         int pontuacaoAmbiental = 0;
-        int pontuacaoEconomico = 0;
+        int pontuacaoGovernamental = 0;
 
         // Verificar as respostas e calcular pontuações
         for (FormularioRequest resposta : formularioRequestList) {
@@ -40,7 +40,7 @@ public class CriarFormularioService {
                         pontuacaoAmbiental++;
                         break;
                     case Governamental:
-                        pontuacaoEconomico++;
+                        pontuacaoGovernamental++;
                         break;
                     default:
                         break;
@@ -58,8 +58,11 @@ public class CriarFormularioService {
         formularioModel.setPontuacaoFinal((int) pontuacaoFinal);
         formularioModel.setPontuacaoSocial(pontuacaoSocial);
         formularioModel.setPontuacaoAmbiental(pontuacaoAmbiental);
-        formularioModel.setPontuacaoEconomico(pontuacaoEconomico);
+        formularioModel.setPontuacaoGovernamental(pontuacaoGovernamental);
         formularioModel.setCertificado(nivelCertificado);
+
+        // Adicionar a hora das respostas
+        formularioModel.setDataRespostas(new Date());
 
         // Crie uma lista de respostas associadas às perguntas
         List<RespostasEnum> respostas = new ArrayList<>();
@@ -74,7 +77,7 @@ public class CriarFormularioService {
         return formularioModel;
     }
 
-    private NivelCertificadoEnum calcularNivelCertificado(double pontuacaoFinal) {
+    NivelCertificadoEnum calcularNivelCertificado(double pontuacaoFinal) {
         if (pontuacaoFinal >= 100) {
             return NivelCertificadoEnum.Ouro;
         } else if (pontuacaoFinal >= 75.1) {

@@ -49,4 +49,9 @@ public class FormularioRequest {
     public void setIdFormulario(Long idFormulario) {
         this.idFormulario = idFormulario;
     }
+
+    public FormularioRequest(EixoEnum perguntaEixo, RespostasEnum respostaUsuario) {
+        this.perguntaEixo = perguntaEixo;
+        this.respostaUsuario = respostaUsuario;
+    }
 }

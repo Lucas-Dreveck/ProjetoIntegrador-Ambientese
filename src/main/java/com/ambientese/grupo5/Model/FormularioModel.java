@@ -41,8 +41,8 @@ public class FormularioModel {
     @Column(name = "pontuacao_ambiental")
     private Integer pontuacaoAmbiental;
 
-    @Column(name = "pontuacao_economico")
-    private Integer pontuacaoEconomico;
+    @Column(name = "pontuacao_governamental")
+    private Integer pontuacaoGovernamental;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data_respostas")
@@ -114,12 +114,12 @@ public class FormularioModel {
         this.pontuacaoAmbiental = pontuacaoAmbiental;
     }
 
-    public Integer getPontuacaoEconomico() {
-        return pontuacaoEconomico;
+    public Integer getPontuacaoGovernamental() {
+        return pontuacaoGovernamental;
     }
 
-    public void setPontuacaoEconomico(Integer pontuacaoEconomico) {
-        this.pontuacaoEconomico = pontuacaoEconomico;
+    public void setPontuacaoGovernamental(Integer pontuacaoGovernamental) {
+        this.pontuacaoGovernamental = pontuacaoGovernamental;
     }
 
     public Date getDataRespostas() {
