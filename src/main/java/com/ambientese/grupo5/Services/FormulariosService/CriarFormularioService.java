@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CriarQuestionarioService {
+public class CriarFormularioService {
 
     private final FormularioRepository formularioRepository;
 
     @Autowired
-    public CriarQuestionarioService(FormularioRepository formularioRepository) {
+    public CriarFormularioService(FormularioRepository formularioRepository) {
         this.formularioRepository = formularioRepository;
     }
 

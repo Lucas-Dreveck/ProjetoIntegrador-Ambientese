@@ -2,7 +2,7 @@ package com.ambientese.grupo5.Controller.FormularioController;
 
 import com.ambientese.grupo5.DTO.FormularioRequest;
 import com.ambientese.grupo5.Model.FormularioModel;
-import com.ambientese.grupo5.Services.FormulariosService.CriarQuestionarioService;
+import com.ambientese.grupo5.Services.FormulariosService.CriarFormularioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,12 +13,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/formularios")
-public class CriarQuestionarioController {
+public class CriarFormularioController {
 
-    private final CriarQuestionarioService formularioService;
+    private final CriarFormularioService formularioService;
 
     @Autowired
-    public CriarQuestionarioController(CriarQuestionarioService formularioService) {
+    public CriarFormularioController(CriarFormularioService formularioService) {
         this.formularioService = formularioService;
     }
 
