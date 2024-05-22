@@ -3,21 +3,20 @@ package com.ambientese.grupo5.Model;
 import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import jakarta.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
-
+import java.util.List;
 
 @Entity
 @Table(name = "Formulario")
 public class FormularioModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "formulario_id")
     private long id;
 
-    @OneToOne
-    @JoinColumn (name = "perguntas_id")
-    private PerguntasModel perguntas;
+    @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL)
+    private List<PerguntasModel> perguntas;
 
     @Column(name = "certificado")
     @Enumerated(EnumType.STRING)
@@ -27,9 +26,11 @@ public class FormularioModel {
     @JoinColumn(name = "empresa_id")
     private EmpresaModel empresa;
 
-    @NotNull
-    @Enumerated(EnumType.STRING) // Mapeamento do enum como string
-    private RespostasEnum respostas;
+    @ElementCollection(targetClass = RespostasEnum.class)
+    @CollectionTable(name = "respostas", joinColumns = @JoinColumn(name = "formulario_id"))
+    @Column(name = "resposta")
+    @Enumerated(EnumType.STRING)
+    private List<RespostasEnum> respostas;
 
     @Column(name = "pontuacao_final")
     private Integer pontuacaoFinal;
@@ -47,6 +48,16 @@ public class FormularioModel {
     @Column(name = "data_respostas")
     private Date dataRespostas;
 
+    // Getters and Setters
+
+    public Integer getPontuacaoFinal() {
+        return pontuacaoFinal;
+    }
+
+    public void setPontuacaoFinal(Integer pontuacaoFinal) {
+        this.pontuacaoFinal = pontuacaoFinal;
+    }
+
     public long getId() {
         return id;
     }
@@ -55,11 +66,11 @@ public class FormularioModel {
         this.id = id;
     }
 
-    public PerguntasModel getPerguntas() {
+    public List<PerguntasModel> getPerguntas() {
         return perguntas;
     }
 
-    public void setPerguntas(PerguntasModel perguntas) {
+    public void setPerguntas(List<PerguntasModel> perguntas) {
         this.perguntas = perguntas;
     }
 
@@ -79,20 +90,12 @@ public class FormularioModel {
         this.empresa = empresa;
     }
 
-    public @NotNull RespostasEnum getRespostas() {
+    public List<RespostasEnum> getRespostas() {
         return respostas;
     }
 
-    public void setRespostas(@NotNull RespostasEnum respostas) {
+    public void setRespostas(List<RespostasEnum> respostas) {
         this.respostas = respostas;
-    }
-
-    public Integer getPontuacaoFinal() {
-        return pontuacaoFinal;
-    }
-
-    public void setPontuacaoFinal(Integer pontuacaoFinal) {
-        this.pontuacaoFinal = pontuacaoFinal;
     }
 
     public Integer getPontuacaoSocial() {
