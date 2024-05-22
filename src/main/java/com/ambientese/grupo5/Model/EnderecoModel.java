@@ -86,13 +86,9 @@ public class EnderecoModel {
         this.bairro = bairro;
     }
 
-    public String getUF() {
-        return UF;
-    }
+    public String getUF() { return UF ;}
 
-    public void setUF(String uF) {
-        UF = uF;
-    }
+    public void setUF(String UF) { this.UF = UF; }
 
     public Long getId() {
         return id;

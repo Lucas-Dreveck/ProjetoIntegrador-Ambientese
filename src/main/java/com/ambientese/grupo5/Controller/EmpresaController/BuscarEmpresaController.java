@@ -50,7 +50,7 @@ public class BuscarEmpresaController {
         } else if (razaoSocial != null && !razaoSocial.isEmpty()) {
             empresas = empresaRepository.findFirst10ByRazaoSocialContainingIgnoreCase(razaoSocial);
         } else {
-            Page<EmpresaModel> empresasPage = empresaRepository.findAll(PageRequest.of(0, 25));
+            Page<EmpresaModel> empresasPage = empresaRepository.findAll(PageRequest.of(1, 25));
             empresas = empresasPage.getContent();
         }
 
