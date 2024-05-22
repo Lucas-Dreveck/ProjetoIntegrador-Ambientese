@@ -20,13 +20,16 @@ public class RankingService {
     public List<FormularioModel> classificarPorPontuacao() {
         return formularioRepository.findAllOrderByPontuacaoFinal();
     }
-    public List<FormularioModel>classificarPorEixoAmbiental(){
-        return formularioRepository.findAllByOrderByPontuacaoAmbiental();
+
+    public List<FormularioModel> classificarPorEixoAmbiental() {
+        return formularioRepository.findAllOrderByPontuacaoAmbiental();
     }
-    public List<FormularioModel>classificarPorEixoSocial (){
-        return formularioRepository.findAllByOrderByPontuacaoSocial();
+
+    public List<FormularioModel> classificarPorEixoSocial() {
+        return formularioRepository.findAllOrderByPontuacaoSocial();
     }
-    public List<FormularioModel>classificarPorEixoGovernamental (){
-        return formularioRepository.findAllByOrderByPontuacaoGovernamental();
+
+    public List<FormularioModel> classificarPorEixoGovernamental() {
+        return formularioRepository.findAllOrderByPontuacaoGovernamental();
     }
 }
