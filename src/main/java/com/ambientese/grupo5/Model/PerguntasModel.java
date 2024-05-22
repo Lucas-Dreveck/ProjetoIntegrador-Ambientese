@@ -28,6 +28,14 @@ public class PerguntasModel {
     @JoinColumn(name = "formulario_id")
     private FormularioModel formulario;
 
+    public PerguntasModel(String s, EixoEnum eixoEnum) {
+
+    }
+
+    public PerguntasModel() {
+
+    }
+
 
     public long getId() {
         return id;
