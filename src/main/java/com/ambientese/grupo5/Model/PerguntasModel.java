@@ -1,6 +1,7 @@
 package com.ambientese.grupo5.Model;
 
 import com.ambientese.grupo5.Model.Enums.EixoEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -23,6 +24,7 @@ public class PerguntasModel {
     private EixoEnum perguntasEixo;
 
     @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL)
+    @JsonIgnore // Adicionando esta anotação para evitar a serialização da lista de respostas
     private List<RespostaModel> respostas;
 
     public PerguntasModel(String s, EixoEnum eixoEnum) {}
