@@ -3,20 +3,27 @@ package com.ambientese.grupo5.Model;
 import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import jakarta.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
-
+import java.util.List;
 
 @Entity
 @Table(name = "Formulario")
 public class FormularioModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn (name = "perguntas_id")
-    private PerguntasModel perguntas;
+    @ManyToMany
+    @JoinTable(
+        name = "formulario_perguntas",
+        joinColumns = @JoinColumn(name = "formulario_id"),
+        inverseJoinColumns = @JoinColumn(name = "pergunta_id")
+    )
+    private List<PerguntasModel> perguntas;
+
+    @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL)
+    private List<RespostaModel> respostas;
 
     @Column(name = "certificado")
     @Enumerated(EnumType.STRING)
@@ -25,10 +32,6 @@ public class FormularioModel {
     @OneToOne
     @JoinColumn(name = "empresa_id")
     private EmpresaModel empresa;
-
-    @NotNull
-    @Enumerated(EnumType.STRING) // Mapeamento do enum como string
-    private RespostasEnum respostas;
 
     @Column(name = "pontuacao_final")
     private Integer pontuacaoFinal;
@@ -39,12 +42,22 @@ public class FormularioModel {
     @Column(name = "pontuacao_ambiental")
     private Integer pontuacaoAmbiental;
 
-    @Column(name = "pontuacao_economico")
-    private Integer pontuacaoEconomico;
+    @Column(name = "pontuacao_governamental")
+    private Integer pontuacaoGovernamental;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data_respostas")
     private Date dataRespostas;
+
+    // Getters and Setters
+
+    public Integer getPontuacaoFinal() {
+        return pontuacaoFinal;
+    }
+
+    public void setPontuacaoFinal(Integer pontuacaoFinal) {
+        this.pontuacaoFinal = pontuacaoFinal;
+    }
 
     public long getId() {
         return id;
@@ -54,11 +67,11 @@ public class FormularioModel {
         this.id = id;
     }
 
-    public PerguntasModel getPerguntas() {
+    public List<PerguntasModel> getPerguntas() {
         return perguntas;
     }
 
-    public void setPerguntas(PerguntasModel perguntas) {
+    public void setPerguntas(List<PerguntasModel> perguntas) {
         this.perguntas = perguntas;
     }
 
@@ -78,20 +91,12 @@ public class FormularioModel {
         this.empresa = empresa;
     }
 
-    public @NotNull RespostasEnum getRespostas() {
+    public List<RespostaModel> getRespostas() {
         return respostas;
     }
 
-    public void setRespostas(@NotNull RespostasEnum respostas) {
+    public void setRespostas(List<RespostaModel> respostas) {
         this.respostas = respostas;
-    }
-
-    public Integer getPontuacaoFinal() {
-        return pontuacaoFinal;
-    }
-
-    public void setPontuacaoFinal(Integer pontuacaoFinal) {
-        this.pontuacaoFinal = pontuacaoFinal;
     }
 
     public Integer getPontuacaoSocial() {
@@ -110,12 +115,12 @@ public class FormularioModel {
         this.pontuacaoAmbiental = pontuacaoAmbiental;
     }
 
-    public Integer getPontuacaoEconomico() {
-        return pontuacaoEconomico;
+    public Integer getPontuacaoGovernamental() {
+        return pontuacaoGovernamental;
     }
 
-    public void setPontuacaoEconomico(Integer pontuacaoEconomico) {
-        this.pontuacaoEconomico = pontuacaoEconomico;
+    public void setPontuacaoGovernamental(Integer pontuacaoGovernamental) {
+        this.pontuacaoGovernamental = pontuacaoGovernamental;
     }
 
     public Date getDataRespostas() {
