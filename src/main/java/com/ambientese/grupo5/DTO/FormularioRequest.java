@@ -9,6 +9,7 @@ public class FormularioRequest {
     private String perguntaDescricao;
     private RespostasEnum respostaUsuario;
     private EixoEnum perguntaEixo;
+    private Long idFormulario; // Novo campo para armazenar o ID do formulário
 
     public Long getNumeroPergunta() {
         return NumeroPergunta;
@@ -39,5 +40,13 @@ public class FormularioRequest {
 
     public void setPerguntaEixo(EixoEnum perguntaEixo) {
         this.perguntaEixo = perguntaEixo;
+    }
+
+    public Long getIdFormulario() {
+        return idFormulario;
+    }
+
+    public void setIdFormulario(Long idFormulario) {
+        this.idFormulario = idFormulario;
     }
 }

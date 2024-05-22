@@ -1,12 +1,14 @@
 package com.ambientese.grupo5.Controller.FormularioController;
 
-import com.ambientese.grupo5.DTO.CriarFormularioRequest;
 import com.ambientese.grupo5.DTO.FormularioRequest;
+import com.ambientese.grupo5.Model.FormularioModel;
 import com.ambientese.grupo5.Model.Enums.EixoEnum;
 import com.ambientese.grupo5.Services.FormulariosService.CriarFormularioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -14,19 +16,15 @@ import java.util.List;
 @RequestMapping("/formularios")
 public class CriarFormularioController {
 
-    private final CriarFormularioService criarFormularioService;
+    private final CriarFormularioService formularioService;
 
     @Autowired
-    public CriarFormularioController(CriarFormularioService criarFormularioService) {
-        this.criarFormularioService = criarFormularioService;
+    public CriarFormularioController(CriarFormularioService formularioService) {
+        this.formularioService = formularioService;
     }
 
-    @PostMapping("/eixos")
-    public ResponseEntity<List<FormularioRequest>> criarFormularioComEixos(@RequestBody CriarFormularioRequest request) {
-        List<EixoEnum> eixosEnum = request.getEixos();
-        int perguntasPorEixo = request.getPerguntasPorEixo();
-        List<FormularioRequest> formulario = criarFormularioService.criarFormularioComEixos(eixosEnum, perguntasPorEixo);
-        return ResponseEntity.ok(formulario);
+    @PostMapping("/criar")
+    public FormularioModel criarFormulario(@RequestBody FormularioRequest formularioRequest) {
+        return formularioService.criarProcessarEGerarCertificado(formularioRequest);
     }
-
 }

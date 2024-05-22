@@ -5,6 +5,7 @@ import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import jakarta.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -15,9 +16,9 @@ public class FormularioModel {
     @Column(name = "formulario_id")
     private long id;
 
-    @OneToOne
+    @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL)
     @JoinColumn (name = "perguntas_id")
-    private PerguntasModel perguntas;
+    private List<PerguntasModel> perguntas;
 
     @Column(name = "certificado")
     @Enumerated(EnumType.STRING)
@@ -47,6 +48,14 @@ public class FormularioModel {
     @Column(name = "data_respostas")
     private Date dataRespostas;
 
+    public Integer getPontuacaoFinal() {
+        return pontuacaoFinal;
+    }
+
+    public void setPontuacaoFinal(Integer pontuacaoFinal) {
+        this.pontuacaoFinal = pontuacaoFinal;
+    }
+
     public long getId() {
         return id;
     }
@@ -55,11 +64,11 @@ public class FormularioModel {
         this.id = id;
     }
 
-    public PerguntasModel getPerguntas() {
+    public List<PerguntasModel> getPerguntas() {
         return perguntas;
     }
 
-    public void setPerguntas(PerguntasModel perguntas) {
+    public void setPerguntas(List<PerguntasModel> perguntas) {
         this.perguntas = perguntas;
     }
 
@@ -83,16 +92,8 @@ public class FormularioModel {
         return respostas;
     }
 
-    public void setRespostas(@NotNull RespostasEnum respostas) {
+    public void setRespostas(List<RespostasEnum> respostas) {
         this.respostas = respostas;
-    }
-
-    public Integer getPontuacaoFinal() {
-        return pontuacaoFinal;
-    }
-
-    public void setPontuacaoFinal(Integer pontuacaoFinal) {
-        this.pontuacaoFinal = pontuacaoFinal;
     }
 
     public Integer getPontuacaoSocial() {
