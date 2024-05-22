@@ -14,8 +14,16 @@ public class FormularioModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+        name = "formulario_perguntas",
+        joinColumns = @JoinColumn(name = "formulario_id"),
+        inverseJoinColumns = @JoinColumn(name = "pergunta_id")
+    )
     private List<PerguntasModel> perguntas;
+
+    @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL)
+    private List<RespostaModel> respostas;
 
     @Column(name = "certificado")
     @Enumerated(EnumType.STRING)
@@ -24,12 +32,6 @@ public class FormularioModel {
     @OneToOne
     @JoinColumn(name = "empresa_id")
     private EmpresaModel empresa;
-
-    @ElementCollection(targetClass = RespostasEnum.class)
-    @CollectionTable(name = "respostas", joinColumns = @JoinColumn(name = "formulario_id"))
-    @Column(name = "resposta")
-    @Enumerated(EnumType.STRING)
-    private List<RespostasEnum> respostas;
 
     @Column(name = "pontuacao_final")
     private Integer pontuacaoFinal;
@@ -89,11 +91,11 @@ public class FormularioModel {
         this.empresa = empresa;
     }
 
-    public List<RespostasEnum> getRespostas() {
+    public List<RespostaModel> getRespostas() {
         return respostas;
     }
 
-    public void setRespostas(List<RespostasEnum> respostas) {
+    public void setRespostas(List<RespostaModel> respostas) {
         this.respostas = respostas;
     }
 

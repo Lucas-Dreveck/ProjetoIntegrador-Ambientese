@@ -18,18 +18,15 @@ public class RankingService {
     }
 
     public List<FormularioModel> classificarPorPontuacao() {
-        return formularioRepository.findAllOrderByPontuacaoFinal();
+        return formularioRepository.findAllByOrderByPontuacaoFinalAsc();
     }
-
-    public List<FormularioModel> classificarPorEixoAmbiental() {
-        return formularioRepository.findAllOrderByPontuacaoAmbiental();
+    public List<FormularioModel>classificarPorEixoAmbiental(){
+        return formularioRepository.findAllByOrderByPontuacaoAmbientalAsc();
     }
-
-    public List<FormularioModel> classificarPorEixoSocial() {
-        return formularioRepository.findAllOrderByPontuacaoSocial();
+    public List<FormularioModel>classificarPorEixoSocial (){
+        return formularioRepository.findAllByOrderByPontuacaoSocialAsc();
     }
-
-    public List<FormularioModel> classificarPorEixoGovernamental() {
-        return formularioRepository.findAllOrderByPontuacaoGovernamental();
+    public List<FormularioModel>classificarPorEixoGovernamental (){
+        return formularioRepository.findAllByOrderByPontuacaoGovernamentalAsc();
     }
 }

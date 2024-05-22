@@ -4,11 +4,20 @@ import com.ambientese.grupo5.Model.Enums.EixoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 
 public class FormularioRequest {
+    private Long perguntaId;
     private Long numeroPergunta;
     private String perguntaDescricao;
     private RespostasEnum respostaUsuario;
     private EixoEnum perguntaEixo;
-    private Long idFormulario; // Novo campo para armazenar o ID do formulário
+    private Long idFormulario;
+
+    public Long getPerguntaId() {
+        return perguntaId;
+    }
+
+    public void setPerguntaId(Long perguntaId) {
+        this.perguntaId = perguntaId;
+    }
 
     public Long getNumeroPergunta() {
         return numeroPergunta;
@@ -50,7 +59,8 @@ public class FormularioRequest {
         this.idFormulario = idFormulario;
     }
 
-    public FormularioRequest() {
+    public FormularioRequest(Long perguntaId, EixoEnum perguntaEixo, RespostasEnum respostaUsuario) {
+        this.perguntaId = perguntaId;
         this.perguntaEixo = perguntaEixo;
         this.respostaUsuario = respostaUsuario;
     }

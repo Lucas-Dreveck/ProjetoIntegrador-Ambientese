@@ -31,7 +31,7 @@ class RankingServiceTest {
         formularioMock.add(new FormularioModel(/* Adicione aqui os parâmetros para criar um objeto FormularioModel */));
         // Adicione mais formulários conforme necessário
 
-        when(formularioRepository.findAllOrderByPontuacaoFinal()).thenReturn(formularioMock);
+        when(formularioRepository.findAllByOrderByPontuacaoFinalAsc()).thenReturn(formularioMock);
 
         // Chamando o método a ser testado
         List<FormularioModel> formularios = rankingService.classificarPorPontuacao();
