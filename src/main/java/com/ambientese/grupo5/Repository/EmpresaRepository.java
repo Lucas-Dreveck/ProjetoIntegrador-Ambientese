@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmpresaRepository extends JpaRepository<EmpresaModel, Long> {
-    @SuppressWarnings("null")
-    Optional<EmpresaModel> findById(Long empresa_id);
 
-    List<EmpresaModel> findFirst10ByNomeFantasiaContainingIgnoreCase(String nomeFantasia);
+    List<EmpresaModel> findFirst10ByNomeFantasiaContainingIgnoreCaseOrderByNomeFantasiaAsc(String nomeFantasia);
 
-    List<EmpresaModel> findFirst10ByRazaoSocialContainingIgnoreCase(String razaoSocial);
+    List<EmpresaModel> findFirst10ByRazaoSocialContainingIgnoreCaseOrderByRazaoSocialAsc(String razaoSocial);
 
     Optional<EmpresaModel> findByCnpj(String cnpj);
 }

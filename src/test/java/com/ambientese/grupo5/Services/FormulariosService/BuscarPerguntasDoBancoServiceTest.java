@@ -35,9 +35,9 @@ class BuscarPerguntasDoBancoServiceTest {
                 new PerguntasModel("Pergunta 5", EixoEnum.Ambiental)
                 // Adicione mais perguntas conforme necessário
         );
-        when(perguntasRepository.findByPerguntasEixo(EixoEnum.Social)).thenReturn(perguntasMock);
-        when(perguntasRepository.findByPerguntasEixo(EixoEnum.Ambiental)).thenReturn(perguntasMock);
-        when(perguntasRepository.findByPerguntasEixo(EixoEnum.Governamental)).thenReturn(perguntasMock);
+        when(perguntasRepository.findByEixo(EixoEnum.Social)).thenReturn(perguntasMock);
+        when(perguntasRepository.findByEixo(EixoEnum.Ambiental)).thenReturn(perguntasMock);
+        when(perguntasRepository.findByEixo(EixoEnum.Governamental)).thenReturn(perguntasMock);
 
         // Chamando o método a ser testado
         List<PerguntasModel> perguntas = buscarPerguntasDoBancoService.buscarPerguntasDoBanco();

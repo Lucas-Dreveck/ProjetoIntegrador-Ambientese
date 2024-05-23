@@ -63,7 +63,7 @@
 }
 
 .percentage {
-    font-size: 7px;
+    font-size: 8px;
     font-weight: bold;
 }
 
@@ -155,6 +155,26 @@
 
 .tables .table-ambiental .odd-row{
     background-color: #a0dca0;
+}
+
+.btn-home {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--white);
+    color: black;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-home:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
 }
 
 @keyframes progress {

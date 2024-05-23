@@ -131,18 +131,22 @@ public class InitialDataLoader implements CommandLineRunner {
                 for (int i = 0; i < perguntasArray.length; i++) {
                     PerguntasModel pergunta = new PerguntasModel();
                     pergunta.setDescricao(perguntasArray[i]);
-                    pergunta.setPerguntasEixo(eixo);
+                    pergunta.setEixo(eixo);
                     perguntasRepository.save(pergunta);
                 }
             }
 
             // Popular tabela de formulários
             List<EmpresaModel> empresas = empresaRepository.findAll();
-            List<PerguntasModel> perguntasAmbientalList = perguntasRepository.findByPerguntasEixo(EixoEnum.Ambiental);
-            List<PerguntasModel> perguntasSocialList = perguntasRepository.findByPerguntasEixo(EixoEnum.Social);
-            List<PerguntasModel> perguntasGovernamentalList = perguntasRepository.findByPerguntasEixo(EixoEnum.Governamental);
+            List<PerguntasModel> perguntasAmbientalList = perguntasRepository.findByEixo(EixoEnum.Ambiental);
+            List<PerguntasModel> perguntasSocialList = perguntasRepository.findByEixo(EixoEnum.Social);
+            List<PerguntasModel> perguntasGovernamentalList = perguntasRepository.findByEixo(EixoEnum.Governamental);
 
             for (EmpresaModel empresa : empresas) {
+                // if (empresa.getId() == 1) {
+                //     // Empresa root não deve ter formulário
+                //     continue;
+                // }
                 FormularioModel formulario = new FormularioModel();
                 formulario.setEmpresa(empresa);
                 formulario.setPontuacaoFinal(faker.number().numberBetween(0, 100));
@@ -208,70 +212,70 @@ public class InitialDataLoader implements CommandLineRunner {
 
     private static final String[] perguntasAmbiental = {
         "A empresa possui uma política ambiental clara e documentada?",
-        "Quais são as metas de redução de emissões de carbono da empresa?",
-        "Como a empresa gerencia seus resíduos sólidos?",
+        "A empresa possui metas de redução de emissões de carbono?",
+        "A empresa gerencia adequadamente seus resíduos sólidos?",
         "A empresa utiliza fontes de energia renovável?",
-        "Há programas de eficiência energética implementados na empresa?",
+        "Existem programas de eficiência energética implementados na empresa?",
         "A empresa realiza auditorias ambientais regulares?",
-        "Qual é o consumo de água da empresa e como ele é gerido?",
-        "A empresa tem políticas de reciclagem em vigor?",
-        "Como a empresa lida com a poluição do ar e da água gerada por suas operações?",
+        "A empresa gerencia seu consumo de água de forma sustentável?",
+        "A empresa possui políticas de reciclagem em vigor?",
+        "A empresa lida adequadamente com a poluição do ar e da água gerada por suas operações?",
         "A empresa tem iniciativas para conservar a biodiversidade?",
-        "Existem programas de educação ambiental para os funcionários?",
+        "A empresa oferece programas de educação ambiental para os funcionários?",
         "A empresa divulga seu desempenho ambiental em relatórios de sustentabilidade?",
-        "Há investimentos em tecnologias limpas e sustentáveis?",
+        "A empresa investe em tecnologias limpas e sustentáveis?",
         "A empresa possui certificações ambientais, como ISO 14001?",
         "A empresa trabalha para minimizar o impacto ambiental ao longo de sua cadeia de suprimentos?",
-        "Como a empresa avalia e mitiga o impacto ambiental de novos projetos?",
+        "A empresa avalia e mitiga o impacto ambiental de novos projetos?",
         "A empresa participa de iniciativas ou colaborações globais para a sustentabilidade ambiental?",
-        "Quais são as estratégias da empresa para lidar com as mudanças climáticas?",
+        "A empresa possui estratégias para lidar com as mudanças climáticas?",
         "A empresa incentiva práticas sustentáveis entre seus clientes e fornecedores?",
-        "Qual é o compromisso da empresa com a restauração de ecossistemas afetados por suas operações?"
+        "A empresa possui um compromisso com a restauração de ecossistemas afetados por suas operações?"
     };
 
     private static final String[] perguntasSocial = {
         "A empresa possui políticas de diversidade e inclusão?",
-        "Qual é o compromisso da empresa com a saúde e segurança dos funcionários?",
+        "A empresa compromete-se com a saúde e segurança dos funcionários?",
         "A empresa oferece oportunidades de desenvolvimento e capacitação para os empregados?",
-        "Como a empresa se engaja com as comunidades locais onde opera?",
+        "A empresa engaja-se com as comunidades locais onde opera?",
         "A empresa promove igualdade de gênero no local de trabalho?",
-        "Quais são as práticas de remuneração e benefícios da empresa?",
+        "A empresa possui práticas de remuneração e benefícios justas?",
         "A empresa possui políticas contra assédio e discriminação?",
-        "Como a empresa contribui para a educação e formação profissional na comunidade?",
+        "A empresa contribui para a educação e formação profissional na comunidade?",
         "A empresa realiza auditorias sociais em sua cadeia de suprimentos?",
-        "Existem programas de voluntariado corporativo incentivados pela empresa?",
+        "A empresa incentiva programas de voluntariado corporativo?",
         "A empresa apoia a saúde e o bem-estar dos funcionários além do local de trabalho?",
-        "A empresa tem políticas de trabalho infantil e trabalho forçado em sua cadeia de suprimentos?",
-        "Como a empresa lida com as questões de direitos humanos em suas operações globais?",
+        "A empresa possui políticas contra trabalho infantil e trabalho forçado em sua cadeia de suprimentos?",
+        "A empresa lida com questões de direitos humanos em suas operações globais?",
         "A empresa envolve os funcionários em decisões importantes que os afetam?",
-        "Qual é a taxa de retenção de funcionários da empresa?",
+        "A empresa possui uma alta taxa de retenção de funcionários?",
         "A empresa promove a participação dos funcionários em iniciativas de responsabilidade social?",
         "A empresa possui práticas transparentes de comunicação com as partes interessadas?",
-        "Como a empresa mede e relata seu impacto social?",
+        "A empresa mede e relata seu impacto social?",
         "A empresa apoia iniciativas culturais e esportivas nas comunidades onde atua?",
         "A empresa possui políticas de equilíbrio entre vida pessoal e profissional para os funcionários?"
     };
 
     private static final String[] perguntasGovernamental = {
         "A empresa possui uma estratégia clara de sustentabilidade ambiental?",
-        "Como a empresa integra considerações ambientais em seu planejamento estratégico?",
+        "A empresa integra considerações ambientais em seu planejamento estratégico?",
         "A empresa realiza auditorias ambientais regulares?",
-        "Quais são as práticas de gestão de risco ambiental da empresa?",
+        "A empresa possui práticas de gestão de risco ambiental?",
         "A empresa possui uma política de governança ambiental documentada?",
-        "Como a empresa gerencia a conformidade com as leis e regulamentos ambientais?",
+        "A empresa gerencia a conformidade com as leis e regulamentos ambientais?",
         "A empresa divulga relatórios de sustentabilidade ambiental?",
-        "Quais são as práticas de transparência da empresa em relação ao seu impacto ambiental?",
+        "A empresa possui práticas de transparência em relação ao seu impacto ambiental?",
         "A empresa possui um comitê de sustentabilidade ou um departamento dedicado ao meio ambiente?",
-        "Como a empresa lida com a responsabilidade ambiental na cadeia de suprimentos?",
+        "A empresa lida com a responsabilidade ambiental na cadeia de suprimentos?",
         "A empresa promove a participação dos stakeholders nas decisões ambientais?",
         "A empresa tem políticas para prevenir e mitigar a poluição ambiental?",
-        "Como a empresa gerencia e minimiza seu impacto ambiental ao longo do ciclo de vida dos produtos?",
+        "A empresa gerencia e minimiza seu impacto ambiental ao longo do ciclo de vida dos produtos?",
         "A empresa possui programas de treinamento ambiental para os funcionários?",
-        "Quais são as estratégias da empresa para reduzir suas emissões de carbono?",
+        "A empresa possui estratégias para reduzir suas emissões de carbono?",
         "A empresa investe em tecnologias limpas e sustentáveis?",
-        "Como a empresa mede e gerencia seu consumo de recursos naturais?",
-        "A empresa possui certificações ambientais, como ISO 14001?",
-        "Quais são as práticas de responsabilidade ambiental da empresa em relação às comunidades locais?",
+        "A empresa mede e gerencia seu consumo de recursos naturais?",
+        "A empresa divulga seu desempenho ambiental em relatórios públicos?",
+        "A empresa possui práticas de responsabilidade ambiental em relação às comunidades locais?",
         "A empresa tem um histórico de iniciativas e projetos de conservação ambiental?"
     };    
 }

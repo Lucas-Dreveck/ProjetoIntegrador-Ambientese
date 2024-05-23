@@ -18,7 +18,7 @@ public class ListarPerguntasPorEixoService {
         this.perguntasRepository = perguntasRepository;
     }
 
-    public List<PerguntasModel> listarPerguntasPorEixo(EixoEnum perguntasEixo) {
-        return perguntasRepository.findByPerguntasEixo(perguntasEixo);
+    public List<PerguntasModel> listarPerguntasPorEixo(EixoEnum eixo) {
+        return perguntasRepository.findByEixo(eixo);
     }
 }
