@@ -24,7 +24,7 @@ public class BuscarPerguntasDoBancoService {
     public List<PerguntasModel> buscarPerguntasDoBanco() {
         List<PerguntasModel> todasPerguntas = new ArrayList<>();
         for (EixoEnum eixo : EixoEnum.values()) {
-            List<PerguntasModel> perguntasEixo = perguntasRepository.findByPerguntasEixo(eixo);
+            List<PerguntasModel> perguntasEixo = perguntasRepository.findByEixo(eixo);
 
             Collections.shuffle(perguntasEixo, random);
 

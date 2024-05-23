@@ -1,6 +1,7 @@
 package com.ambientese.grupo5.Model;
 
 import com.ambientese.grupo5.Model.Enums.EixoEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -20,9 +21,10 @@ public class PerguntasModel {
     @NotNull
     @NotBlank
     @Enumerated(EnumType.STRING)
-    private EixoEnum perguntasEixo;
+    private EixoEnum eixo;
 
     @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL)
+    @JsonIgnore // Adicionando esta anotação para evitar a serialização da lista de respostas
     private List<RespostaModel> respostas;
 
     public PerguntasModel(String s, EixoEnum eixoEnum) {}
@@ -45,12 +47,12 @@ public class PerguntasModel {
         this.descricao = descricao;
     }
 
-    public EixoEnum getPerguntasEixo() {
-        return perguntasEixo;
+    public EixoEnum getEixo() {
+        return eixo;
     }
 
-    public void setPerguntasEixo(EixoEnum perguntasEixo) {
-        this.perguntasEixo = perguntasEixo;
+    public void setEixo(EixoEnum eixo) {
+        this.eixo = eixo;
     }
 
     public List<RespostaModel> getRespostas() {
