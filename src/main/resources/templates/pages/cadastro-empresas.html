@@ -67,8 +67,8 @@
             </div>
             <div class="rowsEmp">
                 <div class="campoAddEmp">
-                    <label for="endereco" class="labelStyle">Endereço</label>
-                    <input type="text" class="inpStyleEmp inpEnderecoEmp" id="endereco" placeholder="Digite aqui...">
+                    <label for="CNAE" class="labelStyle">CNAE</label>
+                    <input type="text" class="inpStyleEmp inpCnaeEmp" id="CNAE" placeholder="Digite aqui...">
                 </div>
                 <div class="campoAddEmp">
                     <label for="email" class="labelStyle">Email</label>
@@ -80,14 +80,6 @@
                 </div>
             </div>
             <div class="rowsEmp">
-                <div class="campoAddEmp">
-                    <label for="dataAtl" class="labelStyle">Data de Alteracao</label>
-                    <input type="date" class="inpStyleEmp inpDataAlEmp" id="dataAtl" placeholder="00/00/0000">
-                </div>
-                <div class="campoAddEmp">
-                    <label for="CNAE" class="labelStyle">CNAE</label>
-                    <input type="text" class="inpStyleEmp inpCnaeEmp" id="CNAE" placeholder="Digite aqui...">
-                </div>
                 <div class="campoAddEmp">
                     <label for="porte" class="labelStyle">Porte da Empresa</label>
                     <select name="porte" id="porte" class="inpStyleEmp">
@@ -103,11 +95,39 @@
             </div>
             <div class="rowsEmp">
                 <div class="campoAddEmp">
-                    <label for="icon" class="labelStyle">Identidade Visual</label>
-                    <label for="icon" class="labelImg"><img th:src="@{/icons/Document.png}" alt="Clique aqui para enviar"> Adicionar Arquivo</label>
-                    <input type="file" class="inpIconEmp" id="icon">
+                    <label for="cep" class="labelStyle">Cep</label>
+                    <input type="text" class="inpStyleEmp inpCepEmp" id="cep" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="uf" class="labelStyle">UF</label>
+                    <input type="text" class="inpStyleEmp inpUfEmp" id="uf" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="cidade" class="labelStyle">Cidade</label>
+                    <input type="text" class="inpStyleEmp inpCidadeEmp" id="cidade" placeholder="Digite aqui...">
                 </div>
             </div>
+            <div class="rowsEmp">
+                <div class="campoAddEmp">
+                    <label for="numero" class="labelStyle">Numero</label>
+                    <input type="text" class="inpStyleEmp inpNumeroEmp" id="numero" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="rua" class="labelStyle">Rua</label>
+                    <input type="text" class="inpStyleEmp inpRuaEmp" id="rua" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="bairro" class="labelStyle">Bairro</label>
+                    <input type="text" class="inpStyleEmp inpBairroEmp" id="bairro" placeholder="Digite aqui...">
+                </div>
+            </div>
+<!--            <div class="rowsEmp">-->
+<!--                <div class="campoAddEmp">-->
+<!--                    <label for="icon" class="labelStyle">Identidade Visual</label>-->
+<!--                    <label for="icon" class="labelImg"><img th:src="@{/icons/Document.png}" alt="Clique aqui para enviar"> Adicionar Arquivo</label>-->
+<!--                    <input type="file" class="inpIconEmp" id="icon">-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="divAddBtnEmp">
                 <button class="btnStyle btnsCancel btnsEmp" id="cancelAddEmp">Cancelar</button>
                 <button class="btnStyle btnsConfirm btnsEmp" id="confirmAddEmp">Adicionar</button>
@@ -146,10 +166,6 @@
             </div>
             <div class="rowsEmp">
                 <div class="campoEditEmp">
-                    <label for="enderecoEdit" class="labelStyle">Endereço</label>
-                    <input type="text" class="inpStyleEmp inpEnderecoEmp" id="enderecoEdit" placeholder="Digite aqui...">
-                </div>
-                <div class="campoEditEmp">
                     <label for="emailEdit" class="labelStyle">Email</label>
                     <input type="email" class="inpStyleEmp inpEmailEmp" id="emailEdit" placeholder="Digite aqui..." autocomplete="off">
                 </div>
@@ -159,14 +175,6 @@
                 </div>
             </div>
             <div class="rowsEmp">
-                <div class="campoEditEmp">
-                    <label for="dataAltEdit" class="labelStyle">Data de Alteracao</label>
-                    <input type="date" class="inpStyleEmp inpDataAlEmp" id="dataAltEdit" placeholder="00/00/0000">
-                </div>
-                <div class="campoEditEmp">
-                    <label for="cnaeEdit" class="labelStyle">CNAE</label>
-                    <input type="text" class="inpStyleEmp inpCnaeEmp" id="cnaeEdit" placeholder="Digite aqui...">
-                </div>
                 <div class="campoEditEmp">
                     <label for="porteEdit" class="labelStyle">Porte da Empresa</label>
                     <select name="porte" id="porteEdit" class="inpStyleEmp">
@@ -180,11 +188,39 @@
                     <input type="text" class="inpStyleEmp inpAttEmp" id="ramoEdit" placeholder="Digite aqui...">
                 </div>
             </div>
+<!--            <div class="rowsEmp">-->
+<!--                <div class="campoEditEmp">-->
+<!--                    <label for="iconEdit" class="labelStyle">Identidade Visual</label>-->
+<!--                    <label for="iconEdit" class="labelImg"><img th:src="@{/icons/Document.png}" alt="Clique aqui para enviar"> Adicionar Arquivo</label>-->
+<!--                    <input type="file" class="inpIconEmp" id="iconEdit">-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="rowsEmp">
-                <div class="campoEditEmp">
-                    <label for="iconEdit" class="labelStyle">Identidade Visual</label>
-                    <label for="iconEdit" class="labelImg"><img th:src="@{/icons/Document.png}" alt="Clique aqui para enviar"> Adicionar Arquivo</label>
-                    <input type="file" class="inpIconEmp" id="iconEdit">
+                <div class="campoAddEmp">
+                    <label for="cepEdit" class="labelStyle">Cep</label>
+                    <input type="text" class="inpStyleEmp inpCepEmp" id="cepEdit" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="ufEdit" class="labelStyle">UF</label>
+                    <input type="text" class="inpStyleEmp inpUfEmp" id="ufEdit" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="cidadeEdit" class="labelStyle">Cidade</label>
+                    <input type="text" class="inpStyleEmp inpCidadeEmp" id="cidadeEdit" placeholder="Digite aqui...">
+                </div>
+            </div>
+            <div class="rowsEmp">
+                <div class="campoAddEmp">
+                    <label for="numeroEdit" class="labelStyle">Numero</label>
+                    <input type="text" class="inpStyleEmp inpNumeroEmp" id="numeroEdit" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="ruaEdit" class="labelStyle">Rua</label>
+                    <input type="text" class="inpStyleEmp inpRuaEmp" id="ruaEdit" placeholder="Digite aqui...">
+                </div>
+                <div class="campoAddEmp">
+                    <label for="bairroEdit" class="labelStyle">Bairro</label>
+                    <input type="text" class="inpStyleEmp inpBairroEmp" id="bairroEdit" placeholder="Digite aqui...">
                 </div>
             </div>
             <div class="divEditBtnEmp">

@@ -6,7 +6,7 @@ function onOpenEmpresa() {
     const divAdd = document.querySelector('.divAddEmp');
     const divEdit = document.querySelector('.divEditEmp');
     const divDelete = document.querySelector('.divDeleteEmp');
-    let currentId;
+    let currentid;
     let currentPage = 1;
 
     nextDataPage();
@@ -27,13 +27,14 @@ function onOpenEmpresa() {
     document.querySelector('.tableEmp').addEventListener('click', (event) => {
 
         if(event.target.classList.contains('imgEdit')) {
-            const { currentNomeFa, currentNomeSo,
-                currentTelSo, currentRazao, currentCnpj,
-                currentInscricao, currentEmail, currentTelEmp,
-                currentRamo, currentPorte, currentDataAlt, currentCNAE } = processEvent(event);
+            const { currentNomeSo, currentTelSo, currentNomeFa,
+                currentRazao, currentCnpj, currentInscricao,
+                currentEmail, currentTelEmp, currentPorte, currentRamo,
+                currentCep, currentUf, currentBairro, currentCidade, currentNumero,
+                currentLogradouro } = processEvent(event);
 
-            divEdit.style.display = 'block';
-            overlay.style.display = 'block';
+
+            currentid = event.target.getAttribute('data-id');
             document.getElementById('nomeFaEdit').value = currentNomeFa;
             document.getElementById('nomeSoEdit').value = currentNomeSo;
             document.getElementById('telSoEdit').value = currentTelSo;
@@ -44,13 +45,21 @@ function onOpenEmpresa() {
             document.getElementById('telEmpEdit').value = currentTelEmp;
             document.getElementById('ramoEdit').value = currentRamo;
             document.getElementById('porteEdit').value = currentPorte;
-            document.getElementById('cnaeEdit').value = currentCNAE;
-            document.getElementById('dataAltEdit').value = currentDataAlt;
+            document.getElementById('cepEdit').value = currentCep;
+            document.getElementById('ufEdit').value = currentUf;
+            document.getElementById('bairroEdit').value = currentBairro;
+            document.getElementById('cidadeEdit').value = currentCidade;
+            document.getElementById('numeroEdit').value = currentNumero;
+            document.getElementById('ruaEdit').value = currentLogradouro;
+
+            divEdit.style.display = 'block';
+            overlay.style.display = 'block';
+
         } else if(event.target.classList.contains('imgDelete')) {
-            const { currentId } = processEvent(event);
+           currentid = event.target.getAttribute('data-id');
             divDelete.style.display = 'block';
             overlay.style.display = 'block';
-            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar a empresa de id ${currentId}?`;
+            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar a empresa de id ${currentid}?`;
         }
     });
 
@@ -69,59 +78,49 @@ function onOpenEmpresa() {
     });
 
     document.getElementById('confirmAddEmp').addEventListener('click', () => {
-        const nome_fantasia = document.getElementById('nomeFa').value;
-        const nome_solicitante = document.getElementById('nomeSo').value;
-        const telefone_solicitante = document.getElementById('telSo').value;
-        const razao_social = document.getElementById('razao').value;
+        const nomeFantasia = document.getElementById('nomeFa').value;
+        const nomeSolicitante = document.getElementById('nomeSo').value;
+        const telefoneSolicitante = document.getElementById('telSo').value;
+        const razaoSocial = document.getElementById('razao').value;
         const cnpj = document.getElementById('CNPJ').value;
-        const inscricao_social = document.getElementById('inscricao').value;
+        const inscricaoSocial = document.getElementById('inscricao').value;
         const email = document.getElementById('email').value;
-        const telefone_empresa = document.getElementById('telEmp').value;
+        const telefoneEmpresas = document.getElementById('telEmp').value;
         const ramo = document.getElementById('ramo').value;
-        const porte = document.getElementById('porte').value;
-        const CNAE = document.getElementById('CNAE').value;
-        const data_alteracao = document.getElementById('dataAtl').value;
+        const porteEmpresas = document.getElementById('porte').value;
+        const dataAlteracao = new Date();
+        const numero = document.getElementById('numero').value;
+        const cep = document.getElementById('cep').value;
+        const logradouro = document.getElementById('rua').value;
+        const cidade = document.getElementById('cidade').value;
+        const bairro = document.getElementById('bairro').value;
+        const uf = document.getElementById('uf').value;
 
-        if (nome_fantasia === '' || nome_solicitante === '' || telefone_solicitante === '' || razao_social === '' || cnpj === '' || inscricao_social === '' || email === '' || telefone_empresa === '' || ramo === '' || porte === '' || CNAE === '' || data_alteracao === '') {
+       if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
             alert('Preencha todos os campos!');
-            return
-        }
+            return;
+       }
 
         const data = {
-            nome_fantasia,
-            nome_solicitante,
-            telefone_solicitante,
-            razao_social,
-            CNPJ,
-            inscricao_social,
+            nomeFantasia,
+            nomeSolicitante,
+            telefoneSolicitante,
+            razaoSocial,
+            cnpj,
+            inscricaoSocial,
             email,
-            telefone_empresa,
+            telefoneEmpresas,
             ramo,
-            porte,
-            data_alteracao
-        };
-
-        const empresaData = {
-            nomeFantasia: "Empresa XYZ",
-            nomeSolicitante: "João Silva",
-            telefoneSolicitante: "1234567890",
-            razaoSocial: "Empresa XYZ Ltda.",
-            cnpj: "59887447000177",
-            inscricaoSocial: "12345",
             endereco: {
-                cep: "01001000",
-                numero: "123",
-                logradouro: "Rua Exemplo",
-                cidade: "São Paulo",
-                bairro: "Centro",
-                uf: "SP"
+                cep,
+                numero,
+                logradouro,
+                cidade,
+                bairro,
+                uf
             },
-            email: "contato@empresa.com",
-            telefoneEmpresas: "1234567890",
-            ramo: "Tecnologia",
-            porteEmpresas: "Pequeno",
-            cnae: "123456",
-            dataAlteracao: "2023-05-20"
+            porteEmpresas,
+            dataAlteracao
         };
 
         fetch('/Empresa/Add', {
@@ -129,11 +128,12 @@ function onOpenEmpresa() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(empresaData)
+            body: JSON.stringify(data)
         })
             .then(response => response.text())
             .then(text => {
                 console.log(text);
+                alert(text);
             })
             .catch(error => {
                 alert('Erro ao cadastrar empresa!', error);
@@ -142,50 +142,59 @@ function onOpenEmpresa() {
     });
 
     document.getElementById('confirmEditEmp').addEventListener('click', () => {
-        const nome_fantasia = document.getElementById('nomeFaEdit').value;
-        const nome_solicitante = document.getElementById('nomeSoEdit').value;
-        const telefone_solicitante = document.getElementById('telSoEdit').value;
-        const razao_social = document.getElementById('razaoEdit').value;
+        const nomeFantasia = document.getElementById('nomeFaEdit').value;
+        const nomeSolicitante = document.getElementById('nomeSoEdit').value;
+        const telefoneSolicitante = document.getElementById('telSoEdit').value;
+        const razaoSocial = document.getElementById('razaoEdit').value;
         const cnpj = document.getElementById('cnpjEdit').value;
-        const inscricao_social = document.getElementById('inscricaoEdit').value;
+        const inscricaoSocial = document.getElementById('inscricaoEdit').value;
         const email = document.getElementById('emailEdit').value;
-        const telefone_empresa = document.getElementById('telEmpEdit').value;
+        const telefoneEmpresas = document.getElementById('telEmpEdit').value;
         const ramo = document.getElementById('ramoEdit').value;
-        const porte = document.getElementById('porteEdit').value;
-        const CNAE = document.getElementById('cnaeEdit').value;
-        const data_alteracao = document.getElementById('dataAltEdit').value;
+        const porteEmpresas = document.getElementById('porteEdit').value;
+        const dataAlteracao = new Date();
+        const numero = document.getElementById('numeroEdit').value;
+        const cep = document.getElementById('cepEdit').value;
+        const logradouro = document.getElementById('ruaEdit').value;
+        const cidade = document.getElementById('cidadeEdit').value;
+        const bairro = document.getElementById('bairroEdit').value;
+        const uf = document.getElementById('ufEdit').value;
 
         const data = {
-            nome_fantasia,
-            nome_solicitante,
-            telefone_solicitante,
-            razao_social,
+            nomeFantasia,
+            nomeSolicitante,
+            telefoneSolicitante,
+            razaoSocial,
             cnpj,
-            inscricao_social,
+            inscricaoSocial,
             email,
-            telefone_empresa,
+            telefoneEmpresas,
             ramo,
-            porte,
-            CNAE,
-            data_alteracao
+            endereco: {
+                cep,
+                numero,
+                logradouro,
+                cidade,
+                bairro,
+                uf
+            },
+            porteEmpresas,
+            dataAlteracao
         };
 
-        fetch(`/Empresas/Edit/${currentId}`, {
+        let id = parseInt(currentid);
+
+        fetch(`/Empresa/Edit/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Empresa editada com sucesso!');
-                    window.location.reload();
-                } else {
-                    alert('Erro ao editar empresa!', data.error);
-                    console.error(data.error);
-                }
+            .then(response => response.text())
+            .then(text => {
+                console.log(text);
+                alert(text);
             })
             .catch(error => {
                 alert('Erro ao editar empresa!', error);
@@ -194,23 +203,19 @@ function onOpenEmpresa() {
     });
 
     document.getElementById('confirmDelete').addEventListener('click' , () => {
-        fetch(`/empresas/delete/${currentId}`, {
+        const id = parseInt(currentid);
+        fetch(`/Empresa/Delete/${id}`, {
             method: 'DELETE'
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Empresa deletada com sucesso!');
-                    window.location.reload();
-                } else {
-                    alert('Erro ao deletar empresa!', data.error);
-                    console.error(data.error);
-                }
-            })
-            .catch(error => {
-                alert('Erro ao deletar empresa!', error);
-                console.error(error);
-            });
+        .then(response => response.text())
+        .then(text => {
+            console.log(text);
+            alert(text);
+        })
+        .catch(error => {
+            alert('Erro ao deletar empresa!', error);
+            console.error(error);
+        });
     });
 
     overlay.addEventListener('click', () => {
@@ -241,30 +246,34 @@ function addTableLines(data) {
 
         newLine.innerHTML = `
             <td class="thStyle thImg ${classe}">
-                <img th:src="@{/icons/Empresa.png}" alt="Empresa" class="thImg">
+                <img src="/icons/Empresa.png" alt="Empresa" class="thImg">
             </td>
-            <td class="thStyle ${classe}">${empresa.empresa_id}</td>
-            <td class="thStyle ${classe}">${empresa.nome_fantasia}</td>
+            <td class="thStyle ${classe}">${empresa.id}</td>
+            <td class="thStyle ${classe}">${empresa.nomeFantasia}</td>
             <td class="thStyle ${classe}">${empresa.ramo}</td>
-            <td class="thStyle ${classe}">${empresa.porte}</td>
+            <td class="thStyle ${classe}">${empresa.porteEmpresas}</td>
             <td class="thStyle ${classe}">
-                <img th:src="@{/icons/edit.png}" 
-                    data-id="${empresa.Id}"
-                    data-nomeFa="${empresa.nome_fantasia}"
-                    data-nomeSo="${empresa.nome_solicitante}"
-                    data-telSo="${empresa.telefone_solicitante}"
-                    data-razao="${empresa.razao_social}"
+                <img src="/icons/edit.png" 
+                    data-id="${empresa.id}"
+                    data-nomeFa="${empresa.nomeFantasia}"
+                    data-nomeSo="${empresa.nomeSolicitante}"
+                    data-telSo="${empresa.telefoneSolicitante}"
+                    data-razao="${empresa.razaoSocial}"
                     data-cnpj="${empresa.cnpj}"
-                    data-inscricao="${empresa.inscricao_social}"
+                    data-inscricao="${empresa.inscricaoSocial}"
                     data-email="${empresa.email}"
-                    data-telEmp="${empresa.telefone_empresa}"
+                    data-telEmp="${empresa.telefoneEmpresas}"
                     data-ramo="${empresa.ramo}"
-                    data-porte="${empresa.porte}"
-                    data-alt="${empresa.data_alteracao}"
-                    data-cnae="${empresa.CNAE}"
+                    data-porte="${empresa.porteEmpresas}"
+                    data-cep="${empresa.endereco.cep}"
+                    data-numero="${empresa.endereco.numero}"
+                    data-logradouro="${empresa.endereco.logradouro}"
+                    data-cidade="${empresa.endereco.cidade}"
+                    data-bairro="${empresa.endereco.bairro}"
+                    data-uf="${empresa.endereco.uf}"
                 alt="Editar" class="imgEdit imgStyle">
-                <img th:src="@{/icons/delete.png}"
-                    data-id="${empresa.Id}"
+                <img src="/icons/delete.png"
+                    data-id="${empresa.id}"
                 alt="Deletar" class="imgDelete imgStyle">                
             </td>
         `;
@@ -274,7 +283,7 @@ function addTableLines(data) {
 }
 
 function processEvent(event) {
-    const currentId = event.target.getAttribute('data-id');
+    const currentid = event.target.getAttribute('data-id');
     const currentNomeFa = event.target.getAttribute('data-nomeFa');
     const currentNomeSo = event.target.getAttribute('data-nomeSo');
     const currentTelSo = event.target.getAttribute('data-telSo');
@@ -285,11 +294,15 @@ function processEvent(event) {
     const currentTelEmp = event.target.getAttribute('data-telEmp');
     const currentRamo = event.target.getAttribute('data-ramo');
     const currentPorte = event.target.getAttribute('data-porte');
-    const currentDataAlt = event.target.getAttribute('data-alt');
-    const currentCNAE = event.target.getAttribute('data-cnae');
+    const currentCep = event.target.getAttribute('data-cep');
+    const currentNumero = event.target.getAttribute('data-numero');
+    const currentLogradouro = event.target.getAttribute('data-logradouro');
+    const currentCidade = event.target.getAttribute('data-cidade');
+    const currentBairro = event.target.getAttribute('data-bairro');
+    const currentUf = event.target.getAttribute('data-uf');
 
     return {
-        currentId,
+        currentid,
         currentNomeFa,
         currentNomeSo,
         currentTelSo,
@@ -300,8 +313,12 @@ function processEvent(event) {
         currentTelEmp,
         currentRamo,
         currentPorte,
-        currentDataAlt,
-        currentCNAE
+        currentCep,
+        currentNumero,
+        currentLogradouro,
+        currentCidade,
+        currentBairro,
+        currentUf
     };
 }
 
@@ -309,18 +326,22 @@ function nextDataPage () {
     const urlPage = '/Empresa/search';
 
     fetch(urlPage, {
-       method: 'GET',
-         headers: {
-             'Content-Type': 'application/json'
-         }
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            addTableLines(data);
-        })
-        .catch(error => {
-            alert('Erro ao buscar empresas!', error);
-            console.error(error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        addTableLines(data);
+    })
+    .catch(error => {
+        alert('Erro ao buscar empresas!', error);
+        console.error('Fetch error:', error);
+    });
 }
