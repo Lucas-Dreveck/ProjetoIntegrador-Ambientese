@@ -11,7 +11,6 @@ const options = {
     headers: headers
 };
 
-const questionNumbers = 10;
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
 const expandButton = document.querySelector(".expand-menu");
