@@ -1,27 +1,27 @@
 package com.ambientese.grupo5.Model;
 
+import jakarta.persistence.*;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import jakarta.persistence.*;
-
 @Entity
-@Table(name = "Cargo")
-public class CargoModel {
-
+@Table (name = "Certificado")
+public class CertificadoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "certificado_id")
+    private long id;
 
     @NotNull
     @NotBlank
     private String descricao;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -29,7 +29,7 @@ public class CargoModel {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
+    public void setDescricao( String descricao) {
         this.descricao = descricao;
     }
 }

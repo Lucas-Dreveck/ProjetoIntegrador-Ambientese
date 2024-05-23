@@ -3,17 +3,26 @@ package com.ambientese.grupo5.Model;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Funcionario")
 public class FuncionarioModel {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @PrimaryKeyJoinColumn(name = "usuario_id")
     private Long id;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_id")
     private UsuarioModel usuario;
 
     @NotBlank(message = "O nome não pode estar em branco")
@@ -31,7 +40,7 @@ public class FuncionarioModel {
     private String dataNascimento;
 
     @ManyToOne
-    @JoinColumn(name = "cargo_id")
+    @JoinTable(name = "cargo")
     private CargoModel cargo;
 
     public Long getId() {
