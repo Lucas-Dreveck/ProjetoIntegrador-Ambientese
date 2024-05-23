@@ -24,17 +24,17 @@ const renderQuestion = (question) => {
         <h2>${question.descricao}</h2>
         <div class="form-answer">
             <label>
-                <input type="radio" name="answer-${question.id}" value="Conforme" ${whatsChecked === 1 ? 'checked' : null}>
+                <input type="radio" name="answer-${question.id}" value="Conforme" ${enviornment === 'dev' && whatsChecked === 1 ? 'checked' : null}>
                 <p>Conforme</p>
             </label>
             <br>
             <label>
-                <input type="radio" name="answer-${question.id}" value="NaoConforme" ${whatsChecked === -1 ? 'checked' : null}>
+                <input type="radio" name="answer-${question.id}" value="NaoConforme" ${enviornment === 'dev' && whatsChecked === -1 ? 'checked' : null}>
                 <p>Não conforme</p>
             </label>
             <br>
             <label>
-                <input type="radio" name="answer-${question.id}" value="NaoSeAdequa" ${whatsChecked === 0 ? 'checked' : null}>
+                <input type="radio" name="answer-${question.id}" value="NaoSeAdequa" ${enviornment === 'dev' && whatsChecked === 0 ? 'checked' : null}>
                 <p>Não aplicavel</p>
             </label>
             <!-- <div class="add-file">

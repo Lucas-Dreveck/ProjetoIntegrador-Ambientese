@@ -1,5 +1,6 @@
 // FUNCTIONS
 const URL = "http://localhost:8080";
+const enviornment = "dev";
 let isAuthenticated = sessionStorage.getItem("auth") ? sessionStorage.getItem("auth") === 'true' : false;
 sessionStorage.setItem('auth', isAuthenticated);
 
