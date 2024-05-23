@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ambientese.grupo5.DTO.FormularioRequest;
 import com.ambientese.grupo5.Model.*;
 import com.ambientese.grupo5.Model.Enums.*;
 import com.ambientese.grupo5.Repository.*;
+import com.ambientese.grupo5.Services.FormulariosService.ProcessarFormularioService;
 import com.github.javafaker.Faker;
 
 @Component
@@ -33,10 +36,7 @@ public class InitialDataLoader implements CommandLineRunner {
     private PerguntasRepository perguntasRepository;
 
     @Autowired
-    private FormularioRepository formularioRepository;
-
-    @Autowired
-    private RespostaRepository respostaRepository;
+    private ProcessarFormularioService processarFormularioService;
 
     private final Faker faker = new Faker(new Locale("pt-BR"));
 
@@ -136,38 +136,11 @@ public class InitialDataLoader implements CommandLineRunner {
                 }
             }
 
-            // Popular tabela de formulários
+            // Popular tabela de formulários utilizando o serviço ProcessarFormularioService
             List<EmpresaModel> empresas = empresaRepository.findAll();
-            List<PerguntasModel> perguntasAmbientalList = perguntasRepository.findByEixo(EixoEnum.Ambiental);
-            List<PerguntasModel> perguntasSocialList = perguntasRepository.findByEixo(EixoEnum.Social);
-            List<PerguntasModel> perguntasGovernamentalList = perguntasRepository.findByEixo(EixoEnum.Governamental);
-
             for (EmpresaModel empresa : empresas) {
-                // if (empresa.getId() == 1) {
-                //     // Empresa root não deve ter formulário
-                //     continue;
-                // }
-                FormularioModel formulario = new FormularioModel();
-                formulario.setEmpresa(empresa);
-                formulario.setPontuacaoFinal(faker.number().numberBetween(0, 100));
-                formulario.setPontuacaoSocial(faker.number().numberBetween(0, 100));
-                formulario.setPontuacaoAmbiental(faker.number().numberBetween(0, 100));
-                formulario.setPontuacaoGovernamental(faker.number().numberBetween(0, 100));
-                formulario.setCertificado(NivelCertificadoEnum.values()[faker.number().numberBetween(0, NivelCertificadoEnum.values().length)]);
-                formulario.setDataRespostas(new Date());
-
-                formularioRepository.save(formulario);
-
-                // Popular tabela de respostas com 10 perguntas de cada eixo
-                List<PerguntasModel> perguntasSelecionadas = getRandomQuestions(perguntasAmbientalList, 10);
-                perguntasSelecionadas.addAll(getRandomQuestions(perguntasSocialList, 10));
-                perguntasSelecionadas.addAll(getRandomQuestions(perguntasGovernamentalList, 10));
-
-                for (PerguntasModel pergunta : perguntasSelecionadas) {
-                    RespostaId respostaId = new RespostaId(formulario.getId(), pergunta.getId());
-                    RespostaModel resposta = new RespostaModel(respostaId, formulario, pergunta, RespostasEnum.values()[faker.number().numberBetween(0, RespostasEnum.values().length)]);
-                    respostaRepository.save(resposta);
-                }
+                List<FormularioRequest> formularioRequests = generateFormularioRequests();
+                processarFormularioService.criarProcessarEGerarCertificado(empresa.getId(), formularioRequests);
             }
 
             // Criação do usuário root
@@ -193,6 +166,29 @@ public class InitialDataLoader implements CommandLineRunner {
         PorteEnum[] portes = PorteEnum.values();
         int randomIndex = faker.random().nextInt(portes.length);
         return portes[randomIndex];
+    }
+
+    private List<FormularioRequest> generateFormularioRequests() {
+        List<FormularioRequest> formularioRequests = new ArrayList<>();
+
+        // Supondo que há 10 perguntas para cada eixo (Ambiental, Social, Governamental)
+        List<PerguntasModel> perguntasAmbientalList = perguntasRepository.findByEixo(EixoEnum.Ambiental);
+        List<PerguntasModel> perguntasSocialList = perguntasRepository.findByEixo(EixoEnum.Social);
+        List<PerguntasModel> perguntasGovernamentalList = perguntasRepository.findByEixo(EixoEnum.Governamental);
+
+        List<PerguntasModel> perguntasSelecionadas = getRandomQuestions(perguntasAmbientalList, 10);
+        perguntasSelecionadas.addAll(getRandomQuestions(perguntasSocialList, 10));
+        perguntasSelecionadas.addAll(getRandomQuestions(perguntasGovernamentalList, 10));
+
+        for (PerguntasModel pergunta : perguntasSelecionadas) {
+            FormularioRequest request = new FormularioRequest();
+            request.setPerguntaId(pergunta.getId());
+            request.setPerguntaEixo(pergunta.getEixo());
+            request.setRespostaUsuario(RespostasEnum.values()[faker.number().numberBetween(0, RespostasEnum.values().length)]);
+            formularioRequests.add(request);
+        }
+
+        return formularioRequests;
     }
 
     private List<PerguntasModel> getRandomQuestions(List<PerguntasModel> perguntas, int numberOfQuestions) {
