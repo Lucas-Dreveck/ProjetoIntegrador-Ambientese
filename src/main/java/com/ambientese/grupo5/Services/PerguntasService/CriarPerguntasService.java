@@ -19,7 +19,7 @@ public class CriarPerguntasService {
     public PerguntasModel criarPergunta(String descricao, EixoEnum eixo) {
         PerguntasModel novaPergunta = new PerguntasModel();
         novaPergunta.setDescricao(descricao);
-        novaPergunta.setPerguntasEixo(eixo);
+        novaPergunta.setEixo(eixo);
         return perguntasRepository.save(novaPergunta);
     }
 }

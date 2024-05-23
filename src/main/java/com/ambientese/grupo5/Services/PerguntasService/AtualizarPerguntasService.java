@@ -21,7 +21,7 @@ public class AtualizarPerguntasService {
                 -> new IllegalArgumentException("Pergunta não encontrada"));
 
         perguntaExistente.setDescricao(novaDescricao);
-        perguntaExistente.setPerguntasEixo(novoEixo);
+        perguntaExistente.setEixo(novoEixo);
 
         return perguntasRepository.save(perguntaExistente);
     }
