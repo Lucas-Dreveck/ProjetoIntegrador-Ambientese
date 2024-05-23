@@ -54,7 +54,7 @@ class ProcessarFormularioServiceTest {
         List<FormularioRequest> formularioRequestList = Arrays.asList(
                 new FormularioRequest(1L, EixoEnum.Social, RespostasEnum.Conforme),
                 new FormularioRequest(2L, EixoEnum.Ambiental, RespostasEnum.Conforme),
-                new FormularioRequest(3L, EixoEnum.Governamental, RespostasEnum.NãoConforme)
+                new FormularioRequest(3L, EixoEnum.Governamental, RespostasEnum.NaoConforme)
         );
 
         // Mock do objeto PerguntasModel retornado pelo PerguntasRepository
@@ -108,7 +108,7 @@ class ProcessarFormularioServiceTest {
         List<RespostaModel> respostas = Arrays.asList(
                 createRespostaModel(RespostasEnum.Conforme),
                 createRespostaModel(RespostasEnum.Conforme),
-                createRespostaModel(RespostasEnum.NãoConforme)
+                createRespostaModel(RespostasEnum.NaoConforme)
         );
 
         expectedFormularioModel.setRespostas(respostas);

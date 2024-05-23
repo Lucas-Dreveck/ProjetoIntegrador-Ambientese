@@ -13,6 +13,7 @@ import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import com.ambientese.grupo5.Model.FormularioModel;
 import com.ambientese.grupo5.Model.PerguntasModel;
+import com.ambientese.grupo5.Model.RespostaId;
 import com.ambientese.grupo5.Model.RespostaModel;
 import com.ambientese.grupo5.Repository.FormularioRepository;
 import com.ambientese.grupo5.Repository.PerguntasRepository;
@@ -36,70 +37,98 @@ public class ProcessarFormularioService {
     private EmpresaRepository empresaRepository;
 
     @Transactional
-    public FormularioModel criarProcessarEGerarCertificado(Long empresaId, List<FormularioRequest> formularioRequestList) {
+    public FormularioModel criarProcessarEGerarCertificado(Long empresaId, List<FormularioRequest> formularioRequestList) { 
+        if (formularioRequestList.size() != 30) {
+            throw new RuntimeException("Número de perguntas inválido");
+        }
+        if (empresaId == null) {
+            throw new RuntimeException("ID da empresa inválido");
+        }
         int totalPerguntas = formularioRequestList.size();
         int perguntasConforme = 0;
-        int pontuacaoSocial = 0;
-        int pontuacaoAmbiental = 0;
-        int pontuacaoGovernamental = 0;
-
+        int conformeSocial = 0;
+        int naoConformeSocial = 0;
+        int conformeAmbiental = 0;
+        int naoConformeAmbiental = 0;
+        int conformeGovernamental = 0;
+        int naoConformeGovernamental = 0;
+    
         // Verificar as respostas e calcular pontuações
         for (FormularioRequest resposta : formularioRequestList) {
-            if (resposta.getRespostaUsuario() != null && resposta.getRespostaUsuario() == RespostasEnum.Conforme) {
-                perguntasConforme++;
-                switch (resposta.getPerguntaEixo()) {
-                    case Social:
-                        pontuacaoSocial++;
-                        break;
-                    case Ambiental:
-                        pontuacaoAmbiental++;
-                        break;
-                    case Governamental:
-                        pontuacaoGovernamental++;
-                        break;
-                    default:
-                        break;
+            if (resposta.getRespostaUsuario() != null) {
+                if (resposta.getRespostaUsuario() == RespostasEnum.Conforme) {
+                    perguntasConforme++;
+                    switch (resposta.getPerguntaEixo()) {
+                        case Social:
+                            conformeSocial++;
+                            break;
+                        case Ambiental:
+                            conformeAmbiental++;
+                            break;
+                        case Governamental:
+                            conformeGovernamental++;
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (resposta.getRespostaUsuario() == RespostasEnum.NaoConforme) {
+                    switch (resposta.getPerguntaEixo()) {
+                        case Social:
+                            naoConformeSocial++;
+                            break;
+                        case Ambiental:
+                            naoConformeAmbiental++;
+                            break;
+                        case Governamental:
+                            naoConformeGovernamental++;
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (resposta.getRespostaUsuario() == RespostasEnum.NaoSeAdequa) {
+                   totalPerguntas--;
                 }
             }
-            if (resposta.getRespostaUsuario() == null && resposta.getRespostaUsuario() == RespostasEnum.NãoSeAdequa){
-                totalPerguntas--;
-            }
         }
-
+    
         double pontuacaoFinal = (double) perguntasConforme / totalPerguntas * 100.0;
-
+        double pontuacaoAmbiental = (double) conformeAmbiental / (conformeAmbiental + naoConformeAmbiental) * 100.0;
+        double pontuacaoSocial = (double) conformeSocial / (conformeSocial + naoConformeSocial) * 100.0;
+        double pontuacaoGovernamental = (double) conformeGovernamental / (conformeGovernamental + naoConformeGovernamental) * 100.0;
+    
         // Gerar certificado
         NivelCertificadoEnum nivelCertificado = calcularNivelCertificado(pontuacaoFinal);
-
+    
         // Verificar a existência da empresa
         EmpresaModel empresa = empresaRepository.findById(empresaId).orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
-
+    
         // Criar o objeto de modelo de formulário e definir suas propriedades
         FormularioModel formularioModel = new FormularioModel();
         formularioModel.setPontuacaoFinal((int) pontuacaoFinal);
-        formularioModel.setPontuacaoSocial(pontuacaoSocial);
-        formularioModel.setPontuacaoAmbiental(pontuacaoAmbiental);
-        formularioModel.setPontuacaoGovernamental(pontuacaoGovernamental);
+        formularioModel.setPontuacaoSocial((int) pontuacaoSocial);
+        formularioModel.setPontuacaoAmbiental((int) pontuacaoAmbiental);
+        formularioModel.setPontuacaoGovernamental((int) pontuacaoGovernamental);
         formularioModel.setCertificado(nivelCertificado);
         formularioModel.setEmpresa(empresa);
         formularioModel.setDataRespostas(new Date());
-
+    
+        // Salvar o formulário primeiro
+        formularioModel = formularioRepository.saveAndFlush(formularioModel);
+    
         // Criação e associação das respostas
         List<RespostaModel> respostaModels = new ArrayList<>();
         for (FormularioRequest entry : formularioRequestList) {
-            RespostaModel respostaModel = new RespostaModel();
             PerguntasModel pergunta = perguntasRepository.findById(entry.getPerguntaId()).orElseThrow(() -> new RuntimeException("Pergunta não encontrada"));
-            respostaModel.setFormulario(formularioModel);
-            respostaModel.setPergunta(pergunta);
-            respostaModel.setResposta(entry.getRespostaUsuario());
+            RespostaModel respostaModel = new RespostaModel(formularioModel, pergunta, entry.getRespostaUsuario());
             respostaModels.add(respostaModel);
         }
-
-        formularioModel.setRespostas(respostaModels);
-        formularioModel = formularioRepository.save(formularioModel);
+    
+        // Salvar todas as respostas
         respostaRepository.saveAll(respostaModels);
-
-        return formularioModel;
+    
+        // Atualizar o formulário com as respostas associadas
+        formularioModel.setRespostas(respostaModels);
+        return formularioRepository.save(formularioModel);
     }
 
     NivelCertificadoEnum calcularNivelCertificado(double pontuacaoFinal) {

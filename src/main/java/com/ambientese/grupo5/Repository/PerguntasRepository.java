@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PerguntasRepository extends JpaRepository<PerguntasModel, Long> {
-    List<PerguntasModel> findByPerguntasEixo(EixoEnum perguntasEixo);
+    List<PerguntasModel> findByEixo(EixoEnum eixo);
 
 }

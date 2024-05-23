@@ -1,7 +1,8 @@
 package com.ambientese.grupo5.Model;
 
 import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
-import com.ambientese.grupo5.Model.Enums.RespostasEnum;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -14,14 +15,15 @@ public class FormularioModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
     private List<RespostaModel> respostas;
 
     @Column(name = "certificado")
     @Enumerated(EnumType.STRING)
     private NivelCertificadoEnum certificado;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "empresa_id")
     private EmpresaModel empresa;
 
