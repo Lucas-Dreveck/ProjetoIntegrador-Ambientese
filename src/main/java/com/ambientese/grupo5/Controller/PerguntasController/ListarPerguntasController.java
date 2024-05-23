@@ -1,34 +1,30 @@
 package com.ambientese.grupo5.Controller.PerguntasController;
 
-import com.ambientese.grupo5.Model.Enums.EixoEnum;
 import com.ambientese.grupo5.Model.PerguntasModel;
-import com.ambientese.grupo5.Services.PerguntasService.ListarPerguntasPorEixoService;
 import com.ambientese.grupo5.Services.PerguntasService.ListarPerguntasService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/perguntas")
+@RequestMapping("/Perguntas")
 public class ListarPerguntasController {
 
     private final ListarPerguntasService listarPerguntasService;
-    private final ListarPerguntasPorEixoService listarPerguntasPorEixoService;
 
     @Autowired
-    public ListarPerguntasController(ListarPerguntasService listarPerguntasService, ListarPerguntasPorEixoService listarPerguntasPorEixoService) {
+    public ListarPerguntasController(ListarPerguntasService listarPerguntasService) {
         this.listarPerguntasService = listarPerguntasService;
-        this.listarPerguntasPorEixoService = listarPerguntasPorEixoService;
     }
 
     @GetMapping("/search")
-    public List<PerguntasModel> listarPerguntas() {
-        return listarPerguntasService.listarPerguntas();
-    }
-
-    @GetMapping("/eixo/{eixo}")
-    public List<PerguntasModel> listarPerguntasPorEixo(@PathVariable EixoEnum eixo) {
-        return listarPerguntasPorEixoService.listarPerguntasPorEixo(eixo);
+    public ResponseEntity<List<PerguntasModel>> listarPerguntas() {
+        List<PerguntasModel> perguntas = listarPerguntasService.listarPerguntas();
+        return new ResponseEntity<>(perguntas, HttpStatus.OK);
     }
 }

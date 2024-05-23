@@ -9,7 +9,9 @@ import javax.validation.constraints.NotNull;
 public class EnderecoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "endereco_id")
     private Long id;
+
 
     @NotNull
     @NotBlank

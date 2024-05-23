@@ -1,26 +1,26 @@
 package com.ambientese.grupo5.Model;
 
-import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import jakarta.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-
+import java.util.List;
 
 @Entity
 @Table(name = "Formulario")
 public class FormularioModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "formulario_id")
     private long id;
 
     @OneToOne
     @JoinColumn (name = "perguntas_id")
     private PerguntasModel perguntas;
 
-    @Column(name = "certificado")
-    @Enumerated(EnumType.STRING)
-    private NivelCertificadoEnum certificado;
+    @OneToOne
+    @JoinColumn(name = "certificado_id")
+    private CertificadoModel certificado;
 
     @OneToOne
     @JoinColumn(name = "empresa_id")
@@ -58,15 +58,16 @@ public class FormularioModel {
         return perguntas;
     }
 
-    public void setPerguntas(PerguntasModel perguntas) {
-        this.perguntas = perguntas;
+    public void setPerguntas(List<PerguntasModel> perguntas) {
+        this.perguntas = (PerguntasModel) perguntas;
     }
 
-    public NivelCertificadoEnum getCertificado() {
+
+    public CertificadoModel getCertificado() {
         return certificado;
     }
 
-    public void setCertificado(NivelCertificadoEnum certificado) {
+    public void setCertificado(CertificadoModel certificado) {
         this.certificado = certificado;
     }
 
@@ -82,7 +83,7 @@ public class FormularioModel {
         return respostas;
     }
 
-    public void setRespostas(@NotNull RespostasEnum respostas) {
+    public void setRespostas(RespostasEnum respostas) {
         this.respostas = respostas;
     }
 

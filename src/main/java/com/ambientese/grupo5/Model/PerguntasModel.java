@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 public class PerguntasModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "perguntas_id")
     private long id;
 
     @NotNull
@@ -22,7 +23,7 @@ public class PerguntasModel {
 
     @NotNull
     @NotBlank
-    private EixoEnum perguntasEixo;
+    private EixoEnum Eixo;
 
     public long getId() {
         return id;
@@ -48,11 +49,11 @@ public class PerguntasModel {
         Nivel = nivel;
     }
 
-    public EixoEnum getPerguntasEixo() {
-        return perguntasEixo;
+    public EixoEnum getEixo() {
+        return Eixo;
     }
 
-    public void setPerguntasEixo(EixoEnum perguntasEixo) {
-        this.perguntasEixo = perguntasEixo;
+    public void setEixo(EixoEnum eixo) {
+        Eixo = eixo;
     }
 }
