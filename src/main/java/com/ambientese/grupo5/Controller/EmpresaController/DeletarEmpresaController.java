@@ -21,7 +21,6 @@ public class DeletarEmpresaController {
 
     @DeleteMapping("/Delete/{id}")
     public ResponseEntity<?> deletarEmpresa(@PathVariable Long id) {
-        System.out.println("Deletando empresa com id: " + id);
         deletarEmpresa.deleteEmpresa(id);
         return ResponseEntity.ok().build();
     }
