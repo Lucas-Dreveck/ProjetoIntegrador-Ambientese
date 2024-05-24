@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "Cargo")
 public class CargoModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

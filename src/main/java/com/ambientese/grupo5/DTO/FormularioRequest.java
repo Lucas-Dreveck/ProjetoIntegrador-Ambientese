@@ -1,10 +1,6 @@
 package com.ambientese.grupo5.DTO;
 
-<<<<<<< HEAD
 import com.ambientese.grupo5.Model.Enums.EixoEnum;
-=======
-
->>>>>>> develop-empresa-front
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 
 public class FormularioRequest {
@@ -12,7 +8,6 @@ public class FormularioRequest {
     private Long numeroPergunta;
     private String perguntaDescricao;
     private RespostasEnum respostaUsuario;
-<<<<<<< HEAD
     private EixoEnum perguntaEixo;
     private Long idFormulario;
 
@@ -23,8 +18,6 @@ public class FormularioRequest {
     public void setPerguntaId(Long perguntaId) {
         this.perguntaId = perguntaId;
     }
-=======
->>>>>>> develop-empresa-front
 
     public Long getNumeroPergunta() {
         return numeroPergunta;
@@ -49,7 +42,6 @@ public class FormularioRequest {
     public void setRespostaUsuario(RespostasEnum respostaUsuario) {
         this.respostaUsuario = respostaUsuario;
     }
-<<<<<<< HEAD
 
     public EixoEnum getPerguntaEixo() {
         return perguntaEixo;
@@ -72,6 +64,4 @@ public class FormularioRequest {
         this.perguntaEixo = perguntaEixo;
         this.respostaUsuario = respostaUsuario;
     }
-=======
->>>>>>> develop-empresa-front
 }

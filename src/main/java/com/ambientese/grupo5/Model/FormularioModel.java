@@ -1,15 +1,9 @@
 package com.ambientese.grupo5.Model;
 
-<<<<<<< HEAD
 import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
-=======
-import com.ambientese.grupo5.Model.Enums.RespostasEnum;
-import jakarta.persistence.*;
-import javax.validation.constraints.NotNull;
->>>>>>> develop-empresa-front
 import java.util.Date;
 import java.util.List;
 
@@ -19,16 +13,15 @@ public class FormularioModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "formulario_id")
     private long id;
 
     @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     private List<RespostaModel> respostas;
 
-    @OneToOne
-    @JoinColumn(name = "certificado_id")
-    private CertificadoModel certificado;
+    @Column(name = "certificado")
+    @Enumerated(EnumType.STRING)
+    private NivelCertificadoEnum certificado;
 
     @ManyToOne
     @JoinColumn(name = "empresa_id")
@@ -66,24 +59,11 @@ public class FormularioModel {
         this.id = id;
     }
 
-<<<<<<< HEAD
     public NivelCertificadoEnum getCertificado() {
-=======
-    public PerguntasModel getPerguntas() {
-        return perguntas;
-    }
-
-    public void setPerguntas(List<PerguntasModel> perguntas) {
-        this.perguntas = (PerguntasModel) perguntas;
-    }
-
-
-    public CertificadoModel getCertificado() {
->>>>>>> develop-empresa-front
         return certificado;
     }
 
-    public void setCertificado(CertificadoModel certificado) {
+    public void setCertificado(NivelCertificadoEnum certificado) {
         this.certificado = certificado;
     }
 
@@ -99,11 +79,7 @@ public class FormularioModel {
         return respostas;
     }
 
-<<<<<<< HEAD
     public void setRespostas(List<RespostaModel> respostas) {
-=======
-    public void setRespostas(RespostasEnum respostas) {
->>>>>>> develop-empresa-front
         this.respostas = respostas;
     }
 

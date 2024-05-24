@@ -9,9 +9,7 @@ import javax.validation.constraints.NotNull;
 public class EnderecoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "endereco_id")
     private Long id;
-
 
     @NotNull
     @NotBlank
@@ -86,9 +84,13 @@ public class EnderecoModel {
         this.bairro = bairro;
     }
 
-    public String getUF() { return UF ;}
+    public String getUF() {
+        return UF;
+    }
 
-    public void setUF(String UF) { this.UF = UF; }
+    public void setUF(String uF) {
+        UF = uF;
+    }
 
     public Long getId() {
         return id;
