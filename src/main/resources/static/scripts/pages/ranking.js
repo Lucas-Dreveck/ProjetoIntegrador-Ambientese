@@ -84,8 +84,14 @@ const addOptions = async (content) => {
         porteDropdown.appendChild(porte);
     });
 
-    ramoDropdown.addEventListener('change', () => updateRanking());
-    porteDropdown.addEventListener('change', () => updateRanking());
+    ramoDropdown.addEventListener('change', () => {
+        page = 0;
+        updateRanking()
+    });
+    porteDropdown.addEventListener('change', () => {
+        page = 0;
+        updateRanking()
+    });
 
     content.appendChild(ramoDropdown);
     content.appendChild(porteDropdown);
@@ -144,10 +150,14 @@ const createSearch = (content) => {
 
     searchBar.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
+            page = 0;
             updateRanking();
         }
     });
-    searchButton.addEventListener('click', () => updateRanking());
+    searchButton.addEventListener('click', () => {
+        page = 0;
+        updateRanking()
+    });
 
     search.appendChild(searchBar);
     search.appendChild(searchButton);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -172,11 +173,6 @@ public class InitialDataLoader implements CommandLineRunner {
         return ramos[randomIndex];
     }
 
-    private String getRandomNomeFantasia() {
-        int randomIndex = faker.number().numberBetween(0, nomesReaisEmpresas.length);
-        return nomesReaisEmpresas[randomIndex];
-    }
-
     private List<FormularioRequest> generateFormularioRequests() {
         List<FormularioRequest> formularioRequests = new ArrayList<>();
 
@@ -203,20 +199,29 @@ public class InitialDataLoader implements CommandLineRunner {
     private List<PerguntasModel> getRandomQuestions(List<PerguntasModel> perguntas, int numberOfQuestions) {
         Random random = new Random();
         List<PerguntasModel> randomQuestions = new ArrayList<>();
-
-        while (randomQuestions.size() < numberOfQuestions) {
+        List<Integer> selectedIndexes = new ArrayList<>();
+    
+        while (randomQuestions.size() < numberOfQuestions && selectedIndexes.size() < perguntas.size()) {
             int randomIndex = random.nextInt(perguntas.size());
-            PerguntasModel randomQuestion = perguntas.get(randomIndex);
-            if (!randomQuestions.contains(randomQuestion)) {
+            if (!selectedIndexes.contains(randomIndex)) {
+                selectedIndexes.add(randomIndex);
+                PerguntasModel randomQuestion = perguntas.get(randomIndex);
                 randomQuestions.add(randomQuestion);
             }
         }
         return randomQuestions;
     }
-
+    
     private RespostasEnum getRespostaProbabilidade() {
         int randomIndex = faker.random().nextInt(respostaProbabilidades.size());
         return respostaProbabilidades.get(randomIndex);
+    }
+    
+    private String getRandomNomeFantasia() {
+        int randomIndex = faker.number().numberBetween(0, nomesReaisEmpresas.length - 1);
+        String nomeFantasia = nomesReaisEmpresas[randomIndex];
+        nomesReaisEmpresas = ArrayUtils.removeElement(nomesReaisEmpresas, nomeFantasia);
+        return nomeFantasia;
     }
 
     private List<RespostasEnum> gerarRespostaProbabilidades() {
@@ -237,7 +242,7 @@ public class InitialDataLoader implements CommandLineRunner {
         "Agricultura", "Automotivo", "Comércio", "Construção", "Educação", "Indústria", "Saúde", "Telecomunicações", "Transporte",
     };
 
-    private static final String[] nomesReaisEmpresas = {
+    private static String[] nomesReaisEmpresas = {
         "Google", "Microsoft", "Apple", "Amazon", "Facebook", "IBM", "Intel", "Samsung", "Sony", "Coca-Cola",
         "PepsiCo", "Toyota", "Ford", "General Motors", "Volkswagen", "Siemens", "Procter & Gamble", "Johnson & Johnson",
         "Nestlé", "Unilever", "HP", "Dell", "Cisco", "Oracle", "Adobe", "Salesforce", "Tesla", "Netflix", "Uber",
