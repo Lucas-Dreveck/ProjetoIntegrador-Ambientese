@@ -1,11 +1,6 @@
 package com.ambientese.grupo5.DTO;
 
-import com.ambientese.grupo5.Model.EnderecoModel;
 import com.ambientese.grupo5.Model.UsuarioModel;
-import com.ambientese.grupo5.Model.CargoModel;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
