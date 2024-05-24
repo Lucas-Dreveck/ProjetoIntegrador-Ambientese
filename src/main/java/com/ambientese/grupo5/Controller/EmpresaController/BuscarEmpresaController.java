@@ -43,14 +43,15 @@ public class BuscarEmpresaController {
     @GetMapping("/search")
     public ResponseEntity<List<EmpresaModel>> buscarEmpresas(
             @RequestParam(required = false) String nomeFantasia,
-            @RequestParam(required = false) String razaoSocial) {
+            @RequestParam(required = false) String razaoSocial,
+            @RequestParam(defaultValue = "0") int page) {
         List<EmpresaModel> empresas;
         if (nomeFantasia != null && !nomeFantasia.isEmpty()) {
             empresas = empresaRepository.findFirst10ByNomeFantasiaContainingIgnoreCaseOrderByNomeFantasiaAsc(nomeFantasia);
         } else if (razaoSocial != null && !razaoSocial.isEmpty()) {
             empresas = empresaRepository.findFirst10ByRazaoSocialContainingIgnoreCaseOrderByRazaoSocialAsc(razaoSocial);
         } else {
-            Page<EmpresaModel> empresasPage = empresaRepository.findAll(PageRequest.of(0, 25));
+            Page<EmpresaModel> empresasPage = empresaRepository.findAll(PageRequest.of(page, 25));
             empresas = empresasPage.getContent();
         }
 

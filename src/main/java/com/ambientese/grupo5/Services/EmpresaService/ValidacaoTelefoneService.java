@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 public class ValidacaoTelefoneService {
 
     public boolean isValidTelefone (String telefone) {
-        return telefone == null || telefone.matches("\\d{10,11}");
+        return telefone != null;
     }
 }
