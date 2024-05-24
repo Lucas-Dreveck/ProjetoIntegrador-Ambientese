@@ -80,8 +80,6 @@ function onOpenFuncionario() {
     });
 
     document.querySelector('.btnAdd').addEventListener('click', () => {
-        toastAlert("Ainda não implementado", 'error');
-        return;
         divAdd.style.display = 'block';
         overlay.style.display = 'block';
     });
@@ -136,19 +134,21 @@ function onOpenFuncionario() {
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Funcionário cadastrado com sucesso!');
-                    window.location.reload();
-                } else {
-                    alert('Erro ao cadastrar funcionário!', data.error);
-                    console.error(data.error);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao cadastrar funcionário');
                 }
+                return response.json();
+            })
+            .then(data => {
+                toastAlert("Funcionario cadastrado com sucesso!", "success");
+                divAdd.style.display = 'none';
+                overlay.style.display = 'none';
+                currentPageFuncionario = 0;
+                nextDataPageFuncionarios();
             })
             .catch(error => {
-                alert('Erro ao cadastrar funcionário!', error);
-                console.error(error);
+                toastAlert("Erro ao cadastrar funcionário!", "error");
             });
     });
 }

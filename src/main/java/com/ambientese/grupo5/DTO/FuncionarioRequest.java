@@ -78,6 +78,4 @@ public class FuncionarioRequest {
         this.cargo = cargo;
     }
 
-    
-
 }
