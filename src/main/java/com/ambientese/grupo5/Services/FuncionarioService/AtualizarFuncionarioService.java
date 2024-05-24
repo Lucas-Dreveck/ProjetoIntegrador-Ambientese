@@ -4,6 +4,7 @@ import com.ambientese.grupo5.DTO.FuncionarioRequest;
 import com.ambientese.grupo5.Exception.ValidacaoException;
 import com.ambientese.grupo5.Model.FuncionarioModel;
 import com.ambientese.grupo5.Model.UsuarioModel;
+import com.ambientese.grupo5.Repository.CargoRepository;
 import com.ambientese.grupo5.Repository.FuncionarioRepository;
 import com.ambientese.grupo5.Repository.UsuarioRepository;
 
@@ -20,6 +21,9 @@ public class AtualizarFuncionarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private CargoRepository cargoRepository;
 
     @Transactional
     public FuncionarioModel atualizarFuncionario(Long id, FuncionarioRequest funcionarioRequest) {
@@ -29,11 +33,19 @@ public class AtualizarFuncionarioService {
         funcionarioModel.setCpf(funcionarioRequest.getCpf());
         funcionarioModel.setEmail(funcionarioRequest.getEmail());
         funcionarioModel.setDataNascimento(funcionarioRequest.getDataNascimento());
+        funcionarioModel.setCargo(cargoRepository.findByDescricao(funcionarioRequest.getCargo()));
         
         UsuarioModel usuarioModel = usuarioRepository.findById(funcionarioModel.getUsuario().getId())
                 .orElseThrow(() -> new ValidacaoException("Funcionário não encontrado com o ID: " + id));;
 
         usuarioModel.setLogin(funcionarioRequest.getLogin());
+        boolean admin;
+        if ("Administrador".equals(funcionarioRequest.getCargo())) {
+            admin = true;
+        } else {
+            admin = false;
+        }
+        usuarioModel.setIsAdmin(admin);
 
         funcionarioModel.setUsuario(usuarioModel);
         return funcionarioRepository.save(funcionarioModel);
