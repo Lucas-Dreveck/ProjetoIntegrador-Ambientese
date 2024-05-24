@@ -16,4 +16,6 @@ public interface FormularioRepository extends JpaRepository<FormularioModel, Lon
     List<FormularioModel> findAllByOrderByPontuacaoSocialAsc();
     List<FormularioModel> findAllByOrderByPontuacaoAmbientalAsc();
     List<FormularioModel> findAllByOrderByPontuacaoGovernamentalAsc();
+
+    List<FormularioModel> findByEmpresaId(Long empresaId);
 }

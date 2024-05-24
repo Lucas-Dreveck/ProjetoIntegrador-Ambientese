@@ -38,6 +38,10 @@ function loadSelectedPageScript(page, props) {
             break;
         case "result-avaliacao":
             onOpenResultAvaliacao(props);
+            break;
+        case "empresas":
+            onOpenEmpresa();
+            break;
         default:
     //        implement cases to start page js
         break;
