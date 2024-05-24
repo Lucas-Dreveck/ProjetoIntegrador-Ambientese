@@ -11,6 +11,15 @@ public class FormularioRequest {
     private EixoEnum perguntaEixo;
     private Long idFormulario;
 
+    public FormularioRequest() {
+    }
+
+    public FormularioRequest(Long perguntaId, EixoEnum perguntaEixo, RespostasEnum respostaUsuario) {
+        this.perguntaId = perguntaId;
+        this.perguntaEixo = perguntaEixo;
+        this.respostaUsuario = respostaUsuario;
+    }
+
     public Long getPerguntaId() {
         return perguntaId;
     }
@@ -57,11 +66,5 @@ public class FormularioRequest {
 
     public void setIdFormulario(Long idFormulario) {
         this.idFormulario = idFormulario;
-    }
-
-    public FormularioRequest(Long perguntaId, EixoEnum perguntaEixo, RespostasEnum respostaUsuario) {
-        this.perguntaId = perguntaId;
-        this.perguntaEixo = perguntaEixo;
-        this.respostaUsuario = respostaUsuario;
     }
 }

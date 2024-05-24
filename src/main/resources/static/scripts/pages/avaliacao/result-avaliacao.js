@@ -96,7 +96,6 @@ const renderTables = (answers) => {
 }
 
 const onOpenResultAvaliacao = (props) => {
-    console.log(props);
     const result = document.querySelector('#result-content');
     const h1 = document.createElement('h1');
     h1.classList.add('title');

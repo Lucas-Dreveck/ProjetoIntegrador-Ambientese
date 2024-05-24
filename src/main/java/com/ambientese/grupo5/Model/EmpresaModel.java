@@ -65,6 +65,9 @@ public class EmpresaModel {
     @NotBlank
     private PorteEnum porteEmpresas;
 
+    @Column(name = "ranking")
+    private Integer ranking;
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
@@ -176,5 +179,13 @@ public class EmpresaModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(Integer ranking) {
+        this.ranking = ranking;
     }
 }
