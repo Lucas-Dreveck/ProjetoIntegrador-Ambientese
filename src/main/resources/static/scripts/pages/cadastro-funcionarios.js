@@ -1,58 +1,67 @@
+let currentPageFuncionario = 0;
 function onOpenFuncionario() {
-    // const priorBtn = document.getElementById('priorBtn');
-    // const nextBtn = document.getElementById('nextBtn');
+    const priorBtn = document.getElementById('priorBtnFunc');
+    const nextBtn = document.getElementById('nextBtnFunc');
     const overlay = document.querySelector('.overlay');
     const divAdd = document.querySelector('.divAddFunc');
     const divEdit = document.querySelector('.divEditFunc');
     const divDelete = document.querySelector('.divDeleteFunc');
+    let currentId;
 
-    nextDataPage()
+    nextDataPageFuncionarios()
 
-    // nextBtn.addEventListener('click', () => {
-    //     currentPage++;
-    //     nextDataPage();
-    // });
+    nextBtn.addEventListener('click', () => {
+        currentPageFuncionario++;
+        nextDataPageFuncionarios();
+    });
 
-    // priorBtn.addEventListener('click', () => {
-    //     currentPage--;
-    //     if (currentPage < 0) {
-    //         currentPage = 0;
-    //     }
-    //     nextDataPage();
-    // });
+    priorBtn.addEventListener('click', () => {
+        currentPageFuncionario--;
+        if (currentPageFuncionario < 0) {
+            currentPageFuncionario = 0;
+        }
+        nextDataPageFuncionarios();
+    });
 
     document.getElementById('confirmDelete').addEventListener('click', () => {
-        fetch('/funcionario/delete', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({id})
+        const id = parseInt(currentId);
+        fetch(`${URL}/Funcionario/Delete/${id}`, {
+            method: 'DELETE'
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Funcionário deletado com sucesso!');
-                    window.location.reload();
-                } else {
-                    alert('Erro ao deletar funcionário!', data.error);
-                    console.error(data.error);
-                }
-            })
-            .catch(error => {
-                alert('Erro ao deletar funcionário!', error);
-                console.error(error);
-            });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao deletar Funcionario');
+            }
+            return response.text();
+        })
+        .then(data => {
+            toastAlert('Funcionario deletado com sucesso!', 'success');
+            currentPageFuncionario = 0;
+            nextDataPageFuncionarios();
+            console.log(divDelete.style.display);
+            console.log(overlay.style.display);
+            divDelete.style.display = 'none';
+            overlay.style.display = 'none';
+            console.log(divDelete.style.display);
+            console.log(overlay.style.display);
+        })
+        .catch(error => {
+            const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
+            toastAlert(errorMessage, 'error');
+        });
     })
 
     document.querySelector('.tableFunc').addEventListener('click', (event) => {
 
         if (event.target.classList.contains('imgEdit')) {
+            toastAlert("Ainda não implementado", "error")
+            return;
             const {
                 currentNome, currentCpf,
                 currentDataNasc, currentLogin, currentCargo,
                 currentEmail, currentGenero
-            } = processEvent(event);
+            } = processEventFuncionarios(event);
+            currentId = event.target.getAttribute('data-id');
             divEdit.style.display = 'block';
             overlay.style.display = 'block';
             document.getElementById('nomeEdit').value = currentNome;
@@ -63,7 +72,7 @@ function onOpenFuncionario() {
             document.getElementById('emailEdit').value = currentEmail;
             updateCheckbox(currentGenero);
         } else if (event.target.classList.contains('imgDelete')) {
-            const {currentId} = processEvent(event);
+            currentId = event.target.getAttribute('data-id');
             divDelete.style.display = 'block';
             overlay.style.display = 'block';
             document.querySelector('.deleteMsg').innerHTML = `Deseja deletar o funcionário de id ${currentId}?`;
@@ -71,6 +80,8 @@ function onOpenFuncionario() {
     });
 
     document.querySelector('.btnAdd').addEventListener('click', () => {
+        toastAlert("Ainda não implementado", 'error');
+        return;
         divAdd.style.display = 'block';
         overlay.style.display = 'block';
     });
@@ -94,28 +105,31 @@ function onOpenFuncionario() {
     document.getElementById('confirmAdd').addEventListener('click', () => {
         const nome = document.getElementById('nomeAdd').value;
         const cpf = document.getElementById('cpfAdd').value;
-        const dataNasc = document.getElementById('dataNascAdd').value;
+        const dataNascimento = document.getElementById('dataNascAdd').value;
         const login = document.getElementById('loginAdd').value;
         const cargo = document.getElementById('cargoAdd').value;
         const email = document.getElementById('emailAdd').value;
-        const genero = document.querySelector('input[name="genero"]:checked').value;
+        const password = document.getElementById('senhaAdd').value;
 
-        if (nome === '' || cpf === '' || dataNasc === '' || login === '' || cargo === '' || email === '' || genero === '') {
-            alert('Preencha todos os campos!');
+        if (nome === '' || cpf === '' || dataNascimento === '' || login === '' || cargo === '' || email === '' || password === '') {
+            toastAlert('Preencha todos os campos!', 'error');
             return
         }
 
         const data = {
             nome,
             cpf,
-            dataNasc,
-            login,
-            cargo,
             email,
-            genero
+            dataNascimento,
+            usuario: {
+                login,
+                password,
+                isAdmin: cargo === 'Administrador' ? true : false
+            },
+            cargo,
         };
 
-        fetch('/funcionario/add', {
+        fetch(`${URL}/Funcionario/Add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -140,31 +154,33 @@ function onOpenFuncionario() {
 }
 
 // function disableBtns(data) {
-//     priorBtn.disabled = (currentPage <= 1);
-//     nextBtn.disabled = (currentPage >= data);
+//     priorBtn.disabled = (currentPageFuncionario <= 1);
+//     nextBtn.disabled = (currentPageFuncionario >= data);
 // }
 
-function updateCheckbox(option) {
-    var checkboxes = document.getElementsByName("genero");
-    for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].value === option) {
-            checkboxes[i].checked = true;
-        } else {
-            checkboxes[i].checked = false;
-        }
-    }
-}
+// function updateCheckbox(option) {
+//     var checkboxes = document.getElementsByName("genero");
+//     for (var i = 0; i < checkboxes.length; i++) {
+//         if (checkboxes[i].value === option) {
+//             checkboxes[i].checked = true;
+//         } else {
+//             checkboxes[i].checked = false;
+//         }
+//     }
+// }
 
-function addTableLines(data) {
-    const table = document.querySelector('.tableFunc');
+function addTableLinesFuncionarios(data) {
+    const nextBtn = document.getElementById('nextBtnFunc');
+    const table = document.querySelector('.tableFunc>tbody');
 
     if (data.length === 0) {
+        nextBtn.setAttribute('disabled', 'true');
         const newLine = document.createElement('tr');
         newLine.innerHTML = `<td class="thStyle" colspan="5">Nenhum funcionário cadastrado</td>`;
         table.appendChild(newLine);
         return;
     }
-
+    nextBtn.removeAttribute('disabled');
     let count = 0;
 
     data.forEach(funcionario => {
@@ -174,22 +190,22 @@ function addTableLines(data) {
         count++;
 
         newLine.innerHTML = `
-            <td class="func imgFunc ${classe}">
-                <img src="/Images/func.png" alt="Funcionario" class="imgFunc">
+            <td class="thStyle imgFunc ${classe}">
+                <img src="/icons/Cadastro-Funcionario/Businessman.png" alt="Funcionario" class="imgFunc">
             </td>
-            <td class="func ${classe}">${funcionario.id}</td>
-            <td class="func ${classe}">${funcionario.nome}</td>
-            <td class="func ${classe}">${funcionario.cargo}</td>
-            <td class="func ${classe}">
-                <img src="/Images/edit.png" 
+            <td class="thStyle ${classe}">${funcionario.id}</td>
+            <td class="thStyle ${classe}">${funcionario.nome}</td>
+            <td class="thStyle ${classe}">${funcionario.cargo.descricao}</td>
+            <td class="thStyle ${classe}">
+                <img src="/icons/Cadastro-Funcionario/edit.png" 
                     data-id="${funcionario.id}"
                     data-nome="${funcionario.nome}"
                     data-cpf="${funcionario.cpf}"
                     data-nasc="${funcionario.data_nascimento}"
-                    data-cargo="${funcionario.cargo}"
+                    data-cargo="${funcionario.cargo.descricao}"
                     data-email="${funcionario.email}"
                 alt="Editar" class="imgEdit imgStyle">
-                <img src="/Images/delete.png"
+                <img src="/icons/Cadastro-Funcionario/delete.png"
                     data-id="${funcionario.id}"
                 alt="Deletar" class="imgDelete imgStyle">                
             </td>
@@ -199,15 +215,14 @@ function addTableLines(data) {
     });
 }
 
-function processEvent(event) {
-    currentId = event.target.getAttribute('data-id');
+function processEventFuncionarios(event) {
+    const currentId = event.target.getAttribute('data-id');
     const currentNome = event.target.getAttribute('data-nome');
     const currentCpf = event.target.getAttribute('data-cpf');
     const currentDataNasc = event.target.getAttribute('data-nasc');
     const currentLogin = event.target.getAttribute('data-login');
     const currentCargo = event.target.getAttribute('data-cargo');
     const currentEmail = event.target.getAttribute('data-email');
-    const currentGenero = event.target.getAttribute('data-genero');
 
     return {
         currentId,
@@ -217,13 +232,12 @@ function processEvent(event) {
         currentLogin,
         currentCargo,
         currentEmail,
-        currentGenero
     };
 }
 
-function nextDataPage() {
+function nextDataPageFuncionarios() {
     const queryParams = new URLSearchParams();
-    queryParams.append('page', currentPage);
+    queryParams.append('page', currentPageFuncionario);
 
     fetch(`${URL}/Funcionario/search?${queryParams.toString()}`, {
         method: 'GET',
@@ -238,7 +252,13 @@ function nextDataPage() {
             return response.json();
         })
         .then(data => {
-            addTableLines(data);
+            const table = document.querySelector('.tableFunc>tbody');
+            const trs = Array.from(table.children);
+                trs.forEach(tag => {
+                    tag.parentNode.removeChild(tag);
+                }
+            );
+            addTableLinesFuncionarios(data);
         })
         .catch(error => console.error('Erro ao buscar os dados:', error));
 }
@@ -253,7 +273,7 @@ function nextDataPage() {
 
     // document.getElementById('search').addEventListener('input', (event) => {
     //     if (event.target.value === '') {
-    //         nextDataPage();
+    //         nextDataPageFuncionarios();
     //     }
     // });
 
@@ -264,20 +284,18 @@ function nextDataPage() {
         const login = document.getElementById('loginEdit').value;
         const cargo = document.getElementById('cargoEdit').value;
         const email = document.getElementById('emailEdit').value;
-        const genero = document.querySelector('input[name="genero"]:checked').value;
 
         const data = {
-            id: currentId,
             nome,
             cpf,
             dataNasc,
             login,
             cargo,
             email,
-            genero
         };
 
-        fetch('/funcionario/edit', {
+        let id = parseInt(currentId);
+        fetch(`${URL}/Funcionario/Edit/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -316,7 +334,7 @@ function nextDataPage() {
 //     })
 //         .then(response => response.json())
 //         .then(data => {
-//             addTableLines(data);
+//             addTableLinesFuncionarios(data);
 //             disableBtns(data.totalPages);
 //         })
 //         .catch(error => {

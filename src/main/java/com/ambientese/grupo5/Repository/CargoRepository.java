@@ -5,4 +5,5 @@ import com.ambientese.grupo5.Model.CargoModel;
 
 public interface CargoRepository extends JpaRepository<CargoModel, Long>{
     
+    CargoModel findByDescricao(String descricao);
 }

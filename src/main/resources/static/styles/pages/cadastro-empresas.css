@@ -5,6 +5,7 @@
     justify-content: center;
     width: 100%;
     height: calc(100vh - 80px);
+    overflow: hidden;
 }
 
 .divEmp {

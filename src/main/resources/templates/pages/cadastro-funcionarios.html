@@ -6,31 +6,35 @@
 </head>
 <body>
 <content>
+    <div class="content-container">
     <div class="containerGeral">
-<!--        <div class="divSelect">-->
-<!--            <div class="selectBox">-->
-<!--                <select name="select" id="select">-->
-<!--                    <option value="id" selected>Id</option>-->
-<!--                    <option value="nome">Nome</option>-->
-<!--                </select>-->
-<!--                <input type="text" id="search" class="inpFilter" placeholder="Pesquisar id...">-->
-<!--                <img src="/Icons/Cadastro-Empresa/search.png" alt="Pesquisar" class="imgSearch">-->
-<!--            </div>-->
+       <!-- <div class="divSelect">
+           <div class="selectBox">
+               <select name="select" id="select">
+                   <option value="id" selected>Id</option>
+                   <option value="nome">Nome</option>
+               </select>
+               <input type="text" id="search" class="inpFilter" placeholder="Pesquisar id...">
+               <img src="/Icons/Cadastro-Empresa/search.png" alt="Pesquisar" class="imgSearch">
+           </div> -->
         <div class="divFunc">
             <table class="tableFunc">
-                <tr>
-                    <th class="thTable" id="thImg"></th>
-                    <th class="thTable" id="thId">Id</th>
-                    <th class="thTable" id="thNome">Nome</th>
-                    <th class="thTable" id="thFuncao">Função</th>
-                    <th class="thTable btnAdd" id="thAcao">Novo registro</th>
-                </tr>
+               <thead>
+                    <tr>
+                        <th class="thTable" id="thImg"></th>
+                        <th class="thTable" id="thId">Id</th>
+                        <th class="thTable" id="thNome">Nome</th>
+                        <th class="thTable" id="thFuncao">Função</th>
+                        <th class="thTable btnAdd" id="thAcao">Novo registro</th>
+                    </tr>
+               </thead>
+               <tbody></tbody>
             </table>
         </div>
-<!--        <div class="divBtns">-->
-<!--            <button id="priorBtnFunc"> 🡰 </button>-->
-<!--            <button id="nextBtnFunc"> 🡲 </button>-->
-<!--        </div>-->
+       <div class="divBtns">
+           <button id="priorBtnFunc"> 🡰 </button>
+           <button id="nextBtnFunc"> 🡲 </button>
+        </div>
     </div>
     <div class="overlay"></div>
     <div class="divAddFunc">
@@ -55,7 +59,7 @@
                 <input type="text" class="inpStyle inputNasc" id="dataNascAdd" placeholder="__/__/____">
                 <label for="senhaAdd" class="labelStyle">Senha</label>
                 <input type="password" class="inpStyle" id="senhaAdd" placeholder="Senha do Usuário">
-                <span class="labelStyle">Gênero</span>
+                <!-- <span class="labelStyle">Gênero</span>
                 <div class="containerGenero">
                     <input type="checkbox" name="genero" class="genBox" id="MascAdd" value="M" onchange="updateCheckbox('M')">
                     <label for="MascAdd" class="labelStyle">Masculino</label>
@@ -64,7 +68,7 @@
                     <br>
                     <input type="checkbox" name="genero" class="genBox" id="OutrosAdd" value="O" onchange="updateCheckbox('O')">
                     <label for="OutrosAdd" class="labelStyle">Outros</label>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="divBtnAdd">
@@ -92,7 +96,7 @@
                 <input type="text" class="inpStyle inputCpf" id="cpfEdit" placeholder="000.000.000-00">
                 <label for="dataNascEdit" class="labelStyle">Data de Nascimento</label>
                 <input type="text" class="inpStyle inputNasc" id="dataNascEdit" placeholder="__/__/____">
-                <span class="labelStyle">Gênero</span>
+                <!-- <span class="labelStyle">Gênero</span>
                 <div class="containerGenero">
                     <input type="checkbox" name="genero" class="genBox" id="MascEdit" value="M" onchange="updateCheckbox('M')">
                     <label for="MascEdit" class="labelStyle">Masculino</label>
@@ -101,7 +105,7 @@
                     <br>
                     <input type="checkbox" name="genero" class="genBox" id="OutrosEdit" value="O" onchange="updateCheckbox('O')">
                     <label for="OutrosEdit" class="labelStyle">Outros</label>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="divBtnEdit">
@@ -116,9 +120,11 @@
             <button class="btnStyle btnsConfirm btnsDelete" id="confirmDelete">Excluir</button>
         </div>
     </div>
+    </div>
 </content>
 
 <styles>
+    <link rel="stylesheet" th:href="@{/styles/pages/cadastro-empresas.css}"/>
     <link rel="stylesheet" th:href="@{/styles/pages/cadastro-funcionarios.css}"/>
 </styles>
 </body>
