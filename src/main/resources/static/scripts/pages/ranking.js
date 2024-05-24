@@ -1,133 +1,74 @@
-const testRanking = [
-    {
-        "id": 1,
-        "nomeFantasia": "Empresa 1",
-        "ramo": "Alimentício",
-        "porte": "Pequeno",
-        "nota": 100
-    },
-    {
-        "id": 2,
-        "nomeFantasia": "Empresa 2",
-        "ramo": "Tecnologia",
-        "porte": "Médio",
-        "nota": 90
-    },
-    {
-        "id": 3,
-        "nomeFantasia": "Empresa 3",
-        "ramo": "Tecnologia",
-        "porte": "Grande",
-        "nota": 80
-    },
-    {
-        "id": 4,
-        "nomeFantasia": "Empresa 4",
-        "ramo": "Varejo",
-        "porte": "Pequeno",
-        "nota": 70
-    },
-    {
-        "id": 5,
-        "nomeFantasia": "Empresa 5",
-        "ramo": "Alimentício",
-        "porte": "Médio",
-        "nota": 60
-    },
-    {
-        "id": 6,
-        "nomeFantasia": "Empresa 6",
-        "ramo": "Varejo",
-        "porte": "Grande",
-        "nota": 50
-    },
-    {
-        "id": 7,
-        "nomeFantasia": "Empresa 7",
-        "ramo": "Alimentício",
-        "porte": "Pequeno",
-        "nota": 40
-    },
-    {
-        "id": 8,
-        "nomeFantasia": "Empresa 8",
-        "ramo": "Tecnologia",
-        "porte": "Médio",
-        "nota": 30
-    },
-    {
-        "id": 9,
-        "nomeFantasia": "Empresa 9",
-        "ramo": "Tecnologia",
-        "porte": "Grande",
-        "nota": 20
-    },
-    {
-        "id": 10,
-        "nomeFantasia": "Empresa 10",
-        "ramo": "Tecnologia",
-        "porte": "Pequeno",
-        "nota": 10
-    }
-]
-
+let page = 0;
 const createFirstPlace = (company, content) => {
+    const setMedal = () => {
+        if (company.nivelCertificado === 'Bronze') {
+            return '/icons/Medals/bronze-medal.svg';
+        } else if (company.nivelCertificado === 'Prata') {
+            return '/icons/Medals/silver-medal.svg';
+        } else {
+            return '/icons/Medals/gold-medal.svg';
+        }
+    }
+    const medalIcon = setMedal();
     const firstPlace = document.createElement('div');
     firstPlace.classList.add('first-place');
     firstPlace.innerHTML = `
-        <h2 class="company-name">${company.nomeFantasia}</h2>
-        <h1 class="first-place-title">1º lugar - ${company.nota} pontos</h1>
+        <h2 class="company-name">${company.empresaNome}</h2>
+        <h1 class="first-place-title">1º lugar - ${company.pontuacaoFinal} pontos</h1>
         <p class="branch">${company.ramo}</p>
-        <img src="/icons/Medals/gold-medal.svg" alt="Medal" class="medal-icon">
+        <img src="${medalIcon}" alt="Medal" class="medal-icon">
     `;
     content.appendChild(firstPlace);
 }
 
-const createRanking = (companys, content, update) => {
-    const ranking = document.querySelector('.ranking-content');
-    if (document.querySelector('.ranking-table')) {
-        document.querySelector('.ranking-table').remove();
+const createRanking = (companys, content) => {
+    let rankingTable = document.querySelector('.ranking-table');
+    if (!rankingTable) {
+        rankingTable = document.createElement('table');
+        rankingTable.classList.add('ranking-table');
+        content.appendChild(rankingTable);
+    } else {
+        rankingTable.innerHTML = ''; // Limpa o conteúdo interno da tabela
     }
-    const rankingTable = document.createElement('table');
-    rankingTable.classList.add('ranking-table');
 
     const tbody = document.createElement('tbody');
-    companys.forEach((company, index) => {
-        if (index === 0 && !update) return;
+    companys.forEach((company) => {
+        if (company.ranking === 1) return;
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td class="ranking">${index + 1}º - ${company.nomeFantasia}</td>
+            <td class="ranking">${company.ranking}º - ${company.empresaNome}</td>
             <td class="branch">${company.ramo}</td>
-            <td class="size">${company.nota} pontos</td>
+            <td class="size">${company.pontuacaoFinal} pontos</td>
         `;
-        tr.classList.add(index % 2 === 0 ? 'even-row' : 'odd-row');
+        tr.classList.add(tbody.children.length % 2 === 0 ? 'even-row' : 'odd-row');
         tbody.appendChild(tr);
     });
-    
+
     rankingTable.appendChild(tbody);
-    if (ranking)
-        ranking.appendChild(rankingTable);
-    else
-        content.appendChild(rankingTable);
 }
 
-const addOptions = (companys, content) => {
+const addOptions = async (content) => {
     const ramoDropdown = document.createElement('select');
     ramoDropdown.classList.add('ramo-dropdown');
     ramoDropdown.innerHTML = '<option value="">Ramo da empresa</option>';
 
     const porteDropdown = document.createElement('select');
     porteDropdown.classList.add('porte-dropdown');
-    porteDropdown.innerHTML = '<option value="">Porte da empresa</option>'; 
+    porteDropdown.innerHTML = '<option value="">Porte da empresa</option>';
 
     const ramoOptions = new Set();
-    const porteOptions = new Set();
+    const porteOptions = new Set(['Pequeno', 'Médio', 'Grande']);
 
-
-    companys.forEach(company => {
-        ramoOptions.add(company.ramo);
-        porteOptions.add(company.porte);
-    });
+    await fetch(`${URL}/ranking/ramos/list`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao buscar ramos');
+            }
+            return response.json();
+        })
+        .then(response => {
+            response.forEach(ramo => ramoOptions.add(ramo));
+        });
 
     ramoOptions.forEach(option => {
         const ramo = document.createElement('option');
@@ -143,8 +84,8 @@ const addOptions = (companys, content) => {
         porteDropdown.appendChild(porte);
     });
 
-    ramoDropdown.addEventListener('change', updateRanking);
-    porteDropdown.addEventListener('change', updateRanking);
+    ramoDropdown.addEventListener('change', () => updateRanking());
+    porteDropdown.addEventListener('change', () => updateRanking());
 
     content.appendChild(ramoDropdown);
     content.appendChild(porteDropdown);
@@ -155,31 +96,37 @@ const updateRanking = () => {
     const porte = document.querySelector('.porte-dropdown').value;
     const search = document.querySelector('.search-bar').value;
     const queryParams = new URLSearchParams();
-    if(ramo) {
-        queryParams.append('ramo', ramo);
-    }
-    if(porte) {
-        queryParams.append('porte', porte);
-    }
-    if(search) {
-        queryParams.append('search', search);
-    }
-    const fullUrl = `${URL}/ranking?${queryParams.toString()}`;
+    if (ramo) queryParams.append('ramo', ramo);
+    if (porte) queryParams.append('porte', porte);
+    if (search) queryParams.append('nomeFantasia', search);
+    queryParams.append('page', page);
+    const fullUrl = `${URL}/ranking/pontuacao?${queryParams.toString()}`;
+
     fetch(fullUrl, options)
         .then(response => {
-            return testRanking.filter(ranking => {
-                if (!ramo && !porte && !search) return true;
-                return (ramo ? ranking.ramo === ramo : true) &&
-                    (porte ? ranking.porte === porte : true) &&
-                    (search ? ranking.nomeFantasia === search : true);
-            });
-            if (!response.ok) {
-                throw new Error('Erro ao buscar ranking');
-            }
+            if (!response.ok) throw new Error('Erro ao buscar ranking');
             return response.json();
         })
         .then(response => {
-            createRanking(response, null, true);
+            createRanking(response, document.querySelector('.ranking-table-container'));
+            const btnNext = document.querySelector('.btn-next');
+            const btnPrev = document.querySelector('.btn-prev');
+
+            if (response[0].finishList) {
+                btnNext.classList.add('disabled');
+                btnNext.setAttribute('disabled', 'true');
+            } else {
+                btnNext.classList.remove('disabled');
+                btnNext.removeAttribute('disabled');
+            }
+
+            if (page === 0) {
+                btnPrev.classList.add('disabled');
+                btnPrev.setAttribute('disabled', 'true');
+            } else {
+                btnPrev.classList.remove('disabled');
+                btnPrev.removeAttribute('disabled');
+            }
         });
 }
 
@@ -192,7 +139,7 @@ const createSearch = (content) => {
     const searchButton = document.createElement('button');
     searchButton.classList.add('search-button');
     searchButton.innerHTML = `
-        <img src="/icons/search.svg" alt="Search" class="search-icon">
+        <img src="/icons/Buttons/search.svg" alt="Search" class="search-icon">
     `;
 
     searchBar.addEventListener('keydown', (event) => {
@@ -200,7 +147,7 @@ const createSearch = (content) => {
             updateRanking();
         }
     });
-    searchButton.addEventListener('click', updateRanking);
+    searchButton.addEventListener('click', () => updateRanking());
 
     search.appendChild(searchBar);
     search.appendChild(searchButton);
@@ -213,24 +160,57 @@ const onOpenRanking = async () => {
 
     const sideContent = document.createElement('div');
     sideContent.classList.add('side-content');
-    const ranking = document.createElement('div');
-    ranking.classList.add('ranking-content');
+    const rankingContent = document.createElement('div');
+    rankingContent.classList.add('ranking-content');
+    const rankingTableContainer = document.createElement('div');
+    rankingTableContainer.classList.add('ranking-content');
 
-    await fetch(`${URL}/ranking`, options)
+    const queryParams = new URLSearchParams();
+    queryParams.append('size', 10);
+    await fetch(`${URL}/ranking/pontuacao?${queryParams.toString()}`, options)
         .then(response => {
-            return testRanking;
-            if (!response.ok) {
-                throw new Error('Erro ao buscar ranking');
-            }
+            if (!response.ok) throw new Error('Erro ao buscar ranking');
             return response.json();
         })
-        .then(response => {
+        .then(async response => {
             createFirstPlace(response[0], sideContent);
-            createRanking(response, ranking, false);
-            addOptions(response, sideContent);
+            createRanking(response, rankingTableContainer);
+            await addOptions(sideContent);
             createSearch(sideContent);
         });
 
+    const btnPrev = document.createElement('button');
+    btnPrev.classList.add('btn-prev');
+    btnPrev.classList.add('disabled');
+    btnPrev.setAttribute('disabled', 'true');
+    btnPrev.innerHTML = `
+        <img src="/icons/Buttons/arrow-left.svg" alt="Previous" class="arrow-icon">
+    `;
+    btnPrev.addEventListener('click', () => {
+        if (page > 0) {
+            page--;
+            updateRanking();
+        }
+    });
+    const btnNext = document.createElement('button');
+    btnNext.classList.add('btn-next');
+    btnNext.innerHTML = `
+        <img src="/icons/Buttons/arrow-right.svg" alt="Next" class="arrow-icon">
+    `;
+    btnNext.addEventListener('click', () => {
+        page++;
+        updateRanking();
+    });
+
+    const buttons = document.createElement('div');
+    buttons.classList.add('btns-page');
+
+    buttons.appendChild(btnPrev);
+    buttons.appendChild(btnNext);
+
+    rankingContent.appendChild(rankingTableContainer);
+    rankingContent.appendChild(buttons);
+
     content.appendChild(sideContent);
-    content.appendChild(ranking)
+    content.appendChild(rankingContent);
 }
