@@ -1,3 +1,4 @@
+let currentPage = 0;
 function onOpenEmpresa() {
     const priorBtn = document.getElementById('priorBtnEmp');
     const nextBtn = document.getElementById('nextBtnEmp');
@@ -6,7 +7,6 @@ function onOpenEmpresa() {
     const divEdit = document.querySelector('.divEditEmp');
     const divDelete = document.querySelector('.divDeleteEmp');
     let currentid;
-    let currentPage = 1;
 
     nextDataPage();
 
@@ -17,8 +17,8 @@ function onOpenEmpresa() {
 
     priorBtn.addEventListener('click', () => {
         currentPage--;
-        if (currentPage < 1) {
-            currentPage = 1;
+        if (currentPage < 0) {
+            currentPage = 0;
         }
         nextDataPage();
     });
@@ -96,7 +96,7 @@ function onOpenEmpresa() {
         const uf = document.getElementById('uf').value;
 
        if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
-            alert('Preencha todos os campos!');
+            toastAlert('Preencha todos os campos!', 'error');
             return;
        }
 
@@ -122,21 +122,27 @@ function onOpenEmpresa() {
             dataAlteracao
         };
 
-        fetch('/Empresa/Add', {
+        fetch(`${URL}/Empresa/Add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.text())
-            .then(text => {
-                console.log(text);
-                alert(text);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao adicionar empresa');
+                }
+                return response.json();
+            })
+            .then(data => {
+                toastAlert('Empresa adicionada com sucesso!', 'success');
+                divAdd.style.display = 'none';
+                overlay.style.display = 'none';
             })
             .catch(error => {
-                alert('Erro ao cadastrar empresa!', error);
-                console.error(error);
+                const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
+                toastAlert(errorMessage, 'error');
             });
     });
 
@@ -183,37 +189,53 @@ function onOpenEmpresa() {
 
         let id = parseInt(currentid);
 
-        fetch(`/Empresa/Edit/${id}`, {
+        fetch(`${URL}/Empresa/Edit/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.text())
-            .then(text => {
-                console.log(text);
-                alert(text);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao editar empresa');
+                }
+                return response.json();
+            })
+            .then(data => {
+                toastAlert('Empresa editada com sucesso!', 'success');
+                currentPage = 0;
+                nextDataPage();
+                divEdit.style.display = 'none';
+                overlay.style.display = 'none';
             })
             .catch(error => {
-                alert('Erro ao editar empresa!', error);
-                console.error(error);
+                const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
+                toastAlert(errorMessage, 'error');
             });
     });
 
     document.getElementById('confirmDelete').addEventListener('click' , () => {
         const id = parseInt(currentid);
-        fetch(`/Empresa/Delete/${id}`, {
+        fetch(`${URL}/Empresa/Delete/${id}`, {
             method: 'DELETE'
         })
-        .then(response => response.text())
-        .then(text => {
-            console.log(text);
-            alert(text);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao deletar empresa');
+            }
+            return response.text();
+        })
+        .then(data => {
+            toastAlert('Empresa deletada com sucesso!', 'success');
+            currentPage = 0;
+            nextDataPage();
+            divDelete.style.display = 'none';
+            overlay.style.display = 'none';
         })
         .catch(error => {
-            alert('Erro ao deletar empresa!', error);
-            console.error(error);
+            const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
+            toastAlert(errorMessage, 'error');
         });
     });
 
@@ -226,18 +248,21 @@ function onOpenEmpresa() {
 }
 
 function addTableLines(data) {
-    const table = document.querySelector('.tableEmp');
+    const table = document.querySelector('.tableEmp>tbody');
+    const nextBtn = document.getElementById('nextBtnEmp');
 
     if (data.length === 0) {
+        nextBtn.setAttribute('disabled', 'true');
         const newLine = document.createElement('tr');
         newLine.innerHTML = `<td class="thStyle" colspan="6">Nenhuma empresa cadastrada</td>`;
         table.appendChild(newLine);
         return;
     }
+    nextBtn.removeAttribute('disabled');
 
     let count = 0;
 
-    data.forEach(empresa => {
+    data.forEach((empresa, index) => {
         const newLine = document.createElement('tr');
 
         const classe = count % 2 === 0 ? 'azul' : '';
@@ -322,9 +347,10 @@ function processEvent(event) {
 }
 
 function nextDataPage () {
-    const urlPage = '/Empresa/search';
+    const queryParams = new URLSearchParams();
+    queryParams.append('page', currentPage);
 
-    fetch(urlPage, {
+    fetch(`${URL}/Empresa/search?${queryParams.toString()}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -332,15 +358,21 @@ function nextDataPage () {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Erro ao buscar empresas');
         }
         return response.json();
     })
     .then(data => {
+        const table = document.querySelector('.tableEmp>tbody');
+        const trs = Array.from(table.children);
+            trs.forEach(tag => {
+                tag.parentNode.removeChild(tag);
+            }
+        );
         addTableLines(data);
     })
     .catch(error => {
-        alert('Erro ao buscar empresas!', error);
-        console.error('Fetch error:', error);
+        const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
+        toastAlert(errorMessage, 'error');
     });
 }
