@@ -42,6 +42,9 @@ function loadSelectedPageScript(page, props) {
         case "empresas":
             onOpenEmpresa();
             break;
+        case "funcionarios":
+            onOpenFuncionario();
+            break;
         default:
     //        implement cases to start page js
         break;

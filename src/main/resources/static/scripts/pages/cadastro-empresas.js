@@ -8,11 +8,11 @@ function onOpenEmpresa() {
     const divDelete = document.querySelector('.divDeleteEmp');
     let currentid;
 
-    nextDataPage();
+    nextDataPageEmpresas();
 
     nextBtn.addEventListener('click', () => {
         currentPage++;
-        nextDataPage();
+        nextDataPageEmpresas();
     });
 
     priorBtn.addEventListener('click', () => {
@@ -20,7 +20,7 @@ function onOpenEmpresa() {
         if (currentPage < 0) {
             currentPage = 0;
         }
-        nextDataPage();
+        nextDataPageEmpresas();
     });
 
     document.querySelector('.tableEmp').addEventListener('click', (event) => {
@@ -30,7 +30,7 @@ function onOpenEmpresa() {
                 currentRazao, currentCnpj, currentInscricao,
                 currentEmail, currentTelEmp, currentPorte, currentRamo,
                 currentCep, currentUf, currentBairro, currentCidade, currentNumero,
-                currentLogradouro } = processEvent(event);
+                currentLogradouro } = processEventEmpresas(event);
 
 
             currentid = event.target.getAttribute('data-id');
@@ -205,7 +205,7 @@ function onOpenEmpresa() {
             .then(data => {
                 toastAlert('Empresa editada com sucesso!', 'success');
                 currentPage = 0;
-                nextDataPage();
+                nextDataPageEmpresas();
                 divEdit.style.display = 'none';
                 overlay.style.display = 'none';
             })
@@ -229,7 +229,7 @@ function onOpenEmpresa() {
         .then(data => {
             toastAlert('Empresa deletada com sucesso!', 'success');
             currentPage = 0;
-            nextDataPage();
+            nextDataPageEmpresas();
             divDelete.style.display = 'none';
             overlay.style.display = 'none';
         })
@@ -247,7 +247,7 @@ function onOpenEmpresa() {
     });
 }
 
-function addTableLines(data) {
+function addTableLinesEmpresas(data) {
     const table = document.querySelector('.tableEmp>tbody');
     const nextBtn = document.getElementById('nextBtnEmp');
 
@@ -306,7 +306,7 @@ function addTableLines(data) {
     });
 }
 
-function processEvent(event) {
+function processEventEmpresas(event) {
     const currentid = event.target.getAttribute('data-id');
     const currentNomeFa = event.target.getAttribute('data-nomeFa');
     const currentNomeSo = event.target.getAttribute('data-nomeSo');
@@ -346,7 +346,7 @@ function processEvent(event) {
     };
 }
 
-function nextDataPage () {
+function nextDataPageEmpresas () {
     const queryParams = new URLSearchParams();
     queryParams.append('page', currentPage);
 
@@ -369,7 +369,7 @@ function nextDataPage () {
                 tag.parentNode.removeChild(tag);
             }
         );
-        addTableLines(data);
+        addTableLinesEmpresas(data);
     })
     .catch(error => {
         const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
