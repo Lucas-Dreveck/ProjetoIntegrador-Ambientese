@@ -23,12 +23,12 @@ public class FuncionarioRequest {
     @NotBlank(message = "A data de nascimento não pode estar em branco")
     private String dataNascimento;
 
-    @NotNull(message = "O usuário não pode ser nulo")
     private UsuarioModel usuario;
 
     @NotBlank(message = "O cargo não pode estar em branco")
     private String cargo;
 
+    private String login;
 
     public String getNome() {
         return nome;
@@ -76,6 +76,14 @@ public class FuncionarioRequest {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
 }

@@ -54,12 +54,10 @@ function onOpenFuncionario() {
     document.querySelector('.tableFunc').addEventListener('click', (event) => {
 
         if (event.target.classList.contains('imgEdit')) {
-            toastAlert("Ainda não implementado", "error")
-            return;
             const {
                 currentNome, currentCpf,
                 currentDataNasc, currentLogin, currentCargo,
-                currentEmail, currentGenero
+                currentEmail
             } = processEventFuncionarios(event);
             currentId = event.target.getAttribute('data-id');
             divEdit.style.display = 'block';
@@ -70,7 +68,6 @@ function onOpenFuncionario() {
             document.getElementById('loginEdit').value = currentLogin;
             document.getElementById('cargoEdit').value = currentCargo;
             document.getElementById('emailEdit').value = currentEmail;
-            updateCheckbox(currentGenero);
         } else if (event.target.classList.contains('imgDelete')) {
             currentId = event.target.getAttribute('data-id');
             divDelete.style.display = 'block';
@@ -151,6 +148,50 @@ function onOpenFuncionario() {
                 toastAlert("Erro ao cadastrar funcionário!", "error");
             });
     });
+
+    document.getElementById('confirmEdit').addEventListener('click', () => {
+        const nome = document.getElementById('nomeEdit').value;
+        const cpf = document.getElementById('cpfEdit').value;
+        const dataNasc = document.getElementById('dataNascEdit').value;
+        const login = document.getElementById('loginEdit').value;
+        const cargo = document.getElementById('cargoEdit').value;
+        const email = document.getElementById('emailEdit').value;
+
+        const data = {
+            nome,
+            cpf,
+            dataNasc,
+            login,
+            cargo,
+            email,
+        };
+
+        let id = parseInt(currentId);
+        fetch(`${URL}/Funcionario/Edit/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao editar funcionário!');
+                }
+                return response.json();
+            
+            })
+            .then(data => {
+                toastAlert('Funcionário editado com sucesso!', 'success');
+                divEdit.style.display = 'none';
+                overlay.style.display = 'none';
+                currentPageFuncionario = 0;
+                nextDataPageFuncionarios();
+            })
+            .catch(error => {
+                toastAlert('Erro ao editar funcionário!', 'error');
+            });
+    });
 }
 
 // function disableBtns(data) {
@@ -201,9 +242,10 @@ function addTableLinesFuncionarios(data) {
                     data-id="${funcionario.id}"
                     data-nome="${funcionario.nome}"
                     data-cpf="${funcionario.cpf}"
-                    data-nasc="${funcionario.data_nascimento}"
+                    data-nasc="${funcionario.dataNascimento}"
                     data-cargo="${funcionario.cargo.descricao}"
                     data-email="${funcionario.email}"
+                    data-login="${funcionario.usuario.login}"
                 alt="Editar" class="imgEdit imgStyle">
                 <img src="/icons/Cadastro-Funcionario/delete.png"
                     data-id="${funcionario.id}"
@@ -276,47 +318,6 @@ function nextDataPageFuncionarios() {
     //         nextDataPageFuncionarios();
     //     }
     // });
-
-    document.getElementById('confirmEdit').addEventListener('click', () => {
-        const nome = document.getElementById('nomeEdit').value;
-        const cpf = document.getElementById('cpfEdit').value;
-        const dataNasc = document.getElementById('dataNascEdit').value;
-        const login = document.getElementById('loginEdit').value;
-        const cargo = document.getElementById('cargoEdit').value;
-        const email = document.getElementById('emailEdit').value;
-
-        const data = {
-            nome,
-            cpf,
-            dataNasc,
-            login,
-            cargo,
-            email,
-        };
-
-        let id = parseInt(currentId);
-        fetch(`${URL}/Funcionario/Edit/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Funcionário editado com sucesso!');
-                    window.location.reload();
-                } else {
-                    alert('Erro ao editar funcionário!', data.error);
-                    console.error(data.error);
-                }
-            })
-            .catch(error => {
-                alert('Erro ao editar funcionário!', error);
-                console.error(error);
-            });
-    });
 
 // function searchData() {
 //     const type = document.getElementById('select').value;
