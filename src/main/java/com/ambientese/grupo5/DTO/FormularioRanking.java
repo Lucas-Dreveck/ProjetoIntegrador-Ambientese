@@ -1,29 +1,34 @@
 package com.ambientese.grupo5.DTO;
 
-import java.util.Date;
-
 import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
+import com.ambientese.grupo5.Model.Enums.PorteEnum;
 
 public class FormularioRanking {
     private long id;
+    private Integer ranking;
     private String empresaNome;
     private NivelCertificadoEnum nivelCertificado;
+    private String ramo;
+    private PorteEnum porte;
     private Integer pontuacaoFinal;
     private Integer pontuacaoSocial;
     private Integer pontuacaoAmbiental;
     private Integer pontuacaoGovernamental;
-    private Date dataRespostas;
+    private Boolean finishList;
 
-    public FormularioRanking(long id, String empresaNome, NivelCertificadoEnum nivelCertificado, Integer pontuacaoFinal, Integer pontuacaoSocial,
-                                Integer pontuacaoAmbiental, Integer pontuacaoGovernamental, Date dataRespostas) {
+    public FormularioRanking(long id, Integer ranking, String empresaNome, NivelCertificadoEnum nivelCertificado, String ramo, PorteEnum porte, Integer pontuacaoFinal,
+                        Integer pontuacaoSocial,Integer pontuacaoAmbiental, Integer pontuacaoGovernamental, Boolean finishList) {
         this.id = id;
+        this.ranking = ranking;
         this.empresaNome = empresaNome;
         this.nivelCertificado = nivelCertificado;
+        this.ramo = ramo;
+        this.porte = porte;
         this.pontuacaoFinal = pontuacaoFinal;
         this.pontuacaoSocial = pontuacaoSocial;
         this.pontuacaoAmbiental = pontuacaoAmbiental;
         this.pontuacaoGovernamental = pontuacaoGovernamental;
-        this.dataRespostas = dataRespostas;
+        this.finishList = finishList;
     }
 
     public long getId() {
@@ -32,6 +37,14 @@ public class FormularioRanking {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Integer getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(Integer ranking) {
+        this.ranking = ranking;
     }
 
     public String getEmpresaNome() {
@@ -48,6 +61,22 @@ public class FormularioRanking {
 
     public void setNivelCertificado(NivelCertificadoEnum nivelCertificado) {
         this.nivelCertificado = nivelCertificado;
+    }
+
+    public String getRamo() {
+        return ramo;
+    }
+
+    public void setRamo(String ramo) {
+        this.ramo = ramo;
+    }
+
+    public PorteEnum getPorte() {
+        return porte;
+    }
+
+    public void setPorte(PorteEnum porte) {
+        this.porte = porte;
     }
 
     public Integer getPontuacaoFinal() {
@@ -82,13 +111,11 @@ public class FormularioRanking {
         this.pontuacaoGovernamental = pontuacaoGovernamental;
     }
 
-    public Date getDataRespostas() {
-        return dataRespostas;
+    public Boolean getFinishList() {
+        return finishList;
     }
 
-    public void setDataRespostas(Date dataRespostas) {
-        this.dataRespostas = dataRespostas;
+    public void setFinishList(Boolean finishList) {
+        this.finishList = finishList;
     }
-
-    
 }

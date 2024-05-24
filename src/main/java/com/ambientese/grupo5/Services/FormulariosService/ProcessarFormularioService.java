@@ -13,7 +13,6 @@ import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.ambientese.grupo5.Model.Enums.RespostasEnum;
 import com.ambientese.grupo5.Model.FormularioModel;
 import com.ambientese.grupo5.Model.PerguntasModel;
-import com.ambientese.grupo5.Model.RespostaId;
 import com.ambientese.grupo5.Model.RespostaModel;
 import com.ambientese.grupo5.Repository.FormularioRepository;
 import com.ambientese.grupo5.Repository.PerguntasRepository;

@@ -1,7 +1,6 @@
 package com.ambientese.grupo5;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -46,12 +45,12 @@ public class InitialDataLoader implements CommandLineRunner {
         UsuarioModel rootUser = userRepository.findByLogin("root");
 
         if (rootUser == null) {
+            int numberToGenerate = 60;
+            
             // Popular tabela endereco e empresa
-            int numberToGenerate = 20;
-
             for (int i = 0; i < numberToGenerate; i++) {
                 EmpresaModel empresa = new EmpresaModel();
-                empresa.setNomeFantasia(faker.company().name());
+                empresa.setNomeFantasia(getRandomNomeFantasia());
                 empresa.setNomeSolicitante(faker.name().fullName());
                 String cellPhone = faker.phoneNumber().cellPhone();
                 if (cellPhone.length() > 15) {
@@ -67,7 +66,7 @@ public class InitialDataLoader implements CommandLineRunner {
                     telefone = telefone.substring(0, 15);
                 }
                 empresa.setTelefoneEmpresas(telefone);
-                empresa.setRamo(faker.company().industry());
+                empresa.setRamo(getRandomRamo());
                 empresa.setPorteEmpresas(getRandomPorte());
 
                 EnderecoModel endereco = new EnderecoModel();
@@ -168,6 +167,16 @@ public class InitialDataLoader implements CommandLineRunner {
         return portes[randomIndex];
     }
 
+    private String getRandomRamo() {
+        int randomIndex = faker.number().numberBetween(0, ramos.length - 1);
+        return ramos[randomIndex];
+    }
+
+    private String getRandomNomeFantasia() {
+        int randomIndex = faker.number().numberBetween(0, nomesReaisEmpresas.length);
+        return nomesReaisEmpresas[randomIndex];
+    }
+
     private List<FormularioRequest> generateFormularioRequests() {
         List<FormularioRequest> formularioRequests = new ArrayList<>();
 
@@ -184,7 +193,7 @@ public class InitialDataLoader implements CommandLineRunner {
             FormularioRequest request = new FormularioRequest();
             request.setPerguntaId(pergunta.getId());
             request.setPerguntaEixo(pergunta.getEixo());
-            request.setRespostaUsuario(RespostasEnum.values()[faker.number().numberBetween(0, RespostasEnum.values().length)]);
+            request.setRespostaUsuario(getRespostaProbabilidade());
             formularioRequests.add(request);
         }
 
@@ -202,9 +211,42 @@ public class InitialDataLoader implements CommandLineRunner {
                 randomQuestions.add(randomQuestion);
             }
         }
-
         return randomQuestions;
     }
+
+    private RespostasEnum getRespostaProbabilidade() {
+        int randomIndex = faker.random().nextInt(respostaProbabilidades.size());
+        return respostaProbabilidades.get(randomIndex);
+    }
+
+    private List<RespostasEnum> gerarRespostaProbabilidades() {
+        List<RespostasEnum> probabilidades = new ArrayList<>();
+        for (int i = 0; i < 45; i++) {
+            probabilidades.add(RespostasEnum.Conforme);
+        }
+        for (int i = 0; i < 35; i++) {
+            probabilidades.add(RespostasEnum.NaoConforme);
+        }
+        for (int i = 0; i < 20; i++) {
+            probabilidades.add(RespostasEnum.NaoSeAdequa);
+        }
+        return probabilidades;
+    }
+
+    private static final String[] ramos = {
+        "Agricultura", "Automotivo", "Comércio", "Construção", "Educação", "Indústria", "Saúde", "Telecomunicações", "Transporte",
+    };
+
+    private static final String[] nomesReaisEmpresas = {
+        "Google", "Microsoft", "Apple", "Amazon", "Facebook", "IBM", "Intel", "Samsung", "Sony", "Coca-Cola",
+        "PepsiCo", "Toyota", "Ford", "General Motors", "Volkswagen", "Siemens", "Procter & Gamble", "Johnson & Johnson",
+        "Nestlé", "Unilever", "HP", "Dell", "Cisco", "Oracle", "Adobe", "Salesforce", "Tesla", "Netflix", "Uber",
+        "Airbnb", "Spotify", "Lyft", "Snapchat", "Pinterest", "Twitter", "LinkedIn", "TikTok", "Zoom", "Slack",
+        "Dropbox", "Shopify", "PayPal", "Square", "Stripe", "NVIDIA", "AMD", "Qualcomm", "Huawei", "Xiaomi",
+        "Alibaba", "Tencent", "Baidu", "JD.com", "Berkshire Hathaway", "ExxonMobil", "Chevron", "Shell", "BP", "Total", "Aramco"
+    };
+
+    private final List<RespostasEnum> respostaProbabilidades = gerarRespostaProbabilidades();
 
     private static final String[] perguntasAmbiental = {
         "A empresa possui uma política ambiental clara e documentada?",
