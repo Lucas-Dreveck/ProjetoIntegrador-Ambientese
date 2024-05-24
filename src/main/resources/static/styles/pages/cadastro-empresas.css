@@ -9,8 +9,8 @@
 
 .divEmp {
     width: 100%;
-    max-height: 84%; /* Definindo uma altura máxima */
-    overflow: auto; /* Permitindo rolagem vertical se necessário */
+    max-height: 84%;
+    overflow: auto;
     margin-top: 45px;
     margin-bottom: 1%;
 }
@@ -22,20 +22,12 @@
     border-collapse: collapse;
 }
 
-.tableEmp tbody {
-    overflow-y: auto;
-}
-
-.tableEmp tbody::-webkit-scrollbar {
-    width: 0px;
-}
-
 .thTable {
     background-color: #f2f2f2;
     border-bottom: 1px solid #ddd;
-    position: sticky; /* Mantém os cabeçalhos no topo */
-    top: 0; /* Alinha os cabeçalhos no topo */
-    z-index: 1; /* Garante que os cabeçalhos fiquem sobrepostos */
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .emp {
