@@ -152,7 +152,7 @@ function onOpenFuncionario() {
     document.getElementById('confirmEdit').addEventListener('click', () => {
         const nome = document.getElementById('nomeEdit').value;
         const cpf = document.getElementById('cpfEdit').value;
-        const dataNasc = document.getElementById('dataNascEdit').value;
+        const dataNascimento = document.getElementById('dataNascEdit').value;
         const login = document.getElementById('loginEdit').value;
         const cargo = document.getElementById('cargoEdit').value;
         const email = document.getElementById('emailEdit').value;
@@ -160,7 +160,7 @@ function onOpenFuncionario() {
         const data = {
             nome,
             cpf,
-            dataNasc,
+            dataNascimento,
             login,
             cargo,
             email,
