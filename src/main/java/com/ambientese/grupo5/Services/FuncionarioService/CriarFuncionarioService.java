@@ -29,6 +29,7 @@ public class CriarFuncionarioService {
         FuncionarioModel funcionarioModel = new FuncionarioModel();
         funcionarioModel.setNome(funcionarioRequest.getNome());
         funcionarioModel.setCpf(funcionarioRequest.getCpf());
+        funcionarioModel.setEmail(funcionarioRequest.getEmail());
         funcionarioModel.setDataNascimento(funcionarioRequest.getDataNascimento());
         funcionarioModel.setCargo(cargoRepository.findByDescricao(funcionarioRequest.getCargo()));
         funcionarioModel.setUsuario(criarUsuarioService.createUsuario(funcionarioRequest.getUsuario()));
