@@ -79,6 +79,18 @@
     <script type="text/javascript" th:src="@{/scripts/pages/cadastro-funcionarios.js}"></script>
 <!--Add others js files to this div-->
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        if (page) {
+            getMainFrameContent(page);
+        } else {
+            getMainFrameContent('ranking');
+        }
+    });
+</script>
 </body>
 <!--The original structure as made by: Samuel Thomas, all credits to the author-->
 </html>

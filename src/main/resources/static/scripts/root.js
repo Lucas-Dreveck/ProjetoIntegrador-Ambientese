@@ -1,6 +1,5 @@
-// FUNCTIONS
 const URL = "http://localhost:8080";
-const enviornment = "prod";
+const enviornment = "dev";
 let isAuthenticated = sessionStorage.getItem("auth") ? sessionStorage.getItem("auth") === 'true' : false;
 sessionStorage.setItem('auth', isAuthenticated);
 
@@ -46,17 +45,34 @@ function loadSelectedPageScript(page, props) {
             onOpenFuncionario();
             break;
         default:
-    //        implement cases to start page js
-        break;
+            break;
     }
     loading.classList.add("hidden");
     mainContent.classList.remove("hidden");
 }
 
+function updateURLParameter(page) {
+    const param = "page";
+    let searchParams = new URLSearchParams(window.location.search);
+    searchParams.set(param, page);
+    let newUrl = window.location.pathname + '?' + searchParams.toString();
+    window.history.pushState({ path: newUrl }, '', newUrl);
+}
+
 function getMainFrameContent(page, props) {
+    const currentPage = new URLSearchParams(window.location.search).get('page');
+
+    if (!isAuthenticated && page !== 'ranking' && page !== 'login') {
+        toastAlert("Você precisa estar logado para acessar essa página", "error");
+        updateURLParameter(currentPage);
+        loading.classList.add("hidden");
+        mainContent.classList.remove("hidden");
+        return;
+    }
+
     if (page === 'login') {
         isAuthenticated = false;
-        sessionStorage.setItem('auth', isAuthenticated)
+        sessionStorage.setItem('auth', isAuthenticated);
     }
 
     if (isAuthenticated) {
@@ -82,6 +98,7 @@ function getMainFrameContent(page, props) {
             if (contentDiv) {
                 mainContent.innerHTML = contentDiv.innerHTML;
                 loadSelectedPageScript(page, props);
+                updateURLParameter(page);
             }
 
             if (stylesDiv) {
@@ -96,20 +113,15 @@ function getMainFrameContent(page, props) {
 }
 
 function expandButtonClicked() {
-    if (expandButton.classList.contains("active")) {
-        expandButton.classList.remove("active");
-        menu.classList.remove("expanded");
-    } else {
-        expandButton.classList.add("active");
-        menu.classList.add("expanded");
-    }
+    expandButton.classList.toggle("active");
+    menu.classList.toggle("expanded");
 }
 
 function menuButtonClicked(event) {
     const button = event.currentTarget;
     const page = button.getAttribute("page");
 
-    if(!isAuthenticated && (page !== 'ranking' && page !== 'login')) {
+    if (!isAuthenticated && (page !== 'ranking' && page !== 'login')) {
         toastAlert("Você precisa estar logado para acessar essa página", "error");
         return;
     }
@@ -121,9 +133,7 @@ function menuButtonClicked(event) {
     mainContent.classList.add("hidden");
     loading.classList.remove("hidden");
 
-    allMenuButtons.forEach(button => {
-        button.classList.remove("active");
-    });
+    allMenuButtons.forEach(button => button.classList.remove("active"));
 
     if (page !== 'login') {
         button.classList.add("active");
@@ -138,48 +148,35 @@ function toastAlert(message, type = 'info') {
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    setTimeout(() => {
-        toast.classList.add('show');
-    }, 100);
-
+    setTimeout(() => toast.classList.add('show'), 100);
     setTimeout(() => {
         toast.classList.remove('show');
-        setTimeout(() => {
-            toast.remove();
-        }, 300);
+        setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
 
 function frameSetup() {
     document.addEventListener("click", function(event) {
-        if (!sidebar.contains(event.target)) {
-            if (expandButton.classList.contains("active")) {
-                expandButton.classList.remove("active");
-                menu.classList.remove("expanded");
-            }
+        if (!sidebar.contains(event.target) && expandButton.classList.contains("active")) {
+            expandButton.classList.remove("active");
+            menu.classList.remove("expanded");
         }
-    })
+    });
+
     expandButton.addEventListener("click", expandButtonClicked);
     menuItems.forEach(item => {
         const subList = item.nextElementSibling;
 
         if (subList && subList.classList.contains('sub-list')) {
-            item.addEventListener('click', () => {
-                subList.classList.toggle('show');
-            });
-    
-            const subListItems = subList.querySelectorAll('li');
-    
-            subListItems.forEach(subItem => {
-                subItem.addEventListener("click", menuButtonClicked);
-            });
+            item.addEventListener('click', () => subList.classList.toggle('show'));
+
+            subList.querySelectorAll('li').forEach(subItem => subItem.addEventListener("click", menuButtonClicked));
         } else {
             item.addEventListener("click", menuButtonClicked);
         }
-
-        loginLogout.addEventListener("click", menuButtonClicked);
-
     });
+
+    loginLogout.addEventListener("click", menuButtonClicked);
     getMainFrameContent("ranking");
 }
 
