@@ -8,15 +8,16 @@
 <content>
     <div class="content-container">
     <div class="containerGeral">
-       <!-- <div class="divSelect">
-           <div class="selectBox">
-               <select name="select" id="select">
-                   <option value="id" selected>Id</option>
-                   <option value="nome">Nome</option>
-               </select>
-               <input type="text" id="search" class="inpFilter" placeholder="Pesquisar id...">
-               <img src="/Icons/Cadastro-Empresa/search.png" alt="Pesquisar" class="imgSearch">
-           </div> -->
+        <div class="divSelect">
+            <div class="selectBox">
+                <select name="select" id="select">
+                    <option value="id" selected>Id</option>
+                    <option value="nome">Nome</option>
+                </select>
+                <input type="text" id="search" class="inpFilter">
+                <img th:src="@{/icons/Cadastro-Empresa/search.png}" alt="Pesquisar" class="imgSearch">
+            </div>
+        </div>
         <div class="divFunc">
             <table class="tableFunc">
                <thead>
@@ -41,11 +42,11 @@
         <div class="containerAddFunc">
             <div class="boxLeft">
                 <label for="nomeAdd" class="labelStyle">Nome</label>
-                <input type="text" class="inpStyle inputName" id="nomeAdd" placeholder="Nome Completo do Funcionário">
+                <input type="text" class="inpStyle inputName" id="nomeAdd">
                 <label for="emailAdd" class="labelStyle">Email</label>
-                <input type="email" class="inpStyle" id="emailAdd" placeholder="email@email.com">
+                <input type="email" class="inpStyle" id="emailAdd">
                 <label for="loginAdd" class="labelStyle">Login</label>
-                <input type="text" class="inpStyle" id="loginAdd" placeholder="Login do Usuário">
+                <input type="text" class="inpStyle" id="loginAdd">
                 <label for="cargoAdd" class="labelStyle">Cargo</label>
                 <select name="cargo" id="cargoAdd" class="inpStyle">
                     <option value="Consultor">Consultor</option>
@@ -54,21 +55,11 @@
             </div>
             <div class="boxRight">
                 <label for="cpfAdd" class="labelStyle">CPF</label>
-                <input type="text" class="inpStyle inputCpf" id="cpfAdd" placeholder="000.000.000-00">
+                <input type="text" class="inpStyle inputCpf" id="cpfAdd">
                 <label for="dataNascAdd" class="labelStyle">Data de Nascimento</label>
-                <input type="text" class="inpStyle inputNasc" id="dataNascAdd" placeholder="__/__/____">
+                <input type="text" class="inpStyle inputNasc" id="dataNascAdd">
                 <label for="senhaAdd" class="labelStyle">Senha</label>
-                <input type="password" class="inpStyle" id="senhaAdd" placeholder="Senha do Usuário">
-                <!-- <span class="labelStyle">Gênero</span>
-                <div class="containerGenero">
-                    <input type="checkbox" name="genero" class="genBox" id="MascAdd" value="M" onchange="updateCheckbox('M')">
-                    <label for="MascAdd" class="labelStyle">Masculino</label>
-                    <input type="checkbox" name="genero" class="genBox" id="FemAdd" value="F" onchange="updateCheckbox('F')">
-                    <label for="FemAdd" class="labelStyle">Feminino</label>
-                    <br>
-                    <input type="checkbox" name="genero" class="genBox" id="OutrosAdd" value="O" onchange="updateCheckbox('O')">
-                    <label for="OutrosAdd" class="labelStyle">Outros</label>
-                </div> -->
+                <input type="password" class="inpStyle" id="senhaAdd">
             </div>
         </div>
         <div class="divBtnAdd">
@@ -80,11 +71,11 @@
         <div class="containerEditFunc">
             <div class="boxLeft">
                 <label for="nomeEdit" class="labelStyle">Nome</label>
-                <input type="text" class="inpStyle inputName" id="nomeEdit" placeholder="Nome Completo do Funcionário">
+                <input type="text" class="inpStyle inputName" id="nomeEdit">
                 <label for="emailEdit" class="labelStyle">Email</label>
-                <input type="email" class="inpStyle" id="emailEdit" placeholder="email@email.com">
+                <input type="email" class="inpStyle" id="emailEdit">
                 <label for="loginEdit" class="labelStyle">Login</label>
-                <input type="text" class="inpStyle" id="loginEdit" placeholder="Login do Usuário">
+                <input type="text" class="inpStyle" id="loginEdit">
                 <label for="cargoEdit" class="labelStyle">Cargo</label>
                 <select name="cargo" id="cargoEdit" class="inpStyle">
                     <option value="Consultor">Consultor</option>
@@ -93,9 +84,9 @@
             </div>
             <div class="boxRight">
                 <label for="cpfEdit" class="labelStyle">CPF</label>
-                <input type="text" class="inpStyle inputCpf" id="cpfEdit" placeholder="000.000.000-00">
+                <input type="text" class="inpStyle inputCpf" id="cpfEdit">
                 <label for="dataNascEdit" class="labelStyle">Data de Nascimento</label>
-                <input type="text" class="inpStyle inputNasc" id="dataNascEdit" placeholder="__/__/____">
+                <input type="text" class="inpStyle inputNasc" id="dataNascEdit">
                 <!-- <span class="labelStyle">Gênero</span>
                 <div class="containerGenero">
                     <input type="checkbox" name="genero" class="genBox" id="MascEdit" value="M" onchange="updateCheckbox('M')">
