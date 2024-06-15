@@ -23,6 +23,14 @@ function onOpenFuncionario() {
         nextDataPageFuncionarios();
     });
 
+    document.querySelectorAll('.inputNasc').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
+    document.querySelectorAll('.inputCpf').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
     document.getElementById('confirmDelete').addEventListener('click', () => {
         const id = parseInt(currentId);
         fetch(`${URL}/Funcionario/Delete/${id}`, {
@@ -38,12 +46,8 @@ function onOpenFuncionario() {
             toastAlert('Funcionario deletado com sucesso!', 'success');
             currentPageFuncionario = 0;
             nextDataPageFuncionarios();
-            console.log(divDelete.style.display);
-            console.log(overlay.style.display);
             divDelete.style.display = 'none';
             overlay.style.display = 'none';
-            console.log(divDelete.style.display);
-            console.log(overlay.style.display);
         })
         .catch(error => {
             const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
@@ -53,12 +57,13 @@ function onOpenFuncionario() {
 
     document.querySelector('.tableFunc').addEventListener('click', (event) => {
 
+        const {
+            currentNome, currentCpf,
+            currentDataNasc, currentLogin, currentCargo,
+            currentEmail
+        } = processEventFuncionarios(event);
+
         if (event.target.classList.contains('imgEdit')) {
-            const {
-                currentNome, currentCpf,
-                currentDataNasc, currentLogin, currentCargo,
-                currentEmail
-            } = processEventFuncionarios(event);
             currentId = event.target.getAttribute('data-id');
             divEdit.style.display = 'block';
             overlay.style.display = 'block';
@@ -72,7 +77,7 @@ function onOpenFuncionario() {
             currentId = event.target.getAttribute('data-id');
             divDelete.style.display = 'block';
             overlay.style.display = 'block';
-            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar o funcionário de id ${currentId}?`;
+            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar o funcionário \n ${currentNome}?`;
         }
     });
 
@@ -133,7 +138,14 @@ function onOpenFuncionario() {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao cadastrar funcionário');
+                    return response.text().then(text => {
+                        try {
+                            const errorData = JSON.parse(text);
+                            throw new Error(errorData.message || 'Erro ao adicionar Funcionario');
+                        } catch (e) {
+                            throw new Error(text || 'Erro ao adicionar Funcionario');
+                        }
+                    });
                 }
                 return response.json();
             })
@@ -176,10 +188,16 @@ function onOpenFuncionario() {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao editar funcionário!');
+                    return response.text().then(text => {
+                        try {
+                            const errorData = JSON.parse(text);
+                            throw new Error(errorData.message || 'Erro ao editar funcionario');
+                        } catch (e) {
+                            throw new Error(text || 'Erro ao editar funcionario');
+                        }
+                    });
                 }
                 return response.json();
-            
             })
             .then(data => {
                 toastAlert('Funcionário editado com sucesso!', 'success');
@@ -199,17 +217,6 @@ function onOpenFuncionario() {
 //     nextBtn.disabled = (currentPageFuncionario >= data);
 // }
 
-// function updateCheckbox(option) {
-//     var checkboxes = document.getElementsByName("genero");
-//     for (var i = 0; i < checkboxes.length; i++) {
-//         if (checkboxes[i].value === option) {
-//             checkboxes[i].checked = true;
-//         } else {
-//             checkboxes[i].checked = false;
-//         }
-//     }
-// }
-
 function addTableLinesFuncionarios(data) {
     const nextBtn = document.getElementById('nextBtnFunc');
     const table = document.querySelector('.tableFunc>tbody');
@@ -217,7 +224,7 @@ function addTableLinesFuncionarios(data) {
     if (data.length === 0) {
         nextBtn.setAttribute('disabled', 'true');
         const newLine = document.createElement('tr');
-        newLine.innerHTML = `<td class="thStyle" colspan="5">Nenhum funcionário cadastrado</td>`;
+        newLine.innerHTML = `<td class="thStyle" colspan="5">Nenhum funcionário encontrado</td>`;
         table.appendChild(newLine);
         return;
     }
@@ -249,6 +256,7 @@ function addTableLinesFuncionarios(data) {
                 alt="Editar" class="imgEdit imgStyle">
                 <img src="/icons/Cadastro-Funcionario/delete.png"
                     data-id="${funcionario.id}"
+                    data-nome="${funcionario.nome}"
                 alt="Deletar" class="imgDelete imgStyle">                
             </td>
         `;
@@ -342,3 +350,25 @@ function nextDataPageFuncionarios() {
 //             console.error('Erro ao carregar dados!', error);
 //         });
 // }
+
+function justNumbers(event) {
+    var key = event.key;
+    var keyCode = event.keyCode || event.which;
+    var ctrlPressed = event.ctrlKey || event.metaKey;
+
+    if(ctrlPressed && keyCode === 65 || keyCode === 67 || keyCode === 86 || keyCode === 88) {
+        return;
+    }
+
+    if (!/^[0-9]$/.test(key) &&
+        keyCode !== 8 &&
+        keyCode !== 46 &&
+        !(keyCode >= 37 && keyCode <= 40) &&
+        keyCode !== 36 &&
+        keyCode !== 9 &&
+        keyCode !== 17 &&
+        keyCode !== 35) {
+        event.preventDefault();
+        toastAlert('Insira apenas números', 'error');
+    }
+}
