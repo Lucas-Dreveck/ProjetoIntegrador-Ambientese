@@ -41,6 +41,16 @@ public class Pages {
         }
     }
 
+    @GetMapping("/pergunta")
+    public String pagePerguntas(Model model, HttpServletRequest request) throws InterruptedException {
+        String meuHeaderValue = request.getHeader("X-Requested-With");
+        if (meuHeaderValue != null && meuHeaderValue.equals("InsideApplication")) {
+            return "pages/cadastro-perguntas";
+        } else {
+            return "redirect:/";
+        }
+    }
+
     @GetMapping("/ranking")
     public String pageRanking(Model model, HttpServletRequest request) throws InterruptedException {
         String meuHeaderValue = request.getHeader("X-Requested-With");
