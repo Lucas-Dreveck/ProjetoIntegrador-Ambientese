@@ -17,7 +17,7 @@ import com.ambientese.grupo5.Repository.FuncionarioRepository;
 
 
 @RestController
-@RequestMapping("/Funcionario")
+@RequestMapping("/api/Funcionario")
 @Validated
 public class BuscarFuncionarioController {
 

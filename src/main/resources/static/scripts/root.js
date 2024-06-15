@@ -1,16 +1,3 @@
-const URL = "http://localhost:8080";
-const enviornment = "dev";
-let isAuthenticated = sessionStorage.getItem("auth") ? sessionStorage.getItem("auth") === 'true' : false;
-sessionStorage.setItem('auth', isAuthenticated);
-
-const headers = new Headers();
-headers.append('X-Requested-With', 'InsideApplication');
-
-const options = {
-    method: 'GET',
-    headers: headers
-};
-
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
 const expandButton = document.querySelector(".expand-menu");
@@ -20,6 +7,23 @@ const menuItems = document.querySelectorAll(".main-list > li");
 const allMenuButtons = document.querySelectorAll('.menu li');
 const loginLogout = document.querySelector('.login-logout');
 const loading = document.querySelector(".loading");
+
+const URL = "http://localhost:8080";
+const enviornment = "dev";
+
+const headers = new Headers();
+headers.append("X-Requested-With", "InsideApplication");
+headers.append('Content-Type', 'application/json');
+let token = sessionStorage.getItem('token');
+if (token) {
+    loginLogout.textContent = "Sair";
+    headers.append('Authorization', `Bearer ${token}`);
+}
+
+const options = {
+    method: 'GET',
+    headers: headers
+};
 
 function loadSelectedPageScript(page, props) {
     switch (page) {
@@ -51,44 +55,47 @@ function loadSelectedPageScript(page, props) {
     mainContent.classList.remove("hidden");
 }
 
-function updateURLParameter(page) {
+function updateURLParameter(page, addToHistory = true) {
     const param = "page";
     let searchParams = new URLSearchParams(window.location.search);
     searchParams.set(param, page);
     let newUrl = window.location.pathname + '?' + searchParams.toString();
-    window.history.pushState({ path: newUrl }, '', newUrl);
+    
+    if (addToHistory) {
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    } else {
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+    }
 }
 
-function getMainFrameContent(page, props) {
-    const currentPage = new URLSearchParams(window.location.search).get('page');
-
-    if (!isAuthenticated && page !== 'ranking' && page !== 'login') {
-        toastAlert("Você precisa estar logado para acessar essa página", "error");
-        updateURLParameter(currentPage);
-        loading.classList.add("hidden");
-        mainContent.classList.remove("hidden");
-        return;
-    }
-
+function getMainFrameContent(page, props, addToHistory = true) {
     if (page === 'login') {
-        isAuthenticated = false;
-        sessionStorage.setItem('auth', isAuthenticated);
-    }
-
-    if (isAuthenticated) {
-        loginLogout.textContent = "Sair";
-    } else {
+        sessionStorage.removeItem('token');
+        headers.delete('Authorization');
         loginLogout.textContent = "Login";
     }
 
     fetch(`${URL}/${page}`, options)
         .then(response => {
             if (!response.ok) {
+                if (response.status === 401) {
+                    if (sessionStorage.getItem('token') === null) {
+                        toastAlert("Você precisa estar logado para acessar essa página", "error");
+                    } else {
+                        toastAlert("Sua sessão expirou, faça login novamente", "error");
+                    }
+                }
                 throw new Error(`Erro ao recuperar tela: ${page}`);
             }
             return response.text();
         })
         .then(data => {
+            allMenuButtons.forEach(button => button.classList.remove("active"));
+
+            if (page !== 'login' && page !== 'avaliacao' && page !== 'result-avaliacao') {
+                const selectedButton = document.querySelector(`.menu li[page="${page}"]`);
+                selectedButton.classList.add("active");
+            }
             const tempElement = document.createElement("div");
             tempElement.innerHTML = data;
 
@@ -98,17 +105,19 @@ function getMainFrameContent(page, props) {
             if (contentDiv) {
                 mainContent.innerHTML = contentDiv.innerHTML;
                 loadSelectedPageScript(page, props);
-                updateURLParameter(page);
+                updateURLParameter(page, addToHistory);
             }
 
             if (stylesDiv) {
                 allStyles.innerHTML = stylesDiv.innerHTML;
             }
+            return true;
         })
         .catch(error => {
             console.error(error);
-            loading.classList.add("hidden");
-            mainContent.classList.add("hidden");
+            headers.delete('Authorization');
+            sessionStorage.removeItem('token');
+            getMainFrameContent("ranking");
         });
 }
 
@@ -121,11 +130,6 @@ function menuButtonClicked(event) {
     const button = event.currentTarget;
     const page = button.getAttribute("page");
 
-    if (!isAuthenticated && (page !== 'ranking' && page !== 'login')) {
-        toastAlert("Você precisa estar logado para acessar essa página", "error");
-        return;
-    }
-
     if (button.classList.contains("active")) {
         return;
     }
@@ -133,13 +137,7 @@ function menuButtonClicked(event) {
     mainContent.classList.add("hidden");
     loading.classList.remove("hidden");
 
-    allMenuButtons.forEach(button => button.classList.remove("active"));
-
-    if (page !== 'login') {
-        button.classList.add("active");
-    }
-
-    getMainFrameContent(page);
+    getMainFrameContent(page, null, true);
 }
 
 function toastAlert(message, type = 'info') {
@@ -177,7 +175,27 @@ function frameSetup() {
     });
 
     loginLogout.addEventListener("click", menuButtonClicked);
-    getMainFrameContent("ranking");
+    getMainFrameContent("ranking", null, false);
 }
 
+window.addEventListener('popstate', (event) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page');
+    if (page) {
+        getMainFrameContent(page, null, false);
+    } else {
+        getMainFrameContent('ranking', null, false);
+    }
+});
+
 frameSetup();
+
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page');
+    if (page) {
+        getMainFrameContent(page, null, false);
+    } else {
+        getMainFrameContent('ranking', null, false);
+    }
+});

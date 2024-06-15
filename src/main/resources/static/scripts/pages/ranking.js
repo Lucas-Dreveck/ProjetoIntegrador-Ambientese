@@ -59,7 +59,7 @@ const addOptions = async (content) => {
     const ramoOptions = new Set();
     const porteOptions = new Set(['Pequeno', 'Médio', 'Grande']);
 
-    await fetch(`${URL}/ranking/ramos/list`)
+    await fetch(`${URL}/ranking/ramos/list`, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erro ao buscar ramos');

@@ -25,8 +25,9 @@ function onOpenFuncionario() {
 
     document.getElementById('confirmDelete').addEventListener('click', () => {
         const id = parseInt(currentId);
-        fetch(`${URL}/Funcionario/Delete/${id}`, {
-            method: 'DELETE'
+        fetch(`${URL}/api/Funcionario/Delete/${id}`, {
+            method: 'DELETE',
+            headers,
         })
         .then(response => {
             if (!response.ok) {
@@ -124,11 +125,9 @@ function onOpenFuncionario() {
             cargo,
         };
 
-        fetch(`${URL}/Funcionario/Add`, {
+        fetch(`${URL}/api/Funcionario/Add`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
             .then(response => {
@@ -167,11 +166,9 @@ function onOpenFuncionario() {
         };
 
         let id = parseInt(currentId);
-        fetch(`${URL}/Funcionario/Edit/${id}`, {
+        fetch(`${URL}/api/Funcionario/Edit/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
             .then(response => {
@@ -281,11 +278,9 @@ function nextDataPageFuncionarios() {
     const queryParams = new URLSearchParams();
     queryParams.append('page', currentPageFuncionario);
 
-    fetch(`${URL}/Funcionario/search?${queryParams.toString()}`, {
+    fetch(`${URL}/api/Funcionario/search?${queryParams.toString()}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers,
     })
         .then(response => {
             if (!response.ok) {
@@ -328,9 +323,7 @@ function nextDataPageFuncionarios() {
 //
 //     fetch(urlSearch, {
 //         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
+//         headers,
 //         body: JSON.stringify(body)
 //     })
 //         .then(response => response.json())

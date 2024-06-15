@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/Funcionario")
+@RequestMapping("/api/Funcionario")
 @Validated
 public class AtualizarFuncionarioController {
     private final AtualizarFuncionarioService atualizarFuncionario;

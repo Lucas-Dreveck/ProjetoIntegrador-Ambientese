@@ -12,7 +12,7 @@ import com.ambientese.grupo5.Model.FuncionarioModel;
 import com.ambientese.grupo5.Services.FuncionarioService.CriarFuncionarioService;
 
 @RestController
-@RequestMapping("/Funcionario")
+@RequestMapping("/api/Funcionario")
 @Validated
 public class CriarFuncionarioController {
     

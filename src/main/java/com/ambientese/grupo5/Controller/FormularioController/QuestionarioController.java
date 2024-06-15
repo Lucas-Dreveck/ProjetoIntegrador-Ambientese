@@ -27,13 +27,13 @@ public class QuestionarioController {
         this.processarFormularioService = processarFormularioService;
     }
 
-    @GetMapping("/questionario")
+    @GetMapping("/api/questionario")
     @ResponseBody
     public List<PerguntasModel> exibirQuestionario() {
         return buscarPerguntasService.buscarPerguntasDoBanco();
     }
 
-    @PostMapping("/processarRespostas")
+    @PostMapping("/api/processarRespostas")
     @ResponseBody
     public FormularioModel processarRespostas(@RequestParam("empresa_id") Long empresa_id, @RequestBody List<FormularioRequest> respostas) {
         return processarFormularioService.criarProcessarEGerarCertificado(empresa_id, respostas);

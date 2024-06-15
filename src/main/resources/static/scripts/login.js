@@ -10,28 +10,26 @@ const login = async () => {
     const login = document.querySelector('#user').value;
     const password = document.querySelector('#password').value;
 
-    try {
-        const response = await fetch(`${URL}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ login, password })
-        })
-
-        if (response.ok) {
-            const message = await response.text();
-            toastAlert(message, 'success');
-            isAuthenticated = true;
-            sessionStorage.setItem('auth', isAuthenticated)
+    fetch(`${URL}/login`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ login, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.token) {
+            sessionStorage.setItem('token', data.token);
+            headers.append('Authorization', `Bearer ${data.token}`);
+            token = data.token;
+            toastAlert("Login bem-sucedido", "success");
+            loginLogout.textContent = "Sair";
             getMainFrameContent('ranking');
         } else {
-            const errorMessage = await response.text();
-            isAuthenticated = false;
-            sessionStorage.setItem('auth', isAuthenticated)
-            toastAlert(errorMessage, 'error');
+            toastAlert("Usuario ou senha incorretos", "error");
         }
-    } catch (error) {
-        console.error('Erro ao fazer login:', error);
-    }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toastAlert("Usuario ou senha incorretos", "error");
+        });
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/Empresa")
+@RequestMapping("/api/Empresa")
 @Validated
 public class AtualizarEmpresaController {
     private final AtualizarEmpresaService atualizarEmpresa;

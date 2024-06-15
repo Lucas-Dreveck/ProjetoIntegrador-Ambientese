@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Perguntas")
+@RequestMapping("/api/Perguntas")
 public class DeletarPerguntasController {
 
     private final DeletarPerguntasService deletarPerguntasService;

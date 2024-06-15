@@ -122,11 +122,9 @@ function onOpenEmpresa() {
             dataAlteracao
         };
 
-        fetch(`${URL}/Empresa/Add`, {
+        fetch(`${URL}/api/Empresa/Add`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
             .then(response => {
@@ -189,11 +187,9 @@ function onOpenEmpresa() {
 
         let id = parseInt(currentid);
 
-        fetch(`${URL}/Empresa/Edit/${id}`, {
+        fetch(`${URL}/api/Empresa/Edit/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
             .then(response => {
@@ -217,8 +213,9 @@ function onOpenEmpresa() {
 
     document.getElementById('confirmDelete').addEventListener('click' , () => {
         const id = parseInt(currentid);
-        fetch(`${URL}/Empresa/Delete/${id}`, {
-            method: 'DELETE'
+        fetch(`${URL}/api/Empresa/Delete/${id}`, {
+            method: 'DELETE',
+            headers,
         })
         .then(response => {
             if (!response.ok) {
@@ -350,11 +347,9 @@ function nextDataPageEmpresas () {
     const queryParams = new URLSearchParams();
     queryParams.append('page', currentPage);
 
-    fetch(`${URL}/Empresa/search?${queryParams.toString()}`, {
+    fetch(`${URL}/api/Empresa/search?${queryParams.toString()}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers,
     })
     .then(response => {
         if (!response.ok) {

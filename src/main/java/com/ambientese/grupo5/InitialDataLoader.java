@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,7 @@ public class InitialDataLoader implements CommandLineRunner {
 
         if (rootUser == null) {
             int numberToGenerate = 60;
-            
+
             // Popular tabela endereco e empresa
             for (int i = 0; i < numberToGenerate; i++) {
                 EmpresaModel empresa = new EmpresaModel();
@@ -97,7 +98,7 @@ public class InitialDataLoader implements CommandLineRunner {
             for (int i = 0; i < numberToGenerate; i++) {
                 UsuarioModel usuario = new UsuarioModel();
                 usuario.setLogin(faker.name().username());
-                usuario.setPassword(faker.internet().password());
+                usuario.setPassword(BCrypt.hashpw(faker.internet().password(), BCrypt.gensalt()));
                 usuario.setIsAdmin(false);
                 usuario = userRepository.save(usuario);
 
@@ -146,7 +147,7 @@ public class InitialDataLoader implements CommandLineRunner {
             // Criação do usuário root
             UsuarioModel newUser = new UsuarioModel();
             newUser.setLogin("root");
-            newUser.setPassword("root");
+            newUser.setPassword(BCrypt.hashpw("root", BCrypt.gensalt()));
             newUser.setIsAdmin(true);
 
             userRepository.save(newUser);

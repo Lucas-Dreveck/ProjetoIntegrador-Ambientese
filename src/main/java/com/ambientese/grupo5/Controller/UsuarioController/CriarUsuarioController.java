@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/Usuarios")
+@RequestMapping("/api/Usuarios")
 public class CriarUsuarioController {
 
     private final CriarUsuarioService usuarioService;

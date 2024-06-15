@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/Empresa")
+@RequestMapping("/api/Empresa")
 @Validated
 public class BuscarEmpresaController {
 
