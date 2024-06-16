@@ -29,7 +29,7 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         String requestURI = request.getRequestURI();
-        if ("InsideApplication".equals(requestedWith) || requestURI.startsWith("/api/")) {
+        if ("InsideApplication".equals(requestedWith) || requestURI.startsWith("/auth/")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
             response.sendRedirect("/ranking");

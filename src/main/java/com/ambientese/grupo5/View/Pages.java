@@ -8,6 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class Pages {
 
+    @GetMapping("/signup")
+    public String pageSignup(Model model, HttpServletRequest request) {
+        return processRequest(request, "signup", "signup");
+    }
+
     @GetMapping("/login")
     public String pageLogin(Model model, HttpServletRequest request) {
         return processRequest(request, "login", "login");

@@ -117,7 +117,7 @@ function getMainFrameContent(page, props, addToHistory = true) {
             console.error(error);
             headers.delete('Authorization');
             sessionStorage.removeItem('token');
-            getMainFrameContent("ranking");
+            getMainFrameContent("login");
         });
 }
 

@@ -25,7 +25,7 @@ function onOpenFuncionario() {
 
     document.getElementById('confirmDelete').addEventListener('click', () => {
         const id = parseInt(currentId);
-        fetch(`${URL}/api/Funcionario/Delete/${id}`, {
+        fetch(`${URL}/auth/Funcionario/Delete/${id}`, {
             method: 'DELETE',
             headers,
         })
@@ -125,7 +125,7 @@ function onOpenFuncionario() {
             cargo,
         };
 
-        fetch(`${URL}/api/Funcionario/Add`, {
+        fetch(`${URL}/auth/Funcionario/Add`, {
             method: 'POST',
             headers,
             body: JSON.stringify(data)
@@ -166,7 +166,7 @@ function onOpenFuncionario() {
         };
 
         let id = parseInt(currentId);
-        fetch(`${URL}/api/Funcionario/Edit/${id}`, {
+        fetch(`${URL}/auth/Funcionario/Edit/${id}`, {
             method: 'PUT',
             headers,
             body: JSON.stringify(data)
@@ -278,7 +278,7 @@ function nextDataPageFuncionarios() {
     const queryParams = new URLSearchParams();
     queryParams.append('page', currentPageFuncionario);
 
-    fetch(`${URL}/api/Funcionario/search?${queryParams.toString()}`, {
+    fetch(`${URL}/auth/Funcionario/search?${queryParams.toString()}`, {
         method: 'GET',
         headers,
     })

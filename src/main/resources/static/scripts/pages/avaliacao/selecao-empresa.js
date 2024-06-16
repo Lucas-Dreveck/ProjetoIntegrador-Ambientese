@@ -6,7 +6,7 @@ const fetchEmpresas = (input, dropdown) => {
     const filter = input.value.toLowerCase();
     const queryParams = new URLSearchParams();
     queryParams.append('nomeFantasia', filter ? filter : 'a')
-    const fullUrl = `${URL}/api/Empresa/search?${queryParams.toString()}`;
+    const fullUrl = `${URL}/auth/Empresa/search?${queryParams.toString()}`;
     fetch(fullUrl, options)
         .then (response => {
             if (!response.ok) {

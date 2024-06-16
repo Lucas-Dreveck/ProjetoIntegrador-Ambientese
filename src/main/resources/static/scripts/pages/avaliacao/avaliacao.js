@@ -68,7 +68,7 @@ const onOpenAvaliacao = (props) => {
     const ambiental = [];
     const social = [];
 
-    fetch(`${URL}/api/questionario`, options)
+    fetch(`${URL}/auth/questionario`, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erro ao recuperar dados');
@@ -117,7 +117,7 @@ const onOpenAvaliacao = (props) => {
                             }
                         );
                     });
-                    const fullURL = `${URL}/api/processarRespostas?empresa_id=${props.id}`;
+                    const fullURL = `${URL}/auth/processarRespostas?empresa_id=${props.id}`;
                     const body = questions
                     fetch(fullURL, {
                         method: 'POST',

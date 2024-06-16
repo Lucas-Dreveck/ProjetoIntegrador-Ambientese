@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/Perguntas")
+@RequestMapping("/auth/Perguntas")
 public class CriarPerguntasController {
 
     private final CriarPerguntasService criarPerguntasService;

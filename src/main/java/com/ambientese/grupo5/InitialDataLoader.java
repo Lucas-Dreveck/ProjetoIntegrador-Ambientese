@@ -1,6 +1,9 @@
 package com.ambientese.grupo5;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -107,7 +110,13 @@ public class InitialDataLoader implements CommandLineRunner {
                 funcionario.setNome(faker.name().fullName());
                 funcionario.setCpf(faker.regexify("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"));
                 funcionario.setEmail(faker.internet().emailAddress());
-                funcionario.setDataNascimento(faker.date().birthday().toString());
+
+                // Converter Date para LocalDate
+                Date birthday = faker.date().birthday();
+                LocalDate localDate = birthday.toInstant()
+                                            .atZone(ZoneId.systemDefault())
+                                            .toLocalDate();
+                funcionario.setDataNascimento(localDate);
                 funcionario.setCargo(cargoConsultor);
 
                 funcionarioRepository.save(funcionario);

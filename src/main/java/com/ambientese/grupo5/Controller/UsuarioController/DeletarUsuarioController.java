@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/Usuarios")
+@RequestMapping("/auth/Usuarios")
 public class DeletarUsuarioController {
 
         private final DeletarUsuarioService usuarioService;

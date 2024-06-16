@@ -122,7 +122,7 @@ function onOpenEmpresa() {
             dataAlteracao
         };
 
-        fetch(`${URL}/api/Empresa/Add`, {
+        fetch(`${URL}/auth/Empresa/Add`, {
             method: 'POST',
             headers,
             body: JSON.stringify(data)
@@ -187,7 +187,7 @@ function onOpenEmpresa() {
 
         let id = parseInt(currentid);
 
-        fetch(`${URL}/api/Empresa/Edit/${id}`, {
+        fetch(`${URL}/auth/Empresa/Edit/${id}`, {
             method: 'PUT',
             headers,
             body: JSON.stringify(data)
@@ -213,7 +213,7 @@ function onOpenEmpresa() {
 
     document.getElementById('confirmDelete').addEventListener('click' , () => {
         const id = parseInt(currentid);
-        fetch(`${URL}/api/Empresa/Delete/${id}`, {
+        fetch(`${URL}/auth/Empresa/Delete/${id}`, {
             method: 'DELETE',
             headers,
         })
@@ -347,7 +347,7 @@ function nextDataPageEmpresas () {
     const queryParams = new URLSearchParams();
     queryParams.append('page', currentPage);
 
-    fetch(`${URL}/api/Empresa/search?${queryParams.toString()}`, {
+    fetch(`${URL}/auth/Empresa/search?${queryParams.toString()}`, {
         method: 'GET',
         headers,
     })

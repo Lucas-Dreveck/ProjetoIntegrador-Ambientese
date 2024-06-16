@@ -1,5 +1,7 @@
 package com.ambientese.grupo5.Model;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -28,7 +30,7 @@ public class FuncionarioModel {
     private String email;
 
     @NotBlank(message = "A data de nascimento não pode estar em branco")
-    private String dataNascimento;
+    private LocalDate dataNascimento;
 
     @ManyToOne
     @JoinColumn(name = "cargo_id")
@@ -74,11 +76,11 @@ public class FuncionarioModel {
         this.email = email;
     }
 
-    public String getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

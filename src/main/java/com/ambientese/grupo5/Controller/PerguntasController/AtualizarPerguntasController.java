@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/Perguntas")
+@RequestMapping("/auth/Perguntas")
 public class AtualizarPerguntasController {
 
     private final AtualizarPerguntasService atualizarPerguntasService;

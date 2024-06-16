@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ambientese.grupo5.Services.FuncionarioService.DeletarFuncionarioService;
 
 @RestController
-@RequestMapping("/api/Funcionario")
+@RequestMapping("/auth/Funcionario")
 @Validated
 public class DeletarFuncionarController {
     
