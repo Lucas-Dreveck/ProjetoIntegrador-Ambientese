@@ -4,19 +4,32 @@ const onOpenLogin = () => {
         event.preventDefault();
         login();
     });
+
+    const forgotPassword = document.querySelector('#forgotPass');
+    forgotPassword.addEventListener('click', () => {
+        getMainFrameContent('forgot-password');
+    });
 }
 
 const login = async () => {
     const login = document.querySelector('#user').value;
     const password = document.querySelector('#password').value;
 
-    fetch(`${URL}/login`, {
+    await fetch(`${URL}/login`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ login, password })
     })
-    .then(response => response.json())
+    .then(async response => {
+        return {
+            ok: response.ok,
+            token: await response.text()
+        }
+    })
     .then(data => {
+        if (!data.ok) {
+            throw new Error(data.token);
+        }
         if (data.token) {
             sessionStorage.setItem('token', data.token);
             headers.append('Authorization', `Bearer ${data.token}`);
@@ -30,6 +43,6 @@ const login = async () => {
         })
         .catch(error => {
             console.error('Error:', error);
-            toastAlert("Usuario ou senha incorretos", "error");
+            toastAlert(error, "error");
         });
 }

@@ -30,6 +30,9 @@ function loadSelectedPageScript(page, props) {
         case "login":
             onOpenLogin();
             break;
+        case "forgot-password":
+            onOpenForgotPassword();
+            break;
         case "ranking":
             onOpenRanking();
             break;
@@ -92,7 +95,7 @@ function getMainFrameContent(page, props, addToHistory = true) {
         .then(data => {
             allMenuButtons.forEach(button => button.classList.remove("active"));
 
-            if (page !== 'login' && page !== 'avaliacao' && page !== 'result-avaliacao') {
+            if (page !== 'login' && page !== 'avaliacao' && page !== 'result-avaliacao' && page !== 'forgot-password') {
                 const selectedButton = document.querySelector(`.menu li[page="${page}"]`);
                 selectedButton.classList.add("active");
             }

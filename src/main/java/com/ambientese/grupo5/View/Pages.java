@@ -18,6 +18,11 @@ public class Pages {
         return processRequest(request, "login", "login");
     }
 
+    @GetMapping("/forgot-password")
+    public String pageForgotPass(Model model, HttpServletRequest request) {
+        return processRequest(request, "forgot-password", "forgot-password");
+    }
+
     @GetMapping("/empresas")
     public String pageEmpresas(Model model, HttpServletRequest request) {
         return processRequest(request, "pages/cadastro-empresas", "empresas");

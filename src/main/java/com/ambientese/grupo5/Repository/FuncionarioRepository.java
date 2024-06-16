@@ -11,4 +11,6 @@ public interface FuncionarioRepository extends JpaRepository<FuncionarioModel, L
 
     List<FuncionarioModel> findFirst10ByIdOrderByIdAsc(Long id);
 
+    FuncionarioModel findByEmail(String email);
+
 }
