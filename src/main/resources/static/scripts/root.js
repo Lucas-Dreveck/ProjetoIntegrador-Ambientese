@@ -51,6 +51,9 @@ function loadSelectedPageScript(page, props) {
         case "funcionarios":
             onOpenFuncionario();
             break;
+        case "pergunta":
+            onOpenPerguntas();
+            break;
         default:
             break;
     }
