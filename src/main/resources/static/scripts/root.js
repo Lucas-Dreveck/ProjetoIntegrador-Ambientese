@@ -1,3 +1,6 @@
+const URL = "http://localhost:8080";
+const enviornment = "dev";
+
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
 const expandButton = document.querySelector(".expand-menu");
@@ -7,9 +10,6 @@ const menuItems = document.querySelectorAll(".main-list > li");
 const allMenuButtons = document.querySelectorAll('.menu li');
 const loginLogout = document.querySelector('.login-logout');
 const loading = document.querySelector(".loading");
-
-const URL = "http://localhost:8080";
-const enviornment = "dev";
 
 const headers = new Headers();
 headers.append("X-Requested-With", "InsideApplication");
