@@ -73,9 +73,7 @@ function onOpenPerguntas() {
 
         fetch(`${URL}/auth/Perguntas/Add`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
             .then(response => {
@@ -109,9 +107,7 @@ function onOpenPerguntas() {
 
         fetch(`${URL}/auth/Perguntas/Edit/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
             .then(response => {
@@ -228,9 +224,7 @@ function nextDataPagePerg () {
 
     fetch(`${URL}/auth/Perguntas/search?${queryParams.toString()}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers
     })
         .then(response => {
             if (!response.ok) {

@@ -12,33 +12,34 @@ import jakarta.annotation.PostConstruct;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JWTUtil {
-    private static String SECRET;
-    private static Algorithm algorithm;
-    private static JWTVerifier verifier;
+    private Algorithm algorithm;
+    private JWTVerifier verifier;
 
     @Autowired
     private JWTConfig jwtConfig;
 
     @PostConstruct
     public void init() {
-        SECRET = jwtConfig.getJwtSecret();
-        algorithm = Algorithm.HMAC256(SECRET);
-        verifier = JWT.require(algorithm).build();
+        String secret = jwtConfig.getJwtSecret();
+        this.algorithm = Algorithm.HMAC256(secret);
+        this.verifier = JWT.require(algorithm).build();
     }
 
-    public static String generateToken(String login) {
+    public String generateToken(String login, boolean isAdmin, String cargo) {
         return JWT.create()
                 .withSubject(login)
+                .withClaim("cargo", cargo)
                 .withExpiresAt(new Date(System.currentTimeMillis() + 3600000)) // 1 hour expiration
                 .sign(algorithm);
     }
 
-    public static String validateToken(String token) {
+    public DecodedJWT validateToken(String token) {
         try {
-            DecodedJWT jwt = verifier.verify(token);
-            return jwt.getSubject();
+            return verifier.verify(token);
         } catch (JWTVerificationException exception) {
             return null;
         }

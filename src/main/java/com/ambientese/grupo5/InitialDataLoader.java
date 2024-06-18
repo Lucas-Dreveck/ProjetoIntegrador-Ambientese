@@ -89,9 +89,9 @@ public class InitialDataLoader implements CommandLineRunner {
             }
 
             // Popular tabela de cargos
-            CargoModel cargoAdm = new CargoModel();
-            cargoAdm.setDescricao("Administrador");
-            cargoAdm = cargoRepository.save(cargoAdm);
+            CargoModel cargoGestor = new CargoModel();
+            cargoGestor.setDescricao("Gestor");
+            cargoGestor = cargoRepository.save(cargoGestor);
 
             CargoModel cargoConsultor = new CargoModel();
             cargoConsultor.setDescricao("Consultor");
@@ -100,8 +100,8 @@ public class InitialDataLoader implements CommandLineRunner {
             // Popular tabela de funcionarios
             for (int i = 0; i < numberToGenerate; i++) {
                 UsuarioModel usuario = new UsuarioModel();
-                usuario.setLogin(faker.name().username());
-                usuario.setPassword(BCrypt.hashpw(faker.internet().password(), BCrypt.gensalt()));
+                usuario.setLogin(i == 0 ? "Gestor" : i == 1 ? "Consultor" : faker.name().username());
+                usuario.setPassword(BCrypt.hashpw(i == 0 ? "gestor" : i == 1 ? "consultor" : faker.internet().password(), BCrypt.gensalt()));
                 usuario.setIsAdmin(false);
                 usuario = userRepository.save(usuario);
 
@@ -109,7 +109,7 @@ public class InitialDataLoader implements CommandLineRunner {
                 funcionario.setUsuario(usuario);
                 funcionario.setNome(faker.name().fullName());
                 funcionario.setCpf(faker.regexify("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"));
-                funcionario.setEmail(faker.internet().emailAddress());
+                funcionario.setEmail(i == 0 ? "Gestor@test.com" : i == 1 ? "Consultor@test.com" : faker.internet().emailAddress());
 
                 // Converter Date para LocalDate
                 Date birthday = faker.date().birthday();
@@ -117,7 +117,7 @@ public class InitialDataLoader implements CommandLineRunner {
                                             .atZone(ZoneId.systemDefault())
                                             .toLocalDate();
                 funcionario.setDataNascimento(localDate);
-                funcionario.setCargo(cargoConsultor);
+                funcionario.setCargo(i == 0 ? cargoGestor : cargoConsultor);
 
                 funcionarioRepository.save(funcionario);
             }
@@ -162,13 +162,27 @@ public class InitialDataLoader implements CommandLineRunner {
             userRepository.save(newUser);
 
             System.out.println("Banco pré preenchido com sucesso.");
-            System.out.println("Usuário root criado com sucesso.");
-            System.out.println("Login: root");
-            System.out.println("Senha: root");
+            System.out.println("Usuários para debug criados com sucesso:");
+            System.out.println("-- Usuário root");
+            System.out.println("- Login: root");
+            System.out.println("- Senha: root");
+            System.out.println("-- Usuário gestor");
+            System.out.println("- Login: Gestor");
+            System.out.println("- Senha: gestor");
+            System.out.println("-- Usuário consultor");
+            System.out.println("- Login: Consultor");
+            System.out.println("- Senha: consultor");
         } else {
-            System.out.println("Usuário root já existe.");
-            System.out.println("Login: root");
-            System.out.println("Senha: root");
+            System.out.println("Usuários para debug:");
+            System.out.println("-- Usuário root");
+            System.out.println("- Login: root");
+            System.out.println("- Senha: root");
+            System.out.println("-- Usuário gestor");
+            System.out.println("- Login: Gestor");
+            System.out.println("- Senha: gestor");
+            System.out.println("-- Usuário consultor");
+            System.out.println("- Login: Consultor");
+            System.out.println("- Senha: consultor");
         }
     }
 

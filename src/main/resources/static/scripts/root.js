@@ -25,6 +25,50 @@ const options = {
     headers: headers
 };
 
+function updateMenuButtons() {
+    const userInfo = token ? jwt_decode(token) : null;
+    const cargo = userInfo ? userInfo.cargo : "Guest";
+    
+    const permissions = {
+        "Admin": [],
+        "Gestor": [],
+        "Consultor": ["funcionarios"],
+        "Guest": ["empresas", "funcionarios", "perguntas", "start-avaliacao"]
+    };
+    
+    // Lista de todos os botões do menu
+    const menuButtons = {
+        "empresas": document.querySelector('.menu li[page="empresas"]'),
+        "funcionarios": document.querySelector('.menu li[page="funcionarios"]'),
+        "perguntas": document.querySelector('.menu li[page="perguntas"]'),
+        "start-avaliacao": document.querySelector('.menu li[page="start-avaliacao"]'),
+    };
+
+    // Itera sobre as permissões e esconde os botões necessários
+    Object.keys(menuButtons).forEach(button => {
+        if (permissions[cargo] && permissions[cargo].includes(button)) {
+            menuButtons[button].style.display = 'none';
+        } else {
+            menuButtons[button].style.display = 'block';
+        }
+    });
+
+    const cadastroSubItems = document.querySelectorAll('.menu .sub-list li');
+    let allHidden = true;
+    cadastroSubItems.forEach(item => {
+        if (item.style.display !== 'none') {
+            allHidden = false;
+        }
+    });
+
+    const cadastroItem = document.querySelector('.menu .main-list > li:first-child');
+    if (allHidden) {
+        cadastroItem.style.display = 'none';
+    } else {
+        cadastroItem.style.display = 'block';
+    }
+}
+
 function loadSelectedPageScript(page, props) {
     switch (page) {
         case "login":
@@ -51,7 +95,7 @@ function loadSelectedPageScript(page, props) {
         case "funcionarios":
             onOpenFuncionario();
             break;
-        case "pergunta":
+        case "perguntas":
             onOpenPerguntas();
             break;
         default:
@@ -76,11 +120,13 @@ function updateURLParameter(page, addToHistory = true) {
 
 function getMainFrameContent(page, props, addToHistory = true) {
     if (page === 'login') {
+        token = null;
         sessionStorage.removeItem('token');
         headers.delete('Authorization');
         loginLogout.textContent = "Login";
     }
 
+    updateMenuButtons();
     fetch(`${URL}/${page}`, options)
         .then(response => {
             if (!response.ok) {
@@ -90,6 +136,10 @@ function getMainFrameContent(page, props, addToHistory = true) {
                     } else {
                         toastAlert("Sua sessão expirou, faça login novamente", "error");
                     }
+                } else if (response.status === 403) {
+                    toastAlert("Você não tem permissão para acessar essa página", "error");
+                } else {
+                    toastAlert("Erro ao acessar tela", "error");
                 }
                 throw new Error(`Erro ao recuperar tela: ${page}`);
             }
@@ -121,9 +171,11 @@ function getMainFrameContent(page, props, addToHistory = true) {
         })
         .catch(error => {
             console.error(error);
+            token = null;
             headers.delete('Authorization');
             sessionStorage.removeItem('token');
             getMainFrameContent("login");
+            updateMenuButtons();
         });
 }
 

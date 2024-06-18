@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ambientese.grupo5.Model.UsuarioModel;
 import com.ambientese.grupo5.Services.UsuarioService.AuthService;
-import com.ambientese.grupo5.Services.UsuarioService.JWTUtil;
 
 @RestController
 public class AuthController {
@@ -20,8 +19,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UsuarioModel user) {
-        if (authService.authenticate(user.getLogin(), user.getPassword())) {
-            String token = JWTUtil.generateToken(user.getLogin());
+        String token = authService.login(user.getLogin(), user.getPassword());
+        if (token != null) {
             return ResponseEntity.ok(new TokenResponse(token));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha incorretos");

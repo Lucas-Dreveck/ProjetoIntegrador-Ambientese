@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth/perguntas")
+@RequestMapping("/auth/Perguntas")
 public class ListarPerguntasController {
 
     private final ListarPerguntasService listarPerguntasService;

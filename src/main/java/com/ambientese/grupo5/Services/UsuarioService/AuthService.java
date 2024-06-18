@@ -1,6 +1,10 @@
 package com.ambientese.grupo5.Services.UsuarioService;
 
-import java.util.Random;
+import com.ambientese.grupo5.Model.FuncionarioModel;
+import com.ambientese.grupo5.Model.UsuarioModel;
+import com.ambientese.grupo5.Repository.FuncionarioRepository;
+import com.ambientese.grupo5.Repository.UsuarioRepository;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.ambientese.grupo5.Model.FuncionarioModel;
-import com.ambientese.grupo5.Model.UsuarioModel;
-import com.ambientese.grupo5.Repository.FuncionarioRepository;
-import com.ambientese.grupo5.Repository.UsuarioRepository;
+import java.util.Random;
 
 @Service
 public class AuthService {
@@ -26,6 +27,9 @@ public class AuthService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     public boolean authenticate(String login, String password) {
         UsuarioModel user = userRepository.findByLogin(login);
@@ -43,13 +47,21 @@ public class AuthService {
 
     public String login(String login, String plainTextPassword) {
         if (authenticate(login, plainTextPassword)) {
-            return JWTUtil.generateToken(login);
+            UsuarioModel user = userRepository.findByLogin(login);
+            if (user == null) {
+                FuncionarioModel funcionarioModel = funcionarioRepository.findByEmail(login);
+                user = funcionarioModel.getUsuario();
+            }
+            FuncionarioModel funcionario = funcionarioRepository.findByUsuarioId(user.getId());
+            
+            String cargo = (funcionario != null) ? funcionario.getCargo().getDescricao() : "Admin";
+            return jwtUtil.generateToken(login, user.getIsAdmin(), cargo);
         }
         return null;
     }
 
-    public String validateToken(String token) {
-        return JWTUtil.validateToken(token);
+    public DecodedJWT validateToken(String token) {
+        return jwtUtil.validateToken(token);
     }
 
     public ResponseEntity<String> forgotPassword(String email) {
@@ -58,7 +70,6 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email não encontrado");
         }
         UsuarioModel user = funcionario.getUsuario();
-
         String code = generateRecoveryCode();
         user.setRecoveryCode(code);
         userRepository.save(user);

@@ -33,7 +33,7 @@ public class Pages {
         return processRequest(request, "pages/cadastro-funcionarios", "funcionarios");
     }
 
-    @GetMapping("/pergunta")
+    @GetMapping("/perguntas")
     public String pagePerguntas(Model model, HttpServletRequest request) throws InterruptedException {
         String meuHeaderValue = request.getHeader("X-Requested-With");
         if (meuHeaderValue != null && meuHeaderValue.equals("InsideApplication")) {

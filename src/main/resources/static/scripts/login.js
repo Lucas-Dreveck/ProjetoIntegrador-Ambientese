@@ -31,9 +31,9 @@ const login = async () => {
             throw new Error(data.token);
         }
         if (data.token) {
-            sessionStorage.setItem('token', data.token);
-            headers.append('Authorization', `Bearer ${data.token}`);
-            token = data.token;
+            token = JSON.parse(data.token).token
+            sessionStorage.setItem('token', token);
+            headers.append('Authorization', `Bearer ${token}`);
             toastAlert("Login bem-sucedido", "success");
             loginLogout.textContent = "Sair";
             getMainFrameContent('ranking');

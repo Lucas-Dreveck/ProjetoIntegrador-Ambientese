@@ -125,7 +125,7 @@ function onOpenFuncionario() {
             usuario: {
                 login,
                 password,
-                isAdmin: cargo === 'Administrador' ? true : false
+                isAdmin: false
             },
             cargo,
         };
