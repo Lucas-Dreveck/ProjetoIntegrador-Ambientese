@@ -36,6 +36,19 @@ function clearSelectedCompanyIfNotMatch(input) {
     }
 }
 
+async function verifyActiveForm() {
+    return fetch(`${URL}/auth/haveAvaliacaoAtiva/${settedCompany.id}`, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao recuperar dados');
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data;
+        });
+}
+
 const onOpenSelecaoEmpresa = () => {
     const input = document.querySelector('.search');
     const dropdown = document.querySelector('.dropdown-content');
@@ -76,10 +89,38 @@ const onOpenSelecaoEmpresa = () => {
     });
 
     const btnNext = document.querySelector('.btn-next');
-    btnNext.addEventListener('click', () => {
+    btnNext.addEventListener('click', async () => {
         if (settedCompany) {
-            getMainFrameContent('avaliacao', settedCompany);
-            settedCompany = null;
+            const hasActiveForm = await verifyActiveForm();
+            if (!hasActiveForm) {
+                getMainFrameContent('avaliacao', {
+                    company: settedCompany,
+                    isNew: true
+                });
+                settedCompany = null;
+            } else {
+                confirmationModal({
+                    title: 'Atenção',
+                    message: 'A empresa selecionada já possui uma avaliação em andamento. Deseja iniciar uma nova avaliação ou continuar a avaliação existente?',
+                    confirmText: 'Iniciar nova avaliação',
+                    cancelText: 'Continuar avaliação',
+                    haveCancel: false,
+                    onConfirm: () => {
+                        getMainFrameContent('avaliacao', {
+                            company: settedCompany,
+                            isNew: true
+                        });
+                        settedCompany = null;
+                    },
+                    onCancel: () => {
+                        getMainFrameContent('avaliacao', {
+                            company: settedCompany,
+                            isNew: false
+                        });
+                        settedCompany = null;
+                    }
+                });
+            }
         } else {
             toastAlert('Por favor, selecione uma empresa antes de avançar', 'error');
         }

@@ -50,15 +50,7 @@ public class RankingService {
 
         List<FormularioModel> latestFormularios = formularioRepository.findLatestByEmpresaOrderByPontuacaoFinalDesc();
 
-        // Atualizar os rankings das empresas
-        for (int i = 0; i < latestFormularios.size(); i++) {
-            FormularioModel formulario = latestFormularios.get(i);
-            EmpresaModel empresa = formulario.getEmpresa();
-            empresa.setRanking(i + 1);
-            empresaRepository.save(empresa);
-        }
-
-        final Specification<FormularioModel> finalSpec = spec;
+        final Specification<FormularioModel> finalSpec = spec;  
         List<FormularioModel> filteredFormularios = latestFormularios.stream()
                 .filter(formulario -> {
                     boolean matches = true;

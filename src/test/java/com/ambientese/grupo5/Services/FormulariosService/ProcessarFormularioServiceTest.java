@@ -75,7 +75,7 @@ class ProcessarFormularioServiceTest {
         when(perguntasRepository.findById(anyLong())).thenReturn(Optional.of(perguntaMock));
 
         // Chamada do método a ser testado
-        FormularioModel actualFormularioModel = processarFormularioService.criarProcessarEGerarCertificado(empresaId, formularioRequestList);
+        FormularioModel actualFormularioModel = processarFormularioService.criarFormularioCompleto(empresaId, formularioRequestList);
 
         // Verificação dos resultados
         assertEquals(expectedFormularioModel.getPontuacaoFinal(), actualFormularioModel.getPontuacaoFinal());

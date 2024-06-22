@@ -199,6 +199,10 @@ function menuButtonClicked(event) {
 }
 
 function toastAlert(message, type = 'info') {
+    const activeToast = document.querySelector('.toast.show');
+    if (activeToast) {
+        activeToast.remove();
+    }
     const toast = document.createElement('div');
     toast.classList.add('toast', type);
     toast.textContent = message;
@@ -209,6 +213,58 @@ function toastAlert(message, type = 'info') {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 300);
     }, 3000);
+}
+
+function confirmationModal({ title, message, confirmText = "Confirmar", cancelText = "Cancelar", haveCancel = true, onConfirm, onCancel }) {
+    const modalOverlay = document.createElement('div');
+    modalOverlay.classList.add('modal-overlay');
+
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h2>${title}</h2>
+            <p>${message}</p>
+            <div class="modal-buttons">
+                <button class=${haveCancel ? "btn-confirm" : "btn-confirms"}>${confirmText}</button>
+                <button class=${haveCancel ? "btn-cancel" : "btn-confirms"}>${cancelText}</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modalOverlay);
+    document.body.appendChild(modal);
+
+    let confirmButton;
+    let cancelButton;
+
+    if (haveCancel) {
+        confirmButton = modal.querySelector('.btn-confirm');
+        cancelButton = modal.querySelector('.btn-cancel');
+    } else {
+        confirmButton = modal.querySelectorAll('.btn-confirms')[0];
+        cancelButton = modal.querySelectorAll('.btn-confirms')[1];
+    }
+
+    confirmButton.addEventListener('click', () => {
+        if (onConfirm) onConfirm();
+        closeModal();
+    });
+
+    cancelButton.addEventListener('click', () => {
+        if (onCancel) onCancel();
+        closeModal();
+    });
+
+    modalOverlay.addEventListener('click', () => {
+        closeModal();
+    });
+
+    function closeModal() {
+        modalOverlay.remove();
+        modal.remove();
+    }
 }
 
 function frameSetup() {

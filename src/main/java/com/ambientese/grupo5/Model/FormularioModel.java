@@ -4,6 +4,8 @@ import com.ambientese.grupo5.Model.Enums.NivelCertificadoEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class FormularioModel {
 
     @OneToMany(mappedBy = "formulario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
-    private List<RespostaModel> respostas;
+    private List<RespostaModel> respostas = new ArrayList<>();
 
     @Column(name = "certificado")
     @Enumerated(EnumType.STRING)
@@ -75,12 +77,27 @@ public class FormularioModel {
         this.empresa = empresa;
     }
 
+    public void addResposta(RespostaModel resposta) {
+        respostas.add(resposta);
+        resposta.setFormulario(this);
+    }
+
+    public void removeResposta(RespostaModel resposta) {
+        respostas.remove(resposta);
+        resposta.setFormulario(null);
+    }
+
     public List<RespostaModel> getRespostas() {
         return respostas;
     }
 
     public void setRespostas(List<RespostaModel> respostas) {
-        this.respostas = respostas;
+        this.respostas.clear();
+        if (respostas != null) {
+            for (RespostaModel resposta : respostas) {
+                addResposta(resposta);
+            }
+        }
     }
 
     public Integer getPontuacaoSocial() {

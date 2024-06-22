@@ -150,7 +150,7 @@ public class InitialDataLoader implements CommandLineRunner {
             List<EmpresaModel> empresas = empresaRepository.findAll();
             for (EmpresaModel empresa : empresas) {
                 List<FormularioRequest> formularioRequests = generateFormularioRequests();
-                processarFormularioService.criarProcessarEGerarCertificado(empresa.getId(), formularioRequests);
+                processarFormularioService.criarFormularioCompleto(empresa.getId(), formularioRequests);
             }
 
             // Criação do usuário root
