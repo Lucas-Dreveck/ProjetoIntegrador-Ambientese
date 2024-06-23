@@ -107,8 +107,11 @@ public class ProcessarFormularioService {
         List<RespostaModel> novasRespostas = criarRespostas(formularioIncompleto, formularioRequestList);
         respostaRepository.saveAll(novasRespostas);
         formularioIncompleto.setRespostas(novasRespostas);
+        formularioRepository.saveAndFlush(formularioIncompleto);
 
-        return formularioRepository.saveAndFlush(formularioIncompleto);
+        atualizarRanking();
+
+        return formularioIncompleto;
     }
 
     private FormularioModel substituirFormularioIncompletoPorIncompleto(FormularioModel formularioIncompleto, List<FormularioRequest> formularioRequestList) {

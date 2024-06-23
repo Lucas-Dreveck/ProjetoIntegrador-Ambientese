@@ -31,7 +31,7 @@ public class RankingController {
             @RequestParam(required = false) String ramo,
             @RequestParam(required = false) PorteEnum porte,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "15") int size) {
         
         List<FormularioRanking> resultado = rankingService.classificarPorPontuacaoWithFilter(nomeFantasia, ramo, porte, page, size);
         return ResponseEntity.ok(resultado);

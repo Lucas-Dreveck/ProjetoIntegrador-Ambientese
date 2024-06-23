@@ -277,12 +277,7 @@ function exportPDF(empresaId, nomeFantasia) {
     })
     .then(blob => {
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Avaliacao-${nomeFantasia}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        window.open(url, '_blank');
     })
     .catch(error => {
         toastAlert('Erro ao baixar PDF', 'error');
