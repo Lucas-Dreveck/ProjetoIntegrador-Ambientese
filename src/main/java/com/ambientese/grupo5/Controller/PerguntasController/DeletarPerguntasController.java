@@ -17,7 +17,6 @@ public class DeletarPerguntasController {
 
     @DeleteMapping("/Delete/{id}")
     public ResponseEntity<String> deletarPergunta(@PathVariable long id) {
-        deletarPerguntasService.deletarPergunta(id);
-        return ResponseEntity.noContent().build();
+        return deletarPerguntasService.deletarPergunta(id);
     }
 }

@@ -131,16 +131,16 @@ function onOpenEmpresa() {
         const bairro = document.getElementById('bairro').value;
         const uf = document.getElementById('uf').value;
 
+        if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
+            toastAlert('Preencha todos os campos!', 'error');
+            return;
+        }
+
         const isNumber = parseInt(numero)
         if(!isNumber || isNumber < 0 || isNumber > 9999999999) {
             toastAlert('Insira um número válido', 'error');
             return;
         }
-
-       if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
-            toastAlert('Preencha todos os campos!', 'error');
-            return;
-       }
 
         const data = {
             nomeFantasia,
@@ -230,14 +230,14 @@ function onOpenEmpresa() {
         const bairro = document.getElementById('bairroEdit').value;
         const uf = document.getElementById('ufEdit').value;
 
-        const isNumber = parseInt(numero)
-        if(!isNumber || isNumber < 0 || isNumber > 9999999999) {
-            toastAlert('Insira um número válido', 'error');
+        if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
+            toastAlert('Preencha todos os campos!', 'error');
             return;
         }
 
-        if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
-            toastAlert('Preencha todos os campos!', 'error');
+        const isNumber = parseInt(numero)
+        if(!isNumber || isNumber < 0 || isNumber > 9999999999) {
+            toastAlert('Insira um número válido', 'error');
             return;
         }
 

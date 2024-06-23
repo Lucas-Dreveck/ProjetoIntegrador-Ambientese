@@ -268,7 +268,7 @@ function confirmationModal({ title, message, confirmText = "Confirmar", cancelTe
 }
 
 function exportPDF(empresaId, nomeFantasia) {
-    fetch(`${URL}/auth/pdf/getPdf/${empresaId}`, options)
+    fetch(`${URL}/pdf/getPdf/${empresaId}`, options)
     .then(response => {
         if (!response.ok) {
             throw new Error('Erro ao baixar PDF');

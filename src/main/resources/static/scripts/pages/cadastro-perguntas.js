@@ -145,15 +145,22 @@ function onOpenPerguntas() {
     document.getElementById('confirmDelete').addEventListener('click' , () => {
         const id = parseInt(currentid);
         fetch(`${URL}/auth/Perguntas/Delete/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao deletar Pergunta');
+                    return {
+                        status: response.status,
+                        text: await response.text()
+                    };
                 }
                 return response.text();
             })
             .then(data => {
+                if (data.status !== 200) {
+                    throw new Error(data.text);
+                }
                 toastAlert('Pergunta deletada com sucesso!', 'success');
                 currentPagePerg = 0;
                 nextDataPagePerg();

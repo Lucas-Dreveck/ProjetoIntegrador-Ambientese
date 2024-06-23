@@ -13,7 +13,7 @@ public class DeletarFuncionarioService {
     private FuncionarioRepository funcionarioRepository;
 
     public void deleteFuncionario(Long id) {
-        FuncionarioModel empresa = funcionarioRepository.findById(id).orElse(null);
-        funcionarioRepository.delete(empresa);
+        FuncionarioModel funcionario = funcionarioRepository.findById(id).orElse(null);
+        funcionarioRepository.delete(funcionario);
     }
 }
