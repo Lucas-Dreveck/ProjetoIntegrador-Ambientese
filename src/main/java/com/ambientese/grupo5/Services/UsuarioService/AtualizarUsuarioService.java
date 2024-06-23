@@ -9,12 +9,9 @@ import java.util.Optional;
 @Service
 public class AtualizarUsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-
     @Autowired
-    public AtualizarUsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    private UsuarioRepository usuarioRepository;
+
     public Optional<UsuarioModel> updateUsuario(Long id, UsuarioModel usuarioModel) {
         Optional<UsuarioModel> existingUsuario = usuarioRepository.findById(id);
         if (existingUsuario.isPresent()) {

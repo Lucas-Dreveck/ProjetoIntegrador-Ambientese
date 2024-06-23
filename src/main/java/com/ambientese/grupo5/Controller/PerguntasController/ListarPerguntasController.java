@@ -13,14 +13,11 @@ import java.util.List;
 @RequestMapping("/auth/Perguntas")
 public class ListarPerguntasController {
 
-    private final ListarPerguntasService listarPerguntasService;
-    private final ListarPerguntasPorEixoService listarPerguntasPorEixoService;
+    @Autowired
+    private ListarPerguntasService listarPerguntasService;
 
     @Autowired
-    public ListarPerguntasController(ListarPerguntasService listarPerguntasService, ListarPerguntasPorEixoService listarPerguntasPorEixoService) {
-        this.listarPerguntasService = listarPerguntasService;
-        this.listarPerguntasPorEixoService = listarPerguntasPorEixoService;
-    }
+    private ListarPerguntasPorEixoService listarPerguntasPorEixoService;
 
     @GetMapping("/search")
     public List<PerguntasModel> listarPerguntas() {

@@ -9,12 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeletarPerguntasService {
 
-    private final PerguntasRepository perguntasRepository;
-
     @Autowired
-    public DeletarPerguntasService(PerguntasRepository perguntasRepository) {
-        this.perguntasRepository = perguntasRepository;
-    }
+    private PerguntasRepository perguntasRepository;
 
     public ResponseEntity<String> deletarPergunta(long id) {
         PerguntasModel pergunta = perguntasRepository.findById(id).orElseThrow(() ->

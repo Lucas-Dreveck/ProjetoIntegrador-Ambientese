@@ -18,12 +18,8 @@ import java.util.List;
 @RequestMapping("/ranking")
 public class RankingController {
 
-    private final RankingService rankingService;
-
     @Autowired
-    public RankingController(RankingService rankingService) {
-        this.rankingService = rankingService;
-    }
+    private RankingService rankingService;
 
     @GetMapping("/pontuacao")
     public ResponseEntity<List<FormularioRanking>> classificarPorPontuacao(

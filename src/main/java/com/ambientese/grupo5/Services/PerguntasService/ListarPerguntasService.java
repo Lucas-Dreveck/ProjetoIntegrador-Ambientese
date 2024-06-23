@@ -10,12 +10,8 @@ import java.util.List;
 @Service
 public class ListarPerguntasService {
 
-    private final PerguntasRepository perguntasRepository;
-
     @Autowired
-    public ListarPerguntasService(PerguntasRepository perguntasRepository) {
-        this.perguntasRepository = perguntasRepository;
-    }
+    private PerguntasRepository perguntasRepository;
 
     public List<PerguntasModel> listarPerguntas() {
         return perguntasRepository.findAll();

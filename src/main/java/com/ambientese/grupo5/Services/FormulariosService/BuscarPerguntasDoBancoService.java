@@ -20,21 +20,18 @@ import java.util.stream.Collectors;
 @Service
 public class BuscarPerguntasDoBancoService {
 
-    private final PerguntasRepository perguntasRepository;
-    private final FormularioRepository formularioRepository;
-    private final RespostaRepository respostaRepository;
-    private final Random random;
+    @Autowired
+    private PerguntasRepository perguntasRepository;
 
     @Autowired
-    public BuscarPerguntasDoBancoService(PerguntasRepository perguntasRepository, FormularioRepository formularioRepository, RespostaRepository respostaRepository) {
-        this.perguntasRepository = perguntasRepository;
-        this.formularioRepository = formularioRepository;
-        this.respostaRepository = respostaRepository;
-        this.random = new Random();
-    }
+    private FormularioRepository formularioRepository;
+
+    @Autowired
+    private RespostaRepository respostaRepository;
 
     public QuestionarioResponse buscarPerguntasDoBanco(Boolean isNewForm, Long empresaId) {
         if (isNewForm) {
+            Random random = new Random();
             Optional<FormularioModel> latestForm = formularioRepository.findIncompleteByEmpresaId(empresaId);
             if (latestForm.isPresent()) {
                 respostaRepository.deleteAll(latestForm.get().getRespostas());

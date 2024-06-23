@@ -13,12 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth/Perguntas")
 public class CriarPerguntasController {
 
-    private final CriarPerguntasService criarPerguntasService;
-
     @Autowired
-    public CriarPerguntasController(CriarPerguntasService criarPerguntasService) {
-        this.criarPerguntasService = criarPerguntasService;
-    }
+    private CriarPerguntasService criarPerguntasService;
 
     @PostMapping("/Add")
     public PerguntasModel criarPergunta(@RequestBody PerguntasRequest request) {

@@ -9,12 +9,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CriarUsuarioService {
-    private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    public CriarUsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    private UsuarioRepository usuarioRepository;
+
     public UsuarioModel createUsuario(UsuarioModel usuarioModel) {
         usuarioModel.setPassword(BCrypt.hashpw(usuarioModel.getPassword(), BCrypt.gensalt()));
         return usuarioRepository.save(usuarioModel);

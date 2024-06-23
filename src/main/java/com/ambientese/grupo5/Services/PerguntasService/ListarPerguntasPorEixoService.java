@@ -11,12 +11,8 @@ import java.util.List;
 @Service
 public class ListarPerguntasPorEixoService {
 
-    private final PerguntasRepository perguntasRepository;
-
     @Autowired
-    public ListarPerguntasPorEixoService(PerguntasRepository perguntasRepository) {
-        this.perguntasRepository = perguntasRepository;
-    }
+    private PerguntasRepository perguntasRepository;
 
     public List<PerguntasModel> listarPerguntasPorEixo(EixoEnum eixo) {
         return perguntasRepository.findByEixo(eixo);

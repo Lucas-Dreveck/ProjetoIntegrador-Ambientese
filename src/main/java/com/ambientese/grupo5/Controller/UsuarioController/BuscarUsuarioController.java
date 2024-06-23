@@ -13,13 +13,8 @@ import java.util.Optional;
 @RequestMapping("/auth/Usuarios")
 public class BuscarUsuarioController {
 
-    private final ListarUsuarioService usuarioService;
-
     @Autowired
-    public BuscarUsuarioController(ListarUsuarioService usuarioService) {
-
-        this.usuarioService = usuarioService;
-    }
+    private ListarUsuarioService usuarioService;
 
     @GetMapping("/search")
     public ResponseEntity<List<UsuarioModel>> getAllUsuarios() {

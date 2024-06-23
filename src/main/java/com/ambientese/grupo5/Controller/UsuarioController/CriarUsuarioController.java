@@ -13,13 +13,8 @@ import javax.validation.Valid;
 @RequestMapping("/auth/Usuarios")
 public class CriarUsuarioController {
 
-    private final CriarUsuarioService usuarioService;
-
     @Autowired
-    public CriarUsuarioController(CriarUsuarioService usuarioService) {
-
-        this.usuarioService = usuarioService;
-    }
+    private CriarUsuarioService usuarioService;
 
     @PostMapping("/Add")
     public ResponseEntity<UsuarioModel> createUsuario(@Valid @RequestBody UsuarioModel usuarioModel) {

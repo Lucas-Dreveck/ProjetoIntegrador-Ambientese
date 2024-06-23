@@ -8,12 +8,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public class ListarEmpresaService {
-    private final EmpresaRepository empresaRepository;
 
     @Autowired
-    public ListarEmpresaService(EmpresaRepository empresaRepository) {
-        this.empresaRepository = empresaRepository;
-    }
+    private EmpresaRepository empresaRepository;
 
     public List<EmpresaModel> getAllEmpresas() {
         return empresaRepository.findAll();

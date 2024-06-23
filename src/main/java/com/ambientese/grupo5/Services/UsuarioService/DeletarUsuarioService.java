@@ -7,12 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeletarUsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-
     @Autowired
-    public DeletarUsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    private UsuarioRepository usuarioRepository;
 
     public boolean deleteUsuario(Long id) {
         if (usuarioRepository.existsById(id)) {

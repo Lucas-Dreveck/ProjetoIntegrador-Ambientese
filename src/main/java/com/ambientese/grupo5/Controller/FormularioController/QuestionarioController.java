@@ -3,7 +3,6 @@ package com.ambientese.grupo5.Controller.FormularioController;
 import com.ambientese.grupo5.DTO.FormularioRequest;
 import com.ambientese.grupo5.DTO.QuestionarioResponse;
 import com.ambientese.grupo5.Model.FormularioModel;
-import com.ambientese.grupo5.Model.PerguntasModel;
 import com.ambientese.grupo5.Services.FormulariosService.BuscarPerguntasDoBancoService;
 import com.ambientese.grupo5.Services.FormulariosService.ProcessarFormularioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,14 +18,11 @@ import java.util.List;
 @RestController
 public class QuestionarioController {
 
-    private final BuscarPerguntasDoBancoService buscarPerguntasService;
-    private final ProcessarFormularioService processarFormularioService;
+    @Autowired
+    private BuscarPerguntasDoBancoService buscarPerguntasService;
 
     @Autowired
-    public QuestionarioController(BuscarPerguntasDoBancoService buscarPerguntasService, ProcessarFormularioService processarFormularioService) {
-        this.buscarPerguntasService = buscarPerguntasService;
-        this.processarFormularioService = processarFormularioService;
-    }
+    private ProcessarFormularioService processarFormularioService;
 
     @GetMapping("/auth/haveAvaliacaoAtiva/{empresaId}")
     public boolean avaliacaoAtiva(@PathVariable() Long empresaId) {

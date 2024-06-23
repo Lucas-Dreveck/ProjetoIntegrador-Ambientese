@@ -12,12 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth/Usuarios")
 public class DeletarUsuarioController {
 
-        private final DeletarUsuarioService usuarioService;
-
-        @Autowired
-        public DeletarUsuarioController(DeletarUsuarioService usuarioService) {
-            this.usuarioService = usuarioService;
-        }
+    @Autowired
+    private DeletarUsuarioService usuarioService;
 
     @DeleteMapping("/Delete/{id}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
