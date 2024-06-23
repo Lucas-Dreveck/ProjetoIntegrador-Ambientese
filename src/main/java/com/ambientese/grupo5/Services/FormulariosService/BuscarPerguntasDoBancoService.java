@@ -8,6 +8,9 @@ import com.ambientese.grupo5.Model.PerguntasModel;
 import com.ambientese.grupo5.Repository.FormularioRepository;
 import com.ambientese.grupo5.Repository.PerguntasRepository;
 import com.ambientese.grupo5.Repository.RespostaRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class BuscarPerguntasDoBancoService {
     @Autowired
     private RespostaRepository respostaRepository;
 
+    @Transactional
     public QuestionarioResponse buscarPerguntasDoBanco(Boolean isNewForm, Long empresaId) {
         if (isNewForm) {
             Random random = new Random();

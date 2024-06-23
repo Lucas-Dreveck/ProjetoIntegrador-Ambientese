@@ -25,7 +25,7 @@ public class FormularioModel {
     @Enumerated(EnumType.STRING)
     private NivelCertificadoEnum certificado;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     @JoinColumn(name = "empresa_id")
     private EmpresaModel empresa;
 
