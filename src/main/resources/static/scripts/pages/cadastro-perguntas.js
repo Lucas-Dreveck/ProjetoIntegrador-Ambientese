@@ -2,6 +2,8 @@ let currentPagePerg = 0;
 function onOpenPerguntas() {
     const priorBtn = document.getElementById('priorBtnPerg');
     const nextBtn = document.getElementById('nextBtnPerg');
+    const search = document.getElementById('search');
+    const searchBtn = document.querySelector('.imgSearch');
     const overlay = document.querySelector('.overlay');
     const divAdd = document.querySelector('.divAddPerg');
     const divEdit = document.querySelector('.divEditPerg');
@@ -11,16 +13,27 @@ function onOpenPerguntas() {
     nextDataPagePerg();
 
     nextBtn.addEventListener('click', () => {
-        currentPage++;
+        currentPagePerg++;
         nextDataPagePerg();
     });
 
     priorBtn.addEventListener('click', () => {
-        currentPage--;
-        if (currentPage < 0) {
-            currentPage = 0;
+       if (currentPagePerg > 0) {
+           currentPagePerg--;
+           nextDataPagePerg();
         }
+    });
+
+    searchBtn.addEventListener('click', () => {
+        currentPagePerg = 0;
         nextDataPagePerg();
+    });
+
+    search.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            currentPagePerg = 0;
+            nextDataPagePerg();
+        }
     });
 
     document.querySelector('.tablePerg').addEventListener('click', (event) => {
@@ -76,7 +89,7 @@ function onOpenPerguntas() {
             headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     throw new Error('Erro ao adicionar Pergunta');
                 }
@@ -110,7 +123,7 @@ function onOpenPerguntas() {
             headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     throw new Error('Erro ao editar Pergunta');
                 }
@@ -118,7 +131,7 @@ function onOpenPerguntas() {
             })
             .then(data => {
                 toastAlert('Pergunta editada com sucesso!', 'success');
-                currentPage = 0;
+                currentPagePerg = 0;
                 nextDataPagePerg();
                 divEdit.style.display = 'none';
                 overlay.style.display = 'none';
@@ -142,7 +155,7 @@ function onOpenPerguntas() {
             })
             .then(data => {
                 toastAlert('Pergunta deletada com sucesso!', 'success');
-                currentPage = 0;
+                currentPagePerg = 0;
                 nextDataPagePerg();
                 divDelete.style.display = 'none';
                 overlay.style.display = 'none';
@@ -163,16 +176,29 @@ function onOpenPerguntas() {
 
 function addTableLinesPerguntas(data) {
     const table = document.querySelector('.tablePerg>tbody');
+    const prevBtn = document.getElementById('priorBtnPerg');
     const nextBtn = document.getElementById('nextBtnPerg');
 
-    if (data.length === 0) {
+    if(data.length === 0) {
+        toastAlert('Nenhuma pergunta encontrada', 'error');
         nextBtn.setAttribute('disabled', 'true');
-        const newLine = document.createElement('tr');
-        newLine.innerHTML = `<td class="thStyle" colspan="5">Nenhuma pergunta encontrada</td>`;
-        table.appendChild(newLine);
-        return;
+        nextBtn.classList.add('disabled');
+    } else {
+        if (data[0].finishList) {
+            nextBtn.setAttribute('disabled', 'true');
+            nextBtn.classList.add('disabled');
+        } else {
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('disabled');
+        };
     }
-    nextBtn.removeAttribute('disabled');
+    if (currentPagePerg > 0 ) {
+        prevBtn.removeAttribute('disabled');
+        prevBtn.classList.remove('disabled');
+    } else {
+        prevBtn.setAttribute('disabled', 'true');
+        prevBtn.classList.add('disabled');
+    };
 
     let count = 0;
 
@@ -219,8 +245,10 @@ function processEventPerguntas(event) {
 }
 
 function nextDataPagePerg () {
+    const search = document.getElementById('search').value;
     const queryParams = new URLSearchParams();
-    queryParams.append('page', currentPage);
+    if (search) queryParams.append('nome', search);
+    queryParams.append('page', currentPagePerg);
 
     fetch(`${URL}/auth/Perguntas/search?${queryParams.toString()}`, {
         method: 'GET',

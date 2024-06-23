@@ -2,6 +2,8 @@ let currentPage = 0;
 function onOpenEmpresa() {
     const priorBtn = document.getElementById('priorBtnEmp');
     const nextBtn = document.getElementById('nextBtnEmp');
+    const search = document.getElementById('search');
+    const searchBtn = document.querySelector('.imgSearch');
     const overlay = document.querySelector('.overlay');
     const divAdd = document.querySelector('.divAddEmp');
     const divEdit = document.querySelector('.divEditEmp');
@@ -16,11 +18,22 @@ function onOpenEmpresa() {
     });
 
     priorBtn.addEventListener('click', () => {
-        currentPage--;
-        if (currentPage < 0) {
-            currentPage = 0;
+       if (currentPage > 0) {
+           currentPage--;
+           nextDataPageEmpresas();
         }
+    });
+
+    searchBtn.addEventListener('click', () => {
+        currentPage = 0;
         nextDataPageEmpresas();
+    });
+
+    search.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            currentPage = 0;
+            nextDataPageEmpresas();
+        }
     });
 
     document.querySelectorAll('.inpCnpjEmp').forEach(input => {
@@ -156,7 +169,7 @@ function onOpenEmpresa() {
             headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     return response.text().then(text => {
                         try {
@@ -257,7 +270,7 @@ function onOpenEmpresa() {
             headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then( async response => {
                 if (!response.ok) {
                     return response.text().then(text => {
                         try {
@@ -334,16 +347,28 @@ function onOpenEmpresa() {
 
 function addTableLinesEmpresas(data) {
     const table = document.querySelector('.tableEmp>tbody');
+    const prevBtn = document.getElementById('priorBtnEmp');
     const nextBtn = document.getElementById('nextBtnEmp');
-
-    if (data.length === 0) {
+    if(data.length === 0) {
+        toastAlert('Nenhuma empresa encontrada', 'error');
         nextBtn.setAttribute('disabled', 'true');
-        const newLine = document.createElement('tr');
-        newLine.innerHTML = `<td class="thStyle" colspan="6">Nenhuma empresa cadastrada</td>`;
-        table.appendChild(newLine);
-        return;
+        nextBtn.classList.add('disabled');
+    } else {
+        if (data[0].finishList) {
+            nextBtn.setAttribute('disabled', 'true');
+            nextBtn.classList.add('disabled');
+        } else {
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('disabled');
+        };
     }
-    nextBtn.removeAttribute('disabled');
+    if (currentPage > 0 ) {
+        prevBtn.removeAttribute('disabled');
+        prevBtn.classList.remove('disabled');
+    } else {
+        prevBtn.setAttribute('disabled', 'true');
+        prevBtn.classList.add('disabled');
+    };
 
     let count = 0;
 
@@ -433,7 +458,9 @@ function processEventEmpresas(event) {
 }
 
 function nextDataPageEmpresas () {
+    const search = document.getElementById('search').value;
     const queryParams = new URLSearchParams();
+    if (search) queryParams.append('nome', search);
     queryParams.append('page', currentPage);
 
     fetch(`${URL}/auth/Empresa/search?${queryParams.toString()}`, {

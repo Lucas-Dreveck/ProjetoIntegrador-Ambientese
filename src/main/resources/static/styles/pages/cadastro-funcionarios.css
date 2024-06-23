@@ -11,6 +11,9 @@
 .containerGeral {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .divSelect {
@@ -23,6 +26,7 @@
 
 .selectBox {
     width: 15%;
+    height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,30 +35,34 @@
     margin-right: 5%;
 }
 
-#select {
-    width: 30%;
-    border: none;
-    outline: none;
-    background-color: transparent;
-}
-
 .inpFilter {
-    width: 65%;
+    width: 90%;
     border: none;
     outline: none;
     font-size: 12px;
 }
 
 .imgSearch {
+    align-self: center;
     width: 8%;
     margin-right: 3%;
+    cursor: pointer;
 }
 
 .btnAdd {
     color: white;
-    font-size: 26px;
-    background-color: #0077C8;
     cursor: pointer;
+    padding: 5px;
+}
+
+.btnAdd .btn-plus {
+    background-color: #0077C8;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.btnAdd .btn-plus:hover {
+    background-color: #005A8C;
 }
 
 .divFunc {
@@ -62,6 +70,10 @@
     max-height: 84%;
     overflow: auto;
     margin-bottom: 1%;
+}
+
+.divFunc::-webkit-scrollbar {
+    width: 0px;
 }
 
 .tableFunc {
@@ -101,8 +113,21 @@
 
 .thStyle {
     text-align: center;
+    vertical-align: middle;
     font-size: 20px;
     background-color: white;
+}
+
+.thTable {
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+tbody tr {
+    height: 70px;
 }
 
 .azul {
@@ -116,34 +141,44 @@
 
 .divBtns {
     display: flex;
-    justify-content: end;
-    width: 95%;
-    height: 8%;
-}
-
-#priorBtnFunc, #nextBtnFunc {
-    display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: flex-end;
+    width: 90%;
+    margin: 10px 0;
+}
+
+.btn-next,
+.btn-prev {
+    display: flex;
     justify-content: center;
-    width: 3%;
-    height: 80%;
-    border: 3px solid #0077C8;
-    background-color: white;
-    font-size: 30px;
+    align-items: center;
+    margin-right: 20px;
+    border-radius: 10px;
+    background-color: var(--white);
+    color: #fff;
+    font-size: large;
     cursor: pointer;
-    color: blue;
-}
-
-#nextBtn {
-    margin-left: 1%;
-}
-
-#priorBtn, #nextBtn:disabled {
-    background-color: #525252;
-    color: #000000;
     border: none;
-    cursor: default;
-    opacity: 0.6;
+    padding: 0;
+}
+
+.btn-prev:hover,
+.btn-next:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+.btn-prev.disabled,
+.btn-next.disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.btn-prev.disabled .arrow-icon,
+.btn-next.disabled .arrow-icon {
+    filter: grayscale(100%) brightness(180%) saturate(100%);
+    opacity: 1;
 }
 
 .overlay {

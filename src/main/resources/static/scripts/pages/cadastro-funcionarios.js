@@ -2,6 +2,8 @@ let currentPageFuncionario = 0;
 function onOpenFuncionario() {
     const priorBtn = document.getElementById('priorBtnFunc');
     const nextBtn = document.getElementById('nextBtnFunc');
+    const search = document.getElementById('search');
+    const searchBtn = document.querySelector('.imgSearch');
     const overlay = document.querySelector('.overlay');
     const divAdd = document.querySelector('.divAddFunc');
     const divEdit = document.querySelector('.divEditFunc');
@@ -16,11 +18,22 @@ function onOpenFuncionario() {
     });
 
     priorBtn.addEventListener('click', () => {
-        currentPageFuncionario--;
-        if (currentPageFuncionario < 0) {
-            currentPageFuncionario = 0;
+       if (currentPageFuncionario > 0) {
+           currentPageFuncionario--;
+           nextDataPageFuncionarios();
         }
+    });
+
+    searchBtn.addEventListener('click', () => {
+        currentPageFuncionario = 0;
         nextDataPageFuncionarios();
+    });
+
+    search.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            currentPageFuncionario = 0;
+            nextDataPageFuncionarios();
+        }
     });
 
     document.querySelectorAll('.inputNasc').forEach(input => {
@@ -135,7 +148,7 @@ function onOpenFuncionario() {
             headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     return response.text().then(text => {
                         try {
@@ -183,7 +196,7 @@ function onOpenFuncionario() {
             headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     return response.text().then(text => {
                         try {
@@ -215,17 +228,31 @@ function onOpenFuncionario() {
 // }
 
 function addTableLinesFuncionarios(data) {
-    const nextBtn = document.getElementById('nextBtnFunc');
     const table = document.querySelector('.tableFunc>tbody');
+    const prevBtn = document.getElementById('priorBtnFunc');
+    const nextBtn = document.getElementById('nextBtnFunc');
 
-    if (data.length === 0) {
+    if(data.length === 0) {
+        toastAlert('Nenhum funcionario encontrado', 'error');
         nextBtn.setAttribute('disabled', 'true');
-        const newLine = document.createElement('tr');
-        newLine.innerHTML = `<td class="thStyle" colspan="5">Nenhum funcionário encontrado</td>`;
-        table.appendChild(newLine);
-        return;
+        nextBtn.classList.add('disabled');
+    } else {
+        if (data[0].finishList) {
+            nextBtn.setAttribute('disabled', 'true');
+            nextBtn.classList.add('disabled');
+        } else {
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('disabled');
+        };
     }
-    nextBtn.removeAttribute('disabled');
+    if (currentPageFuncionario > 0 ) {
+        prevBtn.removeAttribute('disabled');
+        prevBtn.classList.remove('disabled');
+    } else {
+        prevBtn.setAttribute('disabled', 'true');
+        prevBtn.classList.add('disabled');
+    };
+
     let count = 0;
 
     data.forEach(funcionario => {
@@ -283,7 +310,9 @@ function processEventFuncionarios(event) {
 }
 
 function nextDataPageFuncionarios() {
+    const search = document.getElementById('search').value;
     const queryParams = new URLSearchParams();
+    if (search) queryParams.append('nome', search);
     queryParams.append('page', currentPageFuncionario);
 
     fetch(`${URL}/auth/Funcionario/search?${queryParams.toString()}`, {
@@ -307,42 +336,6 @@ function nextDataPageFuncionarios() {
         })
         .catch(error => console.error('Erro ao buscar os dados:', error));
 }
-
-    // document.querySelector('.imgSearch').addEventListener('click', searchData);
-
-    // document.getElementById('search').addEventListener('keydown', (event) => {
-    //     if (event.key === 'Enter') {
-    //         searchData();
-    //     }
-    // });
-
-    // document.getElementById('search').addEventListener('input', (event) => {
-    //     if (event.target.value === '') {
-    //         nextDataPageFuncionarios();
-    //     }
-    // });
-
-// function searchData() {
-//     const type = document.getElementById('select').value;
-//     const search = document.getElementById('search').value;
-//
-//     const urlSearch = `/funcionarios/search`;
-//     const body = { type, search }
-//
-//     fetch(urlSearch, {
-//         method: 'POST',
-//         headers,
-//         body: JSON.stringify(body)
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             addTableLinesFuncionarios(data);
-//             disableBtns(data.totalPages);
-//         })
-//         .catch(error => {
-//             console.error('Erro ao carregar dados!', error);
-//         });
-// }
 
 function justNumbers(event) {
     var key = event.key;
