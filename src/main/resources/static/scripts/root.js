@@ -267,6 +267,28 @@ function confirmationModal({ title, message, confirmText = "Confirmar", cancelTe
     }
 }
 
+function exportPDF(empresaId, nomeFantasia) {
+    fetch(`${URL}/auth/pdf/getPdf/${empresaId}`, options)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao baixar PDF');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Avaliacao-${nomeFantasia}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    })
+    .catch(error => {
+        toastAlert('Erro ao baixar PDF', 'error');
+    });
+}
+
 function frameSetup() {
     document.addEventListener("click", function(event) {
         if (!sidebar.contains(event.target) && expandButton.classList.contains("active")) {

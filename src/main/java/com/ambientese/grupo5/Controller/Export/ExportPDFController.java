@@ -6,31 +6,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping("/api/pdf")
+@RequestMapping("/auth/pdf")
 public class ExportPDFController {
 
     @Autowired
     private ExportPDFService exportPDFService;
 
-    @GetMapping("/export")
-    public ResponseEntity<byte[]> exportPdf() throws DocumentException, IOException {
-        // Dados para o template Thymeleaf (ajuste conforme necessário)
-        Map<String, Object> data = new HashMap<>();
-        data.put("title", "Avaliação");
-        data.put("content", "<h1>Conteúdo da Avaliação</h1><p>Este é um exemplo de conteúdo que será exportado para PDF.</p>");
+    @PostMapping("/generatePdf")
+    public ResponseEntity<byte[]> exportPdf(@RequestBody Map<String, String> payload) throws DocumentException, IOException {
+        String htmlContent = payload.get("htmlContent");
 
-        ByteArrayInputStream bis = exportPDFService.generatePdf("template", data);
+        ByteArrayInputStream bis = exportPDFService.generatePdfFromHtml(htmlContent);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=avaliacao.pdf");
@@ -40,5 +38,24 @@ public class ExportPDFController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(bis.readAllBytes());
+    }
+
+    @GetMapping("/getPdf/{empresaId}")
+    public ResponseEntity<byte[]> testPdf(@PathVariable("empresaId") Long empresaId){
+        try {
+            ByteArrayInputStream bis = exportPDFService.generatePdf(empresaId);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "inline; filename=avaliacao.pdf");
+
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(bis.readAllBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

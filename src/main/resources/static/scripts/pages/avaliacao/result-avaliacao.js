@@ -112,11 +112,34 @@ const onOpenResultAvaliacao = (props) => {
     tables.innerHTML = renderTables(props.respostas);
     result.appendChild(tables);
 
+    let exportBtnClicked = false;
+
     const buttonHomeScreen = document.createElement('button');
     buttonHomeScreen.classList.add('btn-home');
     buttonHomeScreen.textContent = 'Voltar a tela principal';
     buttonHomeScreen.addEventListener('click', () => {
-        getMainFrameContent('ranking');
+        if (exportBtnClicked) {
+            getMainFrameContent('ranking');
+        } else {
+            confirmationModal({
+                title: 'Atenção',
+                message: 'Você tem certeza que deseja voltar a tela principal sem baixar o PDF?',
+                confirmText: 'Sim',
+                cancelText: 'Não',
+                onConfirm: () => getMainFrameContent('ranking')
+            });
+        }
     });
+
+    const buttonExport = document.createElement('button');
+    buttonExport.id = 'export-pdf';
+    buttonExport.classList.add('btn-export');
+    buttonExport.textContent = 'Baixar PDF';
+    buttonExport.addEventListener('click', () => {
+        exportBtnClicked = true;
+        exportPDF(props.empresa.id, props.empresa.nomeFantasia);
+    });
+    
+    result.appendChild(buttonExport);
     result.appendChild(buttonHomeScreen);
 }
