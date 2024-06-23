@@ -75,9 +75,9 @@ const renderQuestions = (questions, isLast) => {
             if (!isAllQuestionsAnswered(allQuestions)) {
                 confirmationModal({
                     title: 'Atenção',
-                    message: 'Você não respondeu todas as perguntas, deseja salvar mesmo assim?',
-                    confirmText: 'Salvar respostas',
-                    cancelText: 'Cancelar envio',
+                    message: 'Você não respondeu todas as perguntas, deseja finalizar mesmo assim?',
+                    confirmText: 'Finalizar avaliação',
+                    cancelText: 'Cancelar',
                     onCancel: () => {
                         return;
                     },
@@ -91,6 +91,7 @@ const renderQuestions = (questions, isLast) => {
             }
         } else {
             sendQuestions(false);
+            toastAlert('Respostas salvas com sucesso', 'success');
             const nextCategory = questionsCategory.nextElementSibling;
             questionsCategory.style.display = 'none';
             nextCategory.style.display = 'flex';
