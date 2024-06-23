@@ -49,6 +49,34 @@ public class ListarEmpresaService {
         return resultado;
     }
 
+    @Transactional
+    public List<EmpresaCadastro> allPagedEmpresasWithFilter2(String nome, int page, int size) {
+        List<EmpresaModel> empresas;
+        if (nome != null && !nome.isEmpty()) {
+            empresas = empresaRepository.findAllByNomeFantasiaStartingWithIgnoreCaseOrderByNomeFantasiaAsc(nome);
+
+            if (empresas.isEmpty()) {
+                empresas = empresaRepository.findAllByRazaoSocialStartingWithIgnoreCaseOrderByRazaoSocialAsc(nome);
+
+                if (empresas.isEmpty()) {
+                    empresas = empresaRepository.findAllByRamoStartingWithIgnoreCaseOrderByNomeFantasiaAsc(nome);
+
+                    if (empresas.isEmpty()) {
+                        empresas = empresaRepository.findAllOrderByNomeFantasiaAsc().stream()
+                                .filter(empresa -> empresa.getPorteEmpresas().toString().toLowerCase().startsWith(nome.toLowerCase()))
+                                .collect(Collectors.toList());
+                    }
+                }
+            }
+        } else {
+            empresas = empresaRepository.findAllOrderByNomeFantasiaAsc();
+        }
+
+        List<EmpresaCadastro> resultado = paginarEmpresas(empresas, page, size);
+
+        return resultado;
+    }
+
     private List<EmpresaCadastro> paginarEmpresas(List<EmpresaModel> empresas, int page, int size) {
         int total = empresas.size();
         int start = Math.min(page * size, total);

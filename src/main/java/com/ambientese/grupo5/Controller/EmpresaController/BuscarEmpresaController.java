@@ -47,4 +47,14 @@ public class BuscarEmpresaController {
         return ResponseEntity.ok(resultado);
     }
 
+    @GetMapping("/avaliacao/search")
+    public ResponseEntity<List<EmpresaCadastro>> empresasParaAvaliacao(
+            @RequestParam(required = false) String nome,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        List<EmpresaCadastro> resultado = listarEmpresaService.allPagedEmpresasWithFilter2(nome, page, size);
+        return ResponseEntity.ok(resultado);
+    }
+
 }
