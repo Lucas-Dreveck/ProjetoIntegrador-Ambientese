@@ -40,11 +40,12 @@ public class AtualizarFuncionarioService {
 
         usuarioModel.setLogin(funcionarioRequest.getLogin());
         boolean admin;
-        if ("Administrador".equals(funcionarioRequest.getCargo())) {
-            admin = true;
-        } else {
-            admin = false;
-        }
+        // if ("Administrador".equals(funcionarioRequest.getCargo())) {
+        //     admin = true;
+        // } else {
+        //     admin = false;
+        // }
+        admin = false;
         usuarioModel.setIsAdmin(admin);
 
         funcionarioModel.setUsuario(usuarioModel);

@@ -44,13 +44,13 @@
                 <ul class="sub-list">
                     <li page="empresas">Cadastrar Empresa</li>
                     <li page="funcionarios">Cadastrar Funcionário</li>
-                     <li page="pergunta">Cadastrar Pergunta</li>
+                    <li page="perguntas">Cadastrar Pergunta</li>
                 </ul>
                 <li page="ranking">Ranking</li>
                 <li page="start-avaliacao">Avaliação</li>
                 <!-- <li page="historico">Histórico</li> -->
             </ul>
-            <h2 class="login-logout" page="login">Sair</h2>
+            <h2 class="login-logout" page="login">Login</h2>
         </div>
     </section>
 
@@ -69,8 +69,10 @@
 </div>
 
 <div id="allScripts">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <script type="text/javascript" th:src="@{/scripts/root.js}"></script>
     <script type="text/javascript" th:src="@{/scripts/login.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/forgot-password.js}"></script>
     <script type="text/javascript" th:src="@{/scripts/pages/avaliacao/selecao-empresa.js}"></script>
     <script type="text/javascript" th:src="@{/scripts/pages/avaliacao/avaliacao.js}"></script>
     <script type="text/javascript" th:src="@{/scripts/pages/avaliacao/result-avaliacao.js}"></script>
@@ -80,6 +82,18 @@
     <script type="text/javascript" th:src="@{/scripts/pages/cadastro-perguntas.js}"></script>
 <!--Add others js files to this div-->
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        if (page) {
+            getMainFrameContent(page);
+        } else {
+            getMainFrameContent('ranking');
+        }
+    });
+</script>
 </body>
 <!--The original structure as made by: Samuel Thomas, all credits to the author-->
 </html>

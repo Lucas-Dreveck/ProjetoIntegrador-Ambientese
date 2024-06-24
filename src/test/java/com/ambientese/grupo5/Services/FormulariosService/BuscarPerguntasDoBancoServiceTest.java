@@ -1,6 +1,7 @@
 package com.ambientese.grupo5.Services.FormulariosService;
 
 import com.ambientese.grupo5.Model.Enums.EixoEnum;
+import com.ambientese.grupo5.DTO.QuestionarioResponse;
 import com.ambientese.grupo5.Model.PerguntasModel;
 import com.ambientese.grupo5.Repository.PerguntasRepository;
 import org.junit.jupiter.api.Test;
@@ -40,9 +41,13 @@ class BuscarPerguntasDoBancoServiceTest {
         when(perguntasRepository.findByEixo(EixoEnum.Governamental)).thenReturn(perguntasMock);
 
         // Chamando o método a ser testado
-        List<PerguntasModel> perguntas = buscarPerguntasDoBancoService.buscarPerguntasDoBanco();
+        QuestionarioResponse perguntas = buscarPerguntasDoBancoService.buscarPerguntasDoBanco(true, 1L);
 
         // Verificando se o método retorna uma lista com 15 perguntas
-        assertEquals(15, perguntas.size());
+        if (perguntas.getFormularioRequests().size() > 0) {
+            assertEquals(15, perguntas.getFormularioRequests().size());
+        } else {
+            assertEquals(15, perguntas.getPerguntas().size());
+        }
     }
 }

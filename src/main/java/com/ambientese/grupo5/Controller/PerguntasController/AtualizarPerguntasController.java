@@ -7,15 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/perguntas")
+@RequestMapping("/auth/Perguntas")
 public class AtualizarPerguntasController {
 
-    private final AtualizarPerguntasService atualizarPerguntasService;
-
     @Autowired
-    public AtualizarPerguntasController(AtualizarPerguntasService atualizarPerguntasService) {
-        this.atualizarPerguntasService = atualizarPerguntasService;
-    }
+    private AtualizarPerguntasService atualizarPerguntasService;
 
     @PutMapping("/Edit/{id}")
     public PerguntasModel atualizarPergunta(@PathVariable long id, @RequestBody PerguntasRequest request) {

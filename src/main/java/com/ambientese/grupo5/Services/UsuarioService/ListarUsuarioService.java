@@ -10,12 +10,10 @@ import java.util.Optional;
 
 @Service
 public class ListarUsuarioService {
-    private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    public ListarUsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    private UsuarioRepository usuarioRepository;
+
     public List<UsuarioModel> getAllUsuarios() {
         return usuarioRepository.findAll();
     }

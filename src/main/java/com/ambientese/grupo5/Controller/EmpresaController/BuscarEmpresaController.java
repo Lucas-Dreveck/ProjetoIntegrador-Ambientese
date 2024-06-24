@@ -1,10 +1,11 @@
 package com.ambientese.grupo5.Controller.EmpresaController;
 
+import com.ambientese.grupo5.DTO.EmpresaCadastro;
 import com.ambientese.grupo5.Model.EmpresaModel;
 import com.ambientese.grupo5.Repository.EmpresaRepository;
 import com.ambientese.grupo5.Services.EmpresaService.ListarEmpresaService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,19 +14,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/Empresa")
+@RequestMapping("/auth/Empresa")
 @Validated
 public class BuscarEmpresaController {
 
-    private final EmpresaRepository empresaRepository;
-    private final ListarEmpresaService listarEmpresaService;
-
-    public BuscarEmpresaController(EmpresaRepository empresaRepository, ListarEmpresaService listarEmpresaService)
-    {
-        this.empresaRepository = empresaRepository;
-        this.listarEmpresaService = listarEmpresaService;
-
-    }
+    @Autowired
+    private EmpresaRepository empresaRepository;
+    
+    @Autowired
+    private ListarEmpresaService listarEmpresaService;
 
     @GetMapping
     public ResponseEntity<List<EmpresaModel>> getAllEmpresas() {
@@ -41,21 +38,23 @@ public class BuscarEmpresaController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<EmpresaModel>> buscarEmpresas(
-            @RequestParam(required = false) String nomeFantasia,
-            @RequestParam(required = false) String razaoSocial,
-            @RequestParam(defaultValue = "0") int page) {
-        List<EmpresaModel> empresas;
-        if (nomeFantasia != null && !nomeFantasia.isEmpty()) {
-            empresas = empresaRepository.findFirst10ByNomeFantasiaContainingIgnoreCaseOrderByNomeFantasiaAsc(nomeFantasia);
-        } else if (razaoSocial != null && !razaoSocial.isEmpty()) {
-            empresas = empresaRepository.findFirst10ByRazaoSocialContainingIgnoreCaseOrderByRazaoSocialAsc(razaoSocial);
-        } else {
-            Page<EmpresaModel> empresasPage = empresaRepository.findAll(PageRequest.of(page, 25));
-            empresas = empresasPage.getContent();
-        }
+    public ResponseEntity<List<EmpresaCadastro>> buscarEmpresas(
+            @RequestParam(required = false) String nome,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        
+        List<EmpresaCadastro> resultado = listarEmpresaService.allPagedEmpresasWithFilter(nome, page, size);
+        return ResponseEntity.ok(resultado);
+    }
 
-        return ResponseEntity.ok(empresas);
+    @GetMapping("/avaliacao/search")
+    public ResponseEntity<List<EmpresaCadastro>> empresasParaAvaliacao(
+            @RequestParam(required = false) String nome,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        List<EmpresaCadastro> resultado = listarEmpresaService.allPagedEmpresasWithFilter2(nome, page, size);
+        return ResponseEntity.ok(resultado);
     }
 
 }

@@ -18,12 +18,8 @@ import java.util.List;
 @RequestMapping("/ranking")
 public class RankingController {
 
-    private final RankingService rankingService;
-
     @Autowired
-    public RankingController(RankingService rankingService) {
-        this.rankingService = rankingService;
-    }
+    private RankingService rankingService;
 
     @GetMapping("/pontuacao")
     public ResponseEntity<List<FormularioRanking>> classificarPorPontuacao(
@@ -31,7 +27,7 @@ public class RankingController {
             @RequestParam(required = false) String ramo,
             @RequestParam(required = false) PorteEnum porte,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "15") int size) {
         
         List<FormularioRanking> resultado = rankingService.classificarPorPontuacaoWithFilter(nomeFantasia, ramo, porte, page, size);
         return ResponseEntity.ok(resultado);

@@ -1,5 +1,10 @@
+package com.ambientese.grupo5.Services.UsuarioService;
+
+import com.ambientese.grupo5.Controller.UsuarioController.BuscarUsuarioController;
+import com.ambientese.grupo5.Exception.ValidacaoException;
 import com.ambientese.grupo5.Model.UsuarioModel;
-import com.ambientese.grupo5.Services.UsuarioService.BuscarUsuarioService;
+import com.ambientese.grupo5.Repository.UsuarioRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,11 +23,12 @@ public class BuscarUsuarioTeste {
     private MockMvc mockMvc;
 
     @Mock
-    private BuscarUsuarioService buscarUsuarioService;
+    private UsuarioRepository buscarUsuarioService;
 
     @InjectMocks
     private BuscarUsuarioController buscarUsuarioController;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -34,11 +40,11 @@ public class BuscarUsuarioTeste {
         // Mock objeto de resposta
         UsuarioModel usuarioEncontrado = new UsuarioModel();
         usuarioEncontrado.setId(1L);
-        usuarioEncontrado.setNome("Usuário Encontrado");
-        usuarioEncontrado.setEmail("usuario.encontrado@teste.com");
+        usuarioEncontrado.setLogin("Usuário Encontrado");
+        usuarioEncontrado.setPassword("123");
 
         // Mock comportamento do serviço
-        when(buscarUsuarioService.buscarUsuarioPorId(1L))
+        when(buscarUsuarioService.findById(1L).orElseThrow(() -> new ValidacaoException("Usuario não encontrado com o ID: " + 1L)))
                 .thenReturn(usuarioEncontrado);
 
         // Perform GET request

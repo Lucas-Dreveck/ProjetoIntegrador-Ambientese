@@ -11,26 +11,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Service
 public class CriarEmpresaService {
 
-    private final EmpresaRepository empresaRepository;
-    private final EnderecoRepository enderecoRepository;
-    private final ValidacaoCamposObrigatoriosService validacaoCamposObrigatoriosService;
-    private final ValidacaoCNPJService validacaoCNPJService;
-    private final MapearEmpresaService mapearEmpresaService;
-    private final MapearEnderecoService mapearEnderecoService;
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     @Autowired
-    public CriarEmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository,
-                               ValidacaoCamposObrigatoriosService validacaoCamposObrigatoriosService,
-                               ValidacaoCNPJService validacaoCNPJService,
-                               MapearEmpresaService mapearEmpresaService,
-                               MapearEnderecoService mapearEnderecoService) {
-        this.empresaRepository = empresaRepository;
-        this.enderecoRepository = enderecoRepository;
-        this.validacaoCamposObrigatoriosService = validacaoCamposObrigatoriosService;
-        this.validacaoCNPJService = validacaoCNPJService;
-        this.mapearEmpresaService = mapearEmpresaService;
-        this.mapearEnderecoService = mapearEnderecoService;
-    }
+    private EnderecoRepository enderecoRepository;
+
+    @Autowired
+    private ValidacaoCamposObrigatoriosService validacaoCamposObrigatoriosService;
+
+    @Autowired
+    private ValidacaoCNPJService validacaoCNPJService;
+
+    @Autowired
+    private MapearEmpresaService mapearEmpresaService;
+
+    @Autowired
+    private MapearEnderecoService mapearEnderecoService;
 
     public EmpresaModel criarEmpresa(EmpresaRequest empresaRequest) {
         validacaoCamposObrigatoriosService.validarCamposObrigatorios(empresaRequest);

@@ -1,119 +1,96 @@
-.containerGeral {
+.content-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    height: 90%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: calc(100vh - 80px);
+    overflow: hidden;
 }
-
 .box {
-    width: 60%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;
-    border: 3px solid #0077C8;
-    background-color: white;
 }
 
-.boxLeft {
-    width: 50%;
+.boxLogo {
+    width: 75%;
+    height: 100%;
+    border-right: 2px solid gray;
+}
+
+.boxLogo img {
+    width: 100%;
+    height: 100%;
+}
+
+.boxLogin {
+    width: 25%;
+    height: 100%;
+    padding: 3%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.boxForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.inputs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.divInput {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-}
-
-.divInputs {
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    margin-left: 3%;
-    justify-content: center;
+    margin-top: 20px;
 }
 
 .inputStyle {
-    width: 90%;
+    height: 25px;
     color: black;
-    font-size: 20px;
+    font-size: 16px;
     background-color: transparent;
-    border: none;
-    margin-left: 2%;
+    border: 1px solid black;
 }
 
-.inputStyle:focus {
-    outline: none;
-}
-
-.divPass {
-    margin-top: 5%;
-}
-
-.divPass, .divUser {
-    height: 50%;
-}
-
-.divInputImg {
-    height: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid gray;
-    background-color: #d9d9d9;
-}
-
-.passImg, .userImg {
-    width: 5%;
+.forgotPass {
+    font-size: 14px;
+    margin-top: 2px;
+    color: black;
+    cursor: pointer;
+    text-align: end;
 }
 
 .divBtns {
-    margin-left: 3%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    width: 85%;
 }
 
-#singIn {
-    width: 230px;
+.confirmBtn {
+    width: 200px;
     height: 70px;
     background-color: #0077C8;
     color: white;
     font-size: 20px;
-    margin-bottom: 3%;
+    margin-top: 20px;
     border-radius: 10px;
 }
 
-#singIn:hover {
+.confirmBtn:hover {
     background-color: #00659b;
-}
-
-.forgotPass {
-    color: blue;
-}
-
-.forgotPass:hover {
-    cursor: pointer;
-}
-
-.boxRight {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.imgLogo {
-    width: 70%;
-    height: 60%;
-}
-
-.errorMsg {
-    color: red;
-    font-size: 20px;
-    text-align: center;
 }

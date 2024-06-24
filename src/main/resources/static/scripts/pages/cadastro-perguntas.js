@@ -2,6 +2,8 @@ let currentPagePerg = 0;
 function onOpenPerguntas() {
     const priorBtn = document.getElementById('priorBtnPerg');
     const nextBtn = document.getElementById('nextBtnPerg');
+    const search = document.getElementById('search');
+    const searchBtn = document.querySelector('.imgSearch');
     const overlay = document.querySelector('.overlay');
     const divAdd = document.querySelector('.divAddPerg');
     const divEdit = document.querySelector('.divEditPerg');
@@ -11,16 +13,27 @@ function onOpenPerguntas() {
     nextDataPagePerg();
 
     nextBtn.addEventListener('click', () => {
-        currentPage++;
+        currentPagePerg++;
         nextDataPagePerg();
     });
 
     priorBtn.addEventListener('click', () => {
-        currentPage--;
-        if (currentPage < 0) {
-            currentPage = 0;
+       if (currentPagePerg > 0) {
+           currentPagePerg--;
+           nextDataPagePerg();
         }
+    });
+
+    searchBtn.addEventListener('click', () => {
+        currentPagePerg = 0;
         nextDataPagePerg();
+    });
+
+    search.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            currentPagePerg = 0;
+            nextDataPagePerg();
+        }
     });
 
     document.querySelector('.tablePerg').addEventListener('click', (event) => {
@@ -71,14 +84,12 @@ function onOpenPerguntas() {
             eixo,
         };
 
-        fetch(`${URL}/perguntas/Add`, {
+        fetch(`${URL}/auth/Perguntas/Add`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     throw new Error('Erro ao adicionar Pergunta');
                 }
@@ -107,14 +118,12 @@ function onOpenPerguntas() {
 
         let id = parseInt(currentid);
 
-        fetch(`${URL}/perguntas/Edit/${id}`, {
+        fetch(`${URL}/auth/Perguntas/Edit/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     throw new Error('Erro ao editar Pergunta');
                 }
@@ -122,7 +131,7 @@ function onOpenPerguntas() {
             })
             .then(data => {
                 toastAlert('Pergunta editada com sucesso!', 'success');
-                currentPage = 0;
+                currentPagePerg = 0;
                 nextDataPagePerg();
                 divEdit.style.display = 'none';
                 overlay.style.display = 'none';
@@ -135,18 +144,25 @@ function onOpenPerguntas() {
 
     document.getElementById('confirmDelete').addEventListener('click' , () => {
         const id = parseInt(currentid);
-        fetch(`${URL}/perguntas/Delete/${id}`, {
-            method: 'DELETE'
+        fetch(`${URL}/auth/Perguntas/Delete/${id}`, {
+            method: 'DELETE',
+            headers
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao deletar Pergunta');
+                    return {
+                        status: response.status,
+                        text: await response.text()
+                    };
                 }
                 return response.text();
             })
             .then(data => {
+                if (data.status !== 200) {
+                    throw new Error(data.text);
+                }
                 toastAlert('Pergunta deletada com sucesso!', 'success');
-                currentPage = 0;
+                currentPagePerg = 0;
                 nextDataPagePerg();
                 divDelete.style.display = 'none';
                 overlay.style.display = 'none';
@@ -167,16 +183,29 @@ function onOpenPerguntas() {
 
 function addTableLinesPerguntas(data) {
     const table = document.querySelector('.tablePerg>tbody');
+    const prevBtn = document.getElementById('priorBtnPerg');
     const nextBtn = document.getElementById('nextBtnPerg');
 
-    if (data.length === 0) {
+    if(data.length === 0) {
+        toastAlert('Nenhuma pergunta encontrada', 'error');
         nextBtn.setAttribute('disabled', 'true');
-        const newLine = document.createElement('tr');
-        newLine.innerHTML = `<td class="thStyle" colspan="5">Nenhuma pergunta encontrada</td>`;
-        table.appendChild(newLine);
-        return;
+        nextBtn.classList.add('disabled');
+    } else {
+        if (data[0].finishList) {
+            nextBtn.setAttribute('disabled', 'true');
+            nextBtn.classList.add('disabled');
+        } else {
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('disabled');
+        };
     }
-    nextBtn.removeAttribute('disabled');
+    if (currentPagePerg > 0 ) {
+        prevBtn.removeAttribute('disabled');
+        prevBtn.classList.remove('disabled');
+    } else {
+        prevBtn.setAttribute('disabled', 'true');
+        prevBtn.classList.add('disabled');
+    };
 
     let count = 0;
 
@@ -223,14 +252,14 @@ function processEventPerguntas(event) {
 }
 
 function nextDataPagePerg () {
+    const search = document.getElementById('search').value;
     const queryParams = new URLSearchParams();
-    queryParams.append('page', currentPage);
+    if (search) queryParams.append('nome', search);
+    queryParams.append('page', currentPagePerg);
 
-    fetch(`${URL}/perguntas/search?${queryParams.toString()}`, {
+    fetch(`${URL}/auth/Perguntas/search?${queryParams.toString()}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers
     })
         .then(response => {
             if (!response.ok) {

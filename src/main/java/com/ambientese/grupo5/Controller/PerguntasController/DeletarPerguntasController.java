@@ -9,19 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/perguntas")
+@RequestMapping("/auth/Perguntas")
 public class DeletarPerguntasController {
 
-    private final DeletarPerguntasService deletarPerguntasService;
-
     @Autowired
-    public DeletarPerguntasController(DeletarPerguntasService deletarPerguntasService) {
-        this.deletarPerguntasService = deletarPerguntasService;
-    }
+    private DeletarPerguntasService deletarPerguntasService;
 
     @DeleteMapping("/Delete/{id}")
     public ResponseEntity<String> deletarPergunta(@PathVariable long id) {
-        deletarPerguntasService.deletarPergunta(id);
-        return ResponseEntity.noContent().build();
+        return deletarPerguntasService.deletarPergunta(id);
     }
 }
