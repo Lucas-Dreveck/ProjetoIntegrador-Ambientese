@@ -1,5 +1,5 @@
 const URL = "";
-const enviornment = "dev";
+const enviornment = "prod";
 
 const mainContent = document.querySelector(".main-content");
 const allStyles = document.getElementById("allStyles");
