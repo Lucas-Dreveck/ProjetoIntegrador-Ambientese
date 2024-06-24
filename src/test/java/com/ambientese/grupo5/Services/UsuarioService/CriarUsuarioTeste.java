@@ -1,7 +1,10 @@
 package com.ambientese.grupo5.Services.UsuarioService;
 
-import com.ambientese.grupo5.DTO.UsuarioRequest;
+import com.ambientese.grupo5.Controller.UsuarioController.CriarUsuarioController;
+import com.ambientese.grupo5.Exception.ValidacaoException;
 import com.ambientese.grupo5.Model.UsuarioModel;
+import com.ambientese.grupo5.Repository.UsuarioRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -21,11 +23,12 @@ public class CriarUsuarioTeste {
     private MockMvc mockMvc;
 
     @Mock
-    private CriarUsuarioService criarUsuarioService;
+    private UsuarioRepository criarUsuarioService;
 
     @InjectMocks
     private CriarUsuarioController criarUsuarioController;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -35,18 +38,18 @@ public class CriarUsuarioTeste {
     @Test
     public void testCriarUsuario() throws Exception {
         // Mock objeto de request
-        UsuarioRequest usuarioRequest = new UsuarioRequest();
-        usuarioRequest.setNome("Novo Usuário");
-        usuarioRequest.setEmail("novo.usuario@teste.com");
+        UsuarioModel usuarioRequest = new UsuarioModel();
+        usuarioRequest.setLogin("Novo Usuário");
+        usuarioRequest.setPassword("123");
 
         // Mock objeto de resposta
         UsuarioModel usuarioCriado = new UsuarioModel();
         usuarioCriado.setId(1L);
-        usuarioCriado.setNome("Novo Usuário");
-        usuarioCriado.setEmail("novo.usuario@teste.com");
+        usuarioCriado.setLogin("Novo Usuário");
+        usuarioCriado.setPassword("123");
 
         // Mock comportamento do serviço
-        when(criarUsuarioService.criarUsuario(any(UsuarioRequest.class)))
+        when(criarUsuarioService.findById(1L).orElseThrow(() -> new ValidacaoException("Usuario não encontrado com o ID: " + 1L)))
                 .thenReturn(usuarioCriado);
 
         // Perform POST request

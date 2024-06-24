@@ -1,7 +1,7 @@
 package com.ambientese.grupo5.Services.UsuarioService;
 
+import com.ambientese.grupo5.Controller.UsuarioController.BuscarUsuarioController;
 import com.ambientese.grupo5.Model.UsuarioModel;
-import com.ambientese.grupo5.Services.UsuarioService.ListarUsuariosService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -24,11 +23,12 @@ public class ListarUsuariosControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private ListarUsuariosService listarUsuariosService;
+    private ListarUsuarioService listarUsuariosService;
 
     @InjectMocks
-    private ListarUsuariosController listarUsuariosController;
+    private BuscarUsuarioController listarUsuariosController;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -40,18 +40,18 @@ public class ListarUsuariosControllerTest {
         // Mock lista de usuários
         UsuarioModel usuario1 = new UsuarioModel();
         usuario1.setId(1L);
-        usuario1.setNome("Usuário 1");
-        usuario1.setEmail("usuario1@teste.com");
+        usuario1.setLogin("Usuário 1");
+        usuario1.setPassword("123");
 
         UsuarioModel usuario2 = new UsuarioModel();
         usuario2.setId(2L);
-        usuario2.setNome("Usuário 2");
-        usuario2.setEmail("usuario2@teste.com");
+        usuario2.setLogin("Usuário 2");
+        usuario2.setPassword("123");
 
         List<UsuarioModel> usuarios = Arrays.asList(usuario1, usuario2);
 
         // Mock comportamento do serviço
-        when(listarUsuariosService.listarUsuarios())
+        when(listarUsuariosService.getAllUsuarios())
                 .thenReturn(usuarios);
 
         // Perform GET request

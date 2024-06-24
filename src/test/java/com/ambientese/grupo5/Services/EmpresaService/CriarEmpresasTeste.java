@@ -28,6 +28,7 @@ public class CriarEmpresasTeste {
     @InjectMocks
     private CriarEmpresaController criarEmpresaController;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -47,6 +48,7 @@ public class CriarEmpresasTeste {
 
         when(criarEmpresaService.criarEmpresa(any(EmpresaRequest.class))).thenReturn(empresaModel);
 
+        @SuppressWarnings("unused")
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/Empresa/Add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nomeFantasia\":\"Minha Empresa\",\"cnpj\":\"12345678901234\"}"))
