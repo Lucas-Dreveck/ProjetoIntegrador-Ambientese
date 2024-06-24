@@ -54,7 +54,9 @@
 }
 
 .main .sidebar .menu .login-logout {
-    margin-top: 50vh;
+    position: absolute;
+    bottom: 20vh;
+    width: 95%;
     list-style: none;
 }
 

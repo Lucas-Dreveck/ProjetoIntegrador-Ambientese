@@ -20,6 +20,14 @@ public class FormularioRequest {
         this.respostaUsuario = respostaUsuario;
     }
 
+    public FormularioRequest(Long perguntaId, String perguntaDescricao, RespostasEnum respostaUsuario, EixoEnum perguntaEixo, Long idFormulario) {
+        this.perguntaId = perguntaId;
+        this.perguntaDescricao = perguntaDescricao;
+        this.respostaUsuario = respostaUsuario;
+        this.perguntaEixo = perguntaEixo;
+        this.idFormulario = idFormulario;
+    }
+
     public Long getPerguntaId() {
         return perguntaId;
     }

@@ -2,6 +2,8 @@ let currentPage = 0;
 function onOpenEmpresa() {
     const priorBtn = document.getElementById('priorBtnEmp');
     const nextBtn = document.getElementById('nextBtnEmp');
+    const search = document.getElementById('search');
+    const searchBtn = document.querySelector('.imgSearch');
     const overlay = document.querySelector('.overlay');
     const divAdd = document.querySelector('.divAddEmp');
     const divEdit = document.querySelector('.divEditEmp');
@@ -16,22 +18,56 @@ function onOpenEmpresa() {
     });
 
     priorBtn.addEventListener('click', () => {
-        currentPage--;
-        if (currentPage < 0) {
-            currentPage = 0;
+       if (currentPage > 0) {
+           currentPage--;
+           nextDataPageEmpresas();
         }
+    });
+
+    searchBtn.addEventListener('click', () => {
+        currentPage = 0;
         nextDataPageEmpresas();
+    });
+
+    search.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            currentPage = 0;
+            nextDataPageEmpresas();
+        }
+    });
+
+    document.querySelectorAll('.inpCnpjEmp').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
+    document.querySelectorAll('.inpCepEmp').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
+    document.querySelectorAll('.inpTelEmp').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
+    document.querySelectorAll('.inpTelSoEmp').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
+    document.querySelectorAll('.inpNumeroEmp').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
+    document.querySelectorAll('.inpInscricaoEmp').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
     });
 
     document.querySelector('.tableEmp').addEventListener('click', (event) => {
 
+        const { currentNomeSo, currentTelSo, currentNomeFa,
+            currentRazao, currentCnpj, currentInscricao,
+            currentEmail, currentTelEmp, currentPorte, currentRamo,
+            currentCep, currentUf, currentBairro, currentCidade, currentNumero,
+            currentLogradouro } = processEventEmpresas(event);
         if(event.target.classList.contains('imgEdit')) {
-            const { currentNomeSo, currentTelSo, currentNomeFa,
-                currentRazao, currentCnpj, currentInscricao,
-                currentEmail, currentTelEmp, currentPorte, currentRamo,
-                currentCep, currentUf, currentBairro, currentCidade, currentNumero,
-                currentLogradouro } = processEventEmpresas(event);
-
 
             currentid = event.target.getAttribute('data-id');
             document.getElementById('nomeFaEdit').value = currentNomeFa;
@@ -58,7 +94,7 @@ function onOpenEmpresa() {
            currentid = event.target.getAttribute('data-id');
             divDelete.style.display = 'block';
             overlay.style.display = 'block';
-            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar a empresa de id ${currentid}?`;
+            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar a empresa ${currentNomeFa}?`;
         }
     });
 
@@ -95,10 +131,16 @@ function onOpenEmpresa() {
         const bairro = document.getElementById('bairro').value;
         const uf = document.getElementById('uf').value;
 
-       if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
+        if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
             toastAlert('Preencha todos os campos!', 'error');
             return;
-       }
+        }
+
+        const isNumber = parseInt(numero)
+        if(!isNumber || isNumber < 0 || isNumber > 9999999999) {
+            toastAlert('Insira um número válido', 'error');
+            return;
+        }
 
         const data = {
             nomeFantasia,
@@ -122,16 +164,21 @@ function onOpenEmpresa() {
             dataAlteracao
         };
 
-        fetch(`${URL}/Empresa/Add`, {
+        fetch(`${URL}/auth/Empresa/Add`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao adicionar empresa');
+                    return response.text().then(text => {
+                        try {
+                            const errorData = JSON.parse(text);
+                            throw new Error(errorData.message || 'Erro ao adicionar empresa');
+                        } catch (e) {
+                            throw new Error(text || 'Erro ao adicionar empresa');
+                        }
+                    });
                 }
                 return response.json();
             })
@@ -139,6 +186,24 @@ function onOpenEmpresa() {
                 toastAlert('Empresa adicionada com sucesso!', 'success');
                 divAdd.style.display = 'none';
                 overlay.style.display = 'none';
+                nextDataPageEmpresas();
+                currentPage = 0;
+                document.getElementById('nomeFa').value = '';
+                document.getElementById('nomeSo').value = '';
+                document.getElementById('telSo').value = '';
+                document.getElementById('razao').value = '';
+                document.getElementById('CNPJ').value = '';
+                document.getElementById('inscricao').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('telEmp').value = '';
+                document.getElementById('ramo').value = '';
+                document.getElementById('porte').value = '';
+                document.getElementById('numero').value = '';
+                document.getElementById('cep').value = '';
+                document.getElementById('rua').value = '';
+                document.getElementById('cidade').value = '';
+                document.getElementById('bairro').value = '';
+                document.getElementById('uf').value = '';
             })
             .catch(error => {
                 const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
@@ -165,6 +230,17 @@ function onOpenEmpresa() {
         const bairro = document.getElementById('bairroEdit').value;
         const uf = document.getElementById('ufEdit').value;
 
+        if(!nomeFantasia || !nomeSolicitante || !telefoneSolicitante || !razaoSocial || !cnpj || !inscricaoSocial || !email || !telefoneEmpresas || !ramo || !porteEmpresas) {
+            toastAlert('Preencha todos os campos!', 'error');
+            return;
+        }
+
+        const isNumber = parseInt(numero)
+        if(!isNumber || isNumber < 0 || isNumber > 9999999999) {
+            toastAlert('Insira um número válido', 'error');
+            return;
+        }
+
         const data = {
             nomeFantasia,
             nomeSolicitante,
@@ -189,16 +265,21 @@ function onOpenEmpresa() {
 
         let id = parseInt(currentid);
 
-        fetch(`${URL}/Empresa/Edit/${id}`, {
+        fetch(`${URL}/auth/Empresa/Edit/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then( async response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao editar empresa');
+                    return response.text().then(text => {
+                        try {
+                            const errorData = JSON.parse(text);
+                            throw new Error(errorData.message || 'Erro ao editar empresa');
+                        } catch (e) {
+                            throw new Error(text || 'Erro ao editar empresa');
+                        }
+                    });
                 }
                 return response.json();
             })
@@ -208,6 +289,22 @@ function onOpenEmpresa() {
                 nextDataPageEmpresas();
                 divEdit.style.display = 'none';
                 overlay.style.display = 'none';
+                document.getElementById('nomeFaEdit').value = '';
+                document.getElementById('nomeSoEdit').value = '';
+                document.getElementById('telSoEdit').value = '';
+                document.getElementById('razaoEdit').value = '';
+                document.getElementById('cnpjEdit').value = '';
+                document.getElementById('inscricaoEdit').value = '';
+                document.getElementById('emailEdit').value = '';
+                document.getElementById('telEmpEdit').value = '';
+                document.getElementById('ramoEdit').value = '';
+                document.getElementById('porteEdit').value = '';
+                document.getElementById('cepEdit').value = '';
+                document.getElementById('ufEdit').value = '';
+                document.getElementById('bairroEdit').value = '';
+                document.getElementById('cidadeEdit').value = '';
+                document.getElementById('numeroEdit').value = '';
+                document.getElementById('ruaEdit').value = '';
             })
             .catch(error => {
                 const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
@@ -217,8 +314,9 @@ function onOpenEmpresa() {
 
     document.getElementById('confirmDelete').addEventListener('click' , () => {
         const id = parseInt(currentid);
-        fetch(`${URL}/Empresa/Delete/${id}`, {
-            method: 'DELETE'
+        fetch(`${URL}/auth/Empresa/Delete/${id}`, {
+            method: 'DELETE',
+            headers,
         })
         .then(response => {
             if (!response.ok) {
@@ -249,16 +347,28 @@ function onOpenEmpresa() {
 
 function addTableLinesEmpresas(data) {
     const table = document.querySelector('.tableEmp>tbody');
+    const prevBtn = document.getElementById('priorBtnEmp');
     const nextBtn = document.getElementById('nextBtnEmp');
-
-    if (data.length === 0) {
+    if(data.length === 0) {
+        toastAlert('Nenhuma empresa encontrada', 'error');
         nextBtn.setAttribute('disabled', 'true');
-        const newLine = document.createElement('tr');
-        newLine.innerHTML = `<td class="thStyle" colspan="6">Nenhuma empresa cadastrada</td>`;
-        table.appendChild(newLine);
-        return;
+        nextBtn.classList.add('disabled');
+    } else {
+        if (data[0].finishList) {
+            nextBtn.setAttribute('disabled', 'true');
+            nextBtn.classList.add('disabled');
+        } else {
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('disabled');
+        };
     }
-    nextBtn.removeAttribute('disabled');
+    if (currentPage > 0 ) {
+        prevBtn.removeAttribute('disabled');
+        prevBtn.classList.remove('disabled');
+    } else {
+        prevBtn.setAttribute('disabled', 'true');
+        prevBtn.classList.add('disabled');
+    };
 
     let count = 0;
 
@@ -298,6 +408,7 @@ function addTableLinesEmpresas(data) {
                 alt="Editar" class="imgEdit imgStyle">
                 <img src="/icons//Cadastro-Empresa/delete.png"
                     data-id="${empresa.id}"
+                    data-nomeFa="${empresa.nomeFantasia}"
                 alt="Deletar" class="imgDelete imgStyle">                
             </td>
         `;
@@ -347,14 +458,14 @@ function processEventEmpresas(event) {
 }
 
 function nextDataPageEmpresas () {
+    const search = document.getElementById('search').value;
     const queryParams = new URLSearchParams();
+    if (search) queryParams.append('nome', search);
     queryParams.append('page', currentPage);
 
-    fetch(`${URL}/Empresa/search?${queryParams.toString()}`, {
+    fetch(`${URL}/auth/Empresa/search?${queryParams.toString()}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers,
     })
     .then(response => {
         if (!response.ok) {
@@ -375,4 +486,26 @@ function nextDataPageEmpresas () {
         const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
         toastAlert(errorMessage, 'error');
     });
+}
+
+function justNumbers(event) {
+    var key = event.key;
+    var keyCode = event.keyCode || event.which;
+    var ctrlPressed = event.ctrlKey || event.metaKey;
+
+    if(ctrlPressed && keyCode === 65 || keyCode === 67 || keyCode === 86 || keyCode === 88) {
+        return;
+    }
+
+    if (!/^[0-9]$/.test(key) &&
+        keyCode !== 8 &&
+        keyCode !== 46 &&
+        !(keyCode >= 37 && keyCode <= 40) &&
+        keyCode !== 36 &&
+        keyCode !== 9 &&
+        keyCode !== 17 &&
+        keyCode !== 35) {
+        event.preventDefault();
+        toastAlert('Insira apenas números', 'error');
+    }
 }

@@ -2,6 +2,8 @@ let currentPageFuncionario = 0;
 function onOpenFuncionario() {
     const priorBtn = document.getElementById('priorBtnFunc');
     const nextBtn = document.getElementById('nextBtnFunc');
+    const search = document.getElementById('search');
+    const searchBtn = document.querySelector('.imgSearch');
     const overlay = document.querySelector('.overlay');
     const divAdd = document.querySelector('.divAddFunc');
     const divEdit = document.querySelector('.divEditFunc');
@@ -16,17 +18,37 @@ function onOpenFuncionario() {
     });
 
     priorBtn.addEventListener('click', () => {
-        currentPageFuncionario--;
-        if (currentPageFuncionario < 0) {
-            currentPageFuncionario = 0;
+       if (currentPageFuncionario > 0) {
+           currentPageFuncionario--;
+           nextDataPageFuncionarios();
         }
+    });
+
+    searchBtn.addEventListener('click', () => {
+        currentPageFuncionario = 0;
         nextDataPageFuncionarios();
+    });
+
+    search.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            currentPageFuncionario = 0;
+            nextDataPageFuncionarios();
+        }
+    });
+
+    document.querySelectorAll('.inputNasc').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
+    });
+
+    document.querySelectorAll('.inputCpf').forEach(input => {
+        input.addEventListener('keydown', justNumbers);
     });
 
     document.getElementById('confirmDelete').addEventListener('click', () => {
         const id = parseInt(currentId);
-        fetch(`${URL}/Funcionario/Delete/${id}`, {
-            method: 'DELETE'
+        fetch(`${URL}/auth/Funcionario/Delete/${id}`, {
+            method: 'DELETE',
+            headers,
         })
         .then(response => {
             if (!response.ok) {
@@ -38,12 +60,8 @@ function onOpenFuncionario() {
             toastAlert('Funcionario deletado com sucesso!', 'success');
             currentPageFuncionario = 0;
             nextDataPageFuncionarios();
-            console.log(divDelete.style.display);
-            console.log(overlay.style.display);
             divDelete.style.display = 'none';
             overlay.style.display = 'none';
-            console.log(divDelete.style.display);
-            console.log(overlay.style.display);
         })
         .catch(error => {
             const errorMessage = error.message ? error.message : 'Ocorreu um erro ao processar a solicitação';
@@ -53,12 +71,13 @@ function onOpenFuncionario() {
 
     document.querySelector('.tableFunc').addEventListener('click', (event) => {
 
+        const {
+            currentNome, currentCpf,
+            currentDataNasc, currentLogin, currentCargo,
+            currentEmail
+        } = processEventFuncionarios(event);
+
         if (event.target.classList.contains('imgEdit')) {
-            const {
-                currentNome, currentCpf,
-                currentDataNasc, currentLogin, currentCargo,
-                currentEmail
-            } = processEventFuncionarios(event);
             currentId = event.target.getAttribute('data-id');
             divEdit.style.display = 'block';
             overlay.style.display = 'block';
@@ -72,7 +91,7 @@ function onOpenFuncionario() {
             currentId = event.target.getAttribute('data-id');
             divDelete.style.display = 'block';
             overlay.style.display = 'block';
-            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar o funcionário de id ${currentId}?`;
+            document.querySelector('.deleteMsg').innerHTML = `Deseja deletar o funcionário \n ${currentNome}?`;
         }
     });
 
@@ -119,21 +138,26 @@ function onOpenFuncionario() {
             usuario: {
                 login,
                 password,
-                isAdmin: cargo === 'Administrador' ? true : false
+                isAdmin: false
             },
             cargo,
         };
 
-        fetch(`${URL}/Funcionario/Add`, {
+        fetch(`${URL}/auth/Funcionario/Add`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao cadastrar funcionário');
+                    return response.text().then(text => {
+                        try {
+                            const errorData = JSON.parse(text);
+                            throw new Error(errorData.message || 'Erro ao adicionar Funcionario');
+                        } catch (e) {
+                            throw new Error(text || 'Erro ao adicionar Funcionario');
+                        }
+                    });
                 }
                 return response.json();
             })
@@ -167,19 +191,23 @@ function onOpenFuncionario() {
         };
 
         let id = parseInt(currentId);
-        fetch(`${URL}/Funcionario/Edit/${id}`, {
+        fetch(`${URL}/auth/Funcionario/Edit/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(data)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    throw new Error('Erro ao editar funcionário!');
+                    return response.text().then(text => {
+                        try {
+                            const errorData = JSON.parse(text);
+                            throw new Error(errorData.message || 'Erro ao editar funcionario');
+                        } catch (e) {
+                            throw new Error(text || 'Erro ao editar funcionario');
+                        }
+                    });
                 }
                 return response.json();
-            
             })
             .then(data => {
                 toastAlert('Funcionário editado com sucesso!', 'success');
@@ -199,29 +227,32 @@ function onOpenFuncionario() {
 //     nextBtn.disabled = (currentPageFuncionario >= data);
 // }
 
-// function updateCheckbox(option) {
-//     var checkboxes = document.getElementsByName("genero");
-//     for (var i = 0; i < checkboxes.length; i++) {
-//         if (checkboxes[i].value === option) {
-//             checkboxes[i].checked = true;
-//         } else {
-//             checkboxes[i].checked = false;
-//         }
-//     }
-// }
-
 function addTableLinesFuncionarios(data) {
-    const nextBtn = document.getElementById('nextBtnFunc');
     const table = document.querySelector('.tableFunc>tbody');
+    const prevBtn = document.getElementById('priorBtnFunc');
+    const nextBtn = document.getElementById('nextBtnFunc');
 
-    if (data.length === 0) {
+    if(data.length === 0) {
+        toastAlert('Nenhum funcionario encontrado', 'error');
         nextBtn.setAttribute('disabled', 'true');
-        const newLine = document.createElement('tr');
-        newLine.innerHTML = `<td class="thStyle" colspan="5">Nenhum funcionário cadastrado</td>`;
-        table.appendChild(newLine);
-        return;
+        nextBtn.classList.add('disabled');
+    } else {
+        if (data[0].finishList) {
+            nextBtn.setAttribute('disabled', 'true');
+            nextBtn.classList.add('disabled');
+        } else {
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('disabled');
+        };
     }
-    nextBtn.removeAttribute('disabled');
+    if (currentPageFuncionario > 0 ) {
+        prevBtn.removeAttribute('disabled');
+        prevBtn.classList.remove('disabled');
+    } else {
+        prevBtn.setAttribute('disabled', 'true');
+        prevBtn.classList.add('disabled');
+    };
+
     let count = 0;
 
     data.forEach(funcionario => {
@@ -249,6 +280,7 @@ function addTableLinesFuncionarios(data) {
                 alt="Editar" class="imgEdit imgStyle">
                 <img src="/icons/Cadastro-Funcionario/delete.png"
                     data-id="${funcionario.id}"
+                    data-nome="${funcionario.nome}"
                 alt="Deletar" class="imgDelete imgStyle">                
             </td>
         `;
@@ -278,14 +310,14 @@ function processEventFuncionarios(event) {
 }
 
 function nextDataPageFuncionarios() {
+    const search = document.getElementById('search').value;
     const queryParams = new URLSearchParams();
+    if (search) queryParams.append('nome', search);
     queryParams.append('page', currentPageFuncionario);
 
-    fetch(`${URL}/Funcionario/search?${queryParams.toString()}`, {
+    fetch(`${URL}/auth/Funcionario/search?${queryParams.toString()}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers,
     })
         .then(response => {
             if (!response.ok) {
@@ -305,40 +337,24 @@ function nextDataPageFuncionarios() {
         .catch(error => console.error('Erro ao buscar os dados:', error));
 }
 
-    // document.querySelector('.imgSearch').addEventListener('click', searchData);
+function justNumbers(event) {
+    var key = event.key;
+    var keyCode = event.keyCode || event.which;
+    var ctrlPressed = event.ctrlKey || event.metaKey;
 
-    // document.getElementById('search').addEventListener('keydown', (event) => {
-    //     if (event.key === 'Enter') {
-    //         searchData();
-    //     }
-    // });
+    if(ctrlPressed && keyCode === 65 || keyCode === 67 || keyCode === 86 || keyCode === 88) {
+        return;
+    }
 
-    // document.getElementById('search').addEventListener('input', (event) => {
-    //     if (event.target.value === '') {
-    //         nextDataPageFuncionarios();
-    //     }
-    // });
-
-// function searchData() {
-//     const type = document.getElementById('select').value;
-//     const search = document.getElementById('search').value;
-//
-//     const urlSearch = `/funcionarios/search`;
-//     const body = { type, search }
-//
-//     fetch(urlSearch, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(body)
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             addTableLinesFuncionarios(data);
-//             disableBtns(data.totalPages);
-//         })
-//         .catch(error => {
-//             console.error('Erro ao carregar dados!', error);
-//         });
-// }
+    if (!/^[0-9]$/.test(key) &&
+        keyCode !== 8 &&
+        keyCode !== 46 &&
+        !(keyCode >= 37 && keyCode <= 40) &&
+        keyCode !== 36 &&
+        keyCode !== 9 &&
+        keyCode !== 17 &&
+        keyCode !== 35) {
+        event.preventDefault();
+        toastAlert('Insira apenas números', 'error');
+    }
+}

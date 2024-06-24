@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Empresa")
+@RequestMapping("/auth/Empresa")
 @Validated
 public class CriarEmpresaController {
 

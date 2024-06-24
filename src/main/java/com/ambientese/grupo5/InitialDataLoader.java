@@ -1,11 +1,15 @@
 package com.ambientese.grupo5;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -47,7 +51,7 @@ public class InitialDataLoader implements CommandLineRunner {
 
         if (rootUser == null) {
             int numberToGenerate = 60;
-            
+
             // Popular tabela endereco e empresa
             for (int i = 0; i < numberToGenerate; i++) {
                 EmpresaModel empresa = new EmpresaModel();
@@ -85,9 +89,9 @@ public class InitialDataLoader implements CommandLineRunner {
             }
 
             // Popular tabela de cargos
-            CargoModel cargoAdm = new CargoModel();
-            cargoAdm.setDescricao("Administrador");
-            cargoAdm = cargoRepository.save(cargoAdm);
+            CargoModel cargoGestor = new CargoModel();
+            cargoGestor.setDescricao("Gestor");
+            cargoGestor = cargoRepository.save(cargoGestor);
 
             CargoModel cargoConsultor = new CargoModel();
             cargoConsultor.setDescricao("Consultor");
@@ -96,8 +100,8 @@ public class InitialDataLoader implements CommandLineRunner {
             // Popular tabela de funcionarios
             for (int i = 0; i < numberToGenerate; i++) {
                 UsuarioModel usuario = new UsuarioModel();
-                usuario.setLogin(faker.name().username());
-                usuario.setPassword(faker.internet().password());
+                usuario.setLogin(i == 0 ? "Gestor" : i == 1 ? "Consultor" : faker.name().username());
+                usuario.setPassword(BCrypt.hashpw(i == 0 ? "gestor" : i == 1 ? "consultor" : faker.internet().password(), BCrypt.gensalt()));
                 usuario.setIsAdmin(false);
                 usuario = userRepository.save(usuario);
 
@@ -105,9 +109,15 @@ public class InitialDataLoader implements CommandLineRunner {
                 funcionario.setUsuario(usuario);
                 funcionario.setNome(faker.name().fullName());
                 funcionario.setCpf(faker.regexify("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"));
-                funcionario.setEmail(faker.internet().emailAddress());
-                funcionario.setDataNascimento(faker.date().birthday().toString());
-                funcionario.setCargo(cargoConsultor);
+                funcionario.setEmail(i == 0 ? "Gestor@test.com" : i == 1 ? "Consultor@test.com" : faker.internet().emailAddress());
+
+                // Converter Date para LocalDate
+                Date birthday = faker.date().birthday();
+                LocalDate localDate = birthday.toInstant()
+                                            .atZone(ZoneId.systemDefault())
+                                            .toLocalDate();
+                funcionario.setDataNascimento(localDate);
+                funcionario.setCargo(i == 0 ? cargoGestor : cargoConsultor);
 
                 funcionarioRepository.save(funcionario);
             }
@@ -140,25 +150,39 @@ public class InitialDataLoader implements CommandLineRunner {
             List<EmpresaModel> empresas = empresaRepository.findAll();
             for (EmpresaModel empresa : empresas) {
                 List<FormularioRequest> formularioRequests = generateFormularioRequests();
-                processarFormularioService.criarProcessarEGerarCertificado(empresa.getId(), formularioRequests);
+                processarFormularioService.criarFormularioCompleto(empresa.getId(), formularioRequests);
             }
 
             // Criação do usuário root
             UsuarioModel newUser = new UsuarioModel();
             newUser.setLogin("root");
-            newUser.setPassword("root");
+            newUser.setPassword(BCrypt.hashpw("root", BCrypt.gensalt()));
             newUser.setIsAdmin(true);
 
             userRepository.save(newUser);
 
             System.out.println("Banco pré preenchido com sucesso.");
-            System.out.println("Usuário root criado com sucesso.");
-            System.out.println("Login: root");
-            System.out.println("Senha: root");
+            System.out.println("Usuários para debug criados com sucesso:");
+            System.out.println("-- Usuário root");
+            System.out.println("- Login: root");
+            System.out.println("- Senha: root");
+            System.out.println("-- Usuário gestor");
+            System.out.println("- Login: Gestor");
+            System.out.println("- Senha: gestor");
+            System.out.println("-- Usuário consultor");
+            System.out.println("- Login: Consultor");
+            System.out.println("- Senha: consultor");
         } else {
-            System.out.println("Usuário root já existe.");
-            System.out.println("Login: root");
-            System.out.println("Senha: root");
+            System.out.println("Usuários para debug:");
+            System.out.println("-- Usuário root");
+            System.out.println("- Login: root");
+            System.out.println("- Senha: root");
+            System.out.println("-- Usuário gestor");
+            System.out.println("- Login: Gestor");
+            System.out.println("- Senha: gestor");
+            System.out.println("-- Usuário consultor");
+            System.out.println("- Login: Consultor");
+            System.out.println("- Senha: consultor");
         }
     }
 

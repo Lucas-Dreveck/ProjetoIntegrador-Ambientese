@@ -11,12 +11,8 @@ import java.util.Optional;
 @Service
 public class ValidacaoCNPJService {
 
-    private final EmpresaRepository empresaRepository;
-
     @Autowired
-    public ValidacaoCNPJService(EmpresaRepository empresaRepository) {
-        this.empresaRepository = empresaRepository;
-    }
+    private EmpresaRepository empresaRepository;
 
     public boolean isValidCnpj(String cnpj) {
         if (cnpj == null || cnpj.length() != 14) {

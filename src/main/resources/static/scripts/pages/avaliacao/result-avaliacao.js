@@ -118,5 +118,15 @@ const onOpenResultAvaliacao = (props) => {
     buttonHomeScreen.addEventListener('click', () => {
         getMainFrameContent('ranking');
     });
+
+    const buttonExport = document.createElement('button');
+    buttonExport.id = 'export-pdf';
+    buttonExport.classList.add('btn-export');
+    buttonExport.textContent = 'Ver PDF';
+    buttonExport.addEventListener('click', () => {
+        exportPDF(props.empresa.id, props.empresa.nomeFantasia);
+    });
+    
+    result.appendChild(buttonExport);
     result.appendChild(buttonHomeScreen);
 }

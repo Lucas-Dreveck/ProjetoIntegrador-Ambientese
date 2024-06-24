@@ -12,8 +12,11 @@
     width: 100%;
     max-height: 84%;
     overflow: auto;
-    margin-top: 45px;
     margin-bottom: 1%;
+}
+
+.divEmp::-webkit-scrollbar {
+    width: 0px;
 }
 
 .tableEmp {
@@ -21,14 +24,6 @@
     margin-left: 5%;
     margin-top: 1%;
     border-collapse: collapse;
-}
-
-.thTable {
-    background-color: #f2f2f2;
-    border-bottom: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    z-index: 1;
 }
 
 .emp {
@@ -96,10 +91,6 @@
     border: 1px solid gray;
 }
 
-.inpInscricaoEmp {
-    width: 65%;
-}
-
 .labelStyle {
     font-weight: bold;
 }
@@ -114,17 +105,4 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-#priorBtnEmp, #nextBtnEmp {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 3%;
-    height: 80%;
-    border: 3px solid #0077C8;
-    background-color: white;
-    font-size: 30px;
-    cursor: pointer;
-    color: blue;
 }

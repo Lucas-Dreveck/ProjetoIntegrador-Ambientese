@@ -7,7 +7,6 @@ import com.ambientese.grupo5.DTO.FuncionarioRequest;
 import com.ambientese.grupo5.Model.FuncionarioModel;
 import com.ambientese.grupo5.Repository.CargoRepository;
 import com.ambientese.grupo5.Repository.FuncionarioRepository;
-import com.ambientese.grupo5.Repository.UsuarioRepository;
 import com.ambientese.grupo5.Services.UsuarioService.CriarUsuarioService;
 
 @Service
@@ -15,9 +14,6 @@ public class CriarFuncionarioService {
     
     @Autowired 
     private FuncionarioRepository funcionarioRepository;
-
-    @Autowired 
-    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private CargoRepository cargoRepository;

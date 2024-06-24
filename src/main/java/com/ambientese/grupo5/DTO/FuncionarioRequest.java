@@ -2,9 +2,10 @@ package com.ambientese.grupo5.DTO;
 
 import com.ambientese.grupo5.Model.UsuarioModel;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class FuncionarioRequest {
@@ -21,7 +22,7 @@ public class FuncionarioRequest {
     private String email;
 
     @NotBlank(message = "A data de nascimento não pode estar em branco")
-    private String dataNascimento;
+    private LocalDate dataNascimento;
 
     private UsuarioModel usuario;
 
@@ -54,11 +55,11 @@ public class FuncionarioRequest {
         this.email = email;
     }
 
-    public String getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
