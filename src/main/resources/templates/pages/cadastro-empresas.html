@@ -10,10 +10,6 @@
     <div class="containerGeral">
         <div class="divSelect">
             <div class="selectBox">
-                <select name="select" id="select">
-                    <option value="id" selected>Id</option>
-                    <option value="nome">Nome</option>
-                </select>
                 <input type="text" id="search" class="inpFilter">
                 <img th:src="@{/icons/Cadastro-Empresa/search.png}" alt="Pesquisar" class="imgSearch">
             </div>
@@ -27,15 +23,19 @@
                         <th class="thTable" id="thNome">Nome</th>
                         <th class="thTable" id="thRamo">Ramo</th>
                         <th class="thTable" id="thPorte">Porte</th>
-                        <th class="thTable btnAdd" id="thAcao">Novo registro</th>
+                        <th class="thTable btnAdd" id="thAcao"><div class="btn-plus">Novo Registro</div></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
         </div>
         <div class="divBtns">
-            <button id="priorBtnEmp"> 🡰 </button>
-            <button id="nextBtnEmp"> 🡲 </button>
+            <button id="priorBtnEmp" class="btn-prev disabled" disabled="true">
+                <img src="/icons/Buttons/arrow-left.svg" alt="Previous" class="arrow-icon">
+            </button>
+            <button id="nextBtnEmp" class="btn-next">
+                <img src="/icons/Buttons/arrow-right.svg" alt="Next" class="arrow-icon">
+            </button>
         </div>
     </div>
     <div class="overlay"></div>

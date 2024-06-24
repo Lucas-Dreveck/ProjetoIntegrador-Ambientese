@@ -2,6 +2,7 @@ package com.ambientese.grupo5.Services.FuncionarioService;
 
 import com.ambientese.grupo5.Controller.FuncionarioController.AtualizarFuncionarioController;
 import com.ambientese.grupo5.DTO.FuncionarioRequest;
+import com.ambientese.grupo5.Model.CargoModel;
 import com.ambientese.grupo5.Model.FuncionarioModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ public class AtualizarFuncionarioTeste {
     @InjectMocks
     private AtualizarFuncionarioController atualizarFuncionarioController;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -44,7 +46,10 @@ public class AtualizarFuncionarioTeste {
         FuncionarioModel funcionarioAtualizado = new FuncionarioModel();
         funcionarioAtualizado.setId(1L);
         funcionarioAtualizado.setNome("Novo Nome");
-        funcionarioAtualizado.setCargo("Analista de Dados");
+        CargoModel cargoModel = new CargoModel();
+        cargoModel.setId(1L);
+        cargoModel.setDescricao("Analista de Dados");
+        funcionarioAtualizado.setCargo(cargoModel);
 
         // Mock comportamento do serviço
         when(atualizarFuncionarioService.atualizarFuncionario(any(Long.class), any(FuncionarioRequest.class)))

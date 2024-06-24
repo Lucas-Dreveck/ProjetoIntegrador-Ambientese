@@ -9,12 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AtualizarPerguntasService {
 
-    private final PerguntasRepository perguntasRepository;
-
     @Autowired
-    public AtualizarPerguntasService(PerguntasRepository perguntasRepository) {
-        this.perguntasRepository = perguntasRepository;
-    }
+    private PerguntasRepository perguntasRepository;
 
     public PerguntasModel atualizarPergunta(long id, String novaDescricao, EixoEnum novoEixo) {
         PerguntasModel perguntaExistente = perguntasRepository.findById(id).orElseThrow(()

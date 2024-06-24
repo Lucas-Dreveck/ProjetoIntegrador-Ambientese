@@ -28,6 +28,7 @@ public class AtualizarEmpresaTeste {
     @InjectMocks
     private AtualizarEmpresaController atualizarEmpresaController;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -52,6 +53,7 @@ public class AtualizarEmpresaTeste {
                 .thenReturn(empresaAtualizada);
 
         // Perform PUT request
+        @SuppressWarnings("unused")
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/Empresa/Edit/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nomeFantasia\":\"Nova Razão Social\",\"cnpj\":\"98765432109876\"}"))

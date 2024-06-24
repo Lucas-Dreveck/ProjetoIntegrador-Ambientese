@@ -1,5 +1,10 @@
+package com.ambientese.grupo5.Services.FuncionarioService;
+
+import com.ambientese.grupo5.Controller.FuncionarioController.BuscarFuncionarioController;
+import com.ambientese.grupo5.Exception.ValidacaoException;
+import com.ambientese.grupo5.Model.CargoModel;
 import com.ambientese.grupo5.Model.FuncionarioModel;
-import com.ambientese.grupo5.Services.FuncionarioService.BuscarFuncionarioService;
+import com.ambientese.grupo5.Repository.FuncionarioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -19,11 +24,12 @@ public class BuscarFuncionarioPorIdTeste {
     private MockMvc mockMvc;
 
     @Mock
-    private BuscarFuncionarioService buscarFuncionarioService;
+    private FuncionarioRepository buscarFuncionarioService;
 
     @InjectMocks
     private BuscarFuncionarioController buscarFuncionarioController;
 
+    @SuppressWarnings("deprecation")
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -36,10 +42,14 @@ public class BuscarFuncionarioPorIdTeste {
         FuncionarioModel funcionarioEncontrado = new FuncionarioModel();
         funcionarioEncontrado.setId(1L);
         funcionarioEncontrado.setNome("Funcionário Encontrado");
-        funcionarioEncontrado.setCargo("Analista");
+        CargoModel cargoModel = new CargoModel();
+        cargoModel.setId(1L);
+        cargoModel.setDescricao("Analista");
+        funcionarioEncontrado.setCargo(cargoModel);
 
         // Mock comportamento do serviço
-        when(buscarFuncionarioService.buscarFuncionarioPorId(1L))
+        assertEquals(1L, buscarFuncionarioService.findById(1L));
+        when(buscarFuncionarioService.findById(1L).orElseThrow(() -> new ValidacaoException("Funcionário não encontrado com o ID: " + 1L)))
                 .thenReturn(funcionarioEncontrado);
 
         // Perform GET request

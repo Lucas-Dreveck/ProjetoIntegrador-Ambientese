@@ -9,21 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class ValidacaoCamposObrigatoriosService {
 
-    private final ValidacaoCNPJService validacaoCNPJService;
-    private final ValidacaoTelefoneService validacaoTelefoneService;
-    private final ValidacaoCEPService validacaoCEPService;
-    private final ValidacaoEmailService validacaoEmailService;
+    @Autowired
+    private ValidacaoCNPJService validacaoCNPJService;
 
     @Autowired
-    public ValidacaoCamposObrigatoriosService(ValidacaoCNPJService validacaoCNPJService,
-                                              ValidacaoTelefoneService validacaoTelefoneService,
-                                              ValidacaoCEPService validacaoCEPService,
-                                              ValidacaoEmailService validacaoEmailService) {
-        this.validacaoCNPJService = validacaoCNPJService;
-        this.validacaoTelefoneService = validacaoTelefoneService;
-        this.validacaoCEPService = validacaoCEPService;
-        this.validacaoEmailService = validacaoEmailService;
-    }
+    private ValidacaoTelefoneService validacaoTelefoneService;
+
+    @Autowired
+    private ValidacaoCEPService validacaoCEPService;
+
+    @Autowired
+    private ValidacaoEmailService validacaoEmailService;
 
     public void validarCamposObrigatorios(EmpresaRequest empresaRequest) {
         validarEmpresaRequest(empresaRequest);

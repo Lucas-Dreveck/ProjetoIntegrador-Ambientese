@@ -4,34 +4,45 @@ const onOpenLogin = () => {
         event.preventDefault();
         login();
     });
+
+    const forgotPassword = document.querySelector('#forgotPass');
+    forgotPassword.addEventListener('click', () => {
+        getMainFrameContent('forgot-password');
+    });
 }
 
 const login = async () => {
     const login = document.querySelector('#user').value;
     const password = document.querySelector('#password').value;
 
-    try {
-        const response = await fetch(`${URL}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ login, password })
-        })
-
-        if (response.ok) {
-            const message = await response.text();
-            toastAlert(message, 'success');
-            isAuthenticated = true;
-            sessionStorage.setItem('auth', isAuthenticated)
+    await fetch(`${URL}/login`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ login, password })
+    })
+    .then(async response => {
+        return {
+            ok: response.ok,
+            token: await response.text()
+        }
+    })
+    .then(data => {
+        if (!data.ok) {
+            throw new Error(data.token);
+        }
+        if (data.token) {
+            token = JSON.parse(data.token).token
+            sessionStorage.setItem('token', token);
+            headers.append('Authorization', `Bearer ${token}`);
+            toastAlert("Login bem-sucedido", "success");
+            loginLogout.textContent = "Sair";
             getMainFrameContent('ranking');
         } else {
-            const errorMessage = await response.text();
-            isAuthenticated = false;
-            sessionStorage.setItem('auth', isAuthenticated)
-            toastAlert(errorMessage, 'error');
+            toastAlert("Usuario ou senha incorretos", "error");
         }
-    } catch (error) {
-        console.error('Erro ao fazer login:', error);
-    }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toastAlert(error, "error");
+        });
 }
