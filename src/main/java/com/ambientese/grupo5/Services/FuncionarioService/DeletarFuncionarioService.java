@@ -1,7 +1,5 @@
 package com.ambientese.grupo5.Services.FuncionarioService;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +13,7 @@ public class DeletarFuncionarioService {
     private FuncionarioRepository funcionarioRepository;
 
     public void deleteFuncionario(Long id) {
-        FuncionarioModel empresa = funcionarioRepository.findById(id).orElse(null);
-        funcionarioRepository.delete(empresa);
+        FuncionarioModel funcionario = funcionarioRepository.findById(id).orElse(null);
+        funcionarioRepository.delete(funcionario);
     }
 }

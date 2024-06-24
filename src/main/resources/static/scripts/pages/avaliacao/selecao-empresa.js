@@ -6,8 +6,8 @@ const fetchEmpresas = (input, dropdown) => {
     const filter = input.value.toLowerCase();
     const queryParams = new URLSearchParams();
     queryParams.append('nomeFantasia', filter ? filter : 'a')
-    const fullUrl = `${URL}/Empresa/search?${queryParams.toString()}`;
-    fetch(fullUrl)
+    const fullUrl = `${URL}/auth/Empresa/avaliacao/search?${queryParams.toString()}`;
+    fetch(fullUrl, options)
         .then (response => {
             if (!response.ok) {
                 throw new Error('Erro ao buscar empresas');
@@ -34,6 +34,19 @@ function clearSelectedCompanyIfNotMatch(input) {
     if (settedCompany && settedCompany.nomeFantasia.toLowerCase() !== inputValue) {
         settedCompany = null;
     }
+}
+
+async function verifyActiveForm() {
+    return fetch(`${URL}/auth/haveAvaliacaoAtiva/${settedCompany.id}`, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao recuperar dados');
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data;
+        });
 }
 
 const onOpenSelecaoEmpresa = () => {
@@ -76,10 +89,38 @@ const onOpenSelecaoEmpresa = () => {
     });
 
     const btnNext = document.querySelector('.btn-next');
-    btnNext.addEventListener('click', () => {
+    btnNext.addEventListener('click', async () => {
         if (settedCompany) {
-            getMainFrameContent('avaliacao', settedCompany);
-            settedCompany = null;
+            const hasActiveForm = await verifyActiveForm();
+            if (!hasActiveForm) {
+                getMainFrameContent('avaliacao', {
+                    company: settedCompany,
+                    isNew: true
+                });
+                settedCompany = null;
+            } else {
+                confirmationModal({
+                    title: 'Atenção',
+                    message: 'A empresa selecionada já possui uma avaliação em andamento. Deseja iniciar uma nova avaliação ou continuar a avaliação existente?',
+                    confirmText: 'Iniciar nova avaliação',
+                    cancelText: 'Continuar avaliação',
+                    haveCancel: false,
+                    onConfirm: () => {
+                        getMainFrameContent('avaliacao', {
+                            company: settedCompany,
+                            isNew: true
+                        });
+                        settedCompany = null;
+                    },
+                    onCancel: () => {
+                        getMainFrameContent('avaliacao', {
+                            company: settedCompany,
+                            isNew: false
+                        });
+                        settedCompany = null;
+                    }
+                });
+            }
         } else {
             toastAlert('Por favor, selecione uma empresa antes de avançar', 'error');
         }

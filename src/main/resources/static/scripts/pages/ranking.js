@@ -1,24 +1,43 @@
 let page = 0;
-const createFirstPlace = (company, content) => {
-    const setMedal = () => {
-        if (company.nivelCertificado === 'Bronze') {
+const createTop3 = (companys, content) => {
+    const setMedal = (index) => {
+        if (index === 3) {
             return '/icons/Medals/bronze-medal.svg';
-        } else if (company.nivelCertificado === 'Prata') {
+        } else if (index === 1) {
             return '/icons/Medals/silver-medal.svg';
         } else {
             return '/icons/Medals/gold-medal.svg';
         }
     }
-    const medalIcon = setMedal();
-    const firstPlace = document.createElement('div');
-    firstPlace.classList.add('first-place');
-    firstPlace.innerHTML = `
-        <h2 class="company-name">${company.empresaNome}</h2>
-        <h1 class="first-place-title">1º lugar - ${company.pontuacaoFinal} pontos</h1>
-        <p class="branch">${company.ramo}</p>
-        <img src="${medalIcon}" alt="Medal" class="medal-icon">
-    `;
-    content.appendChild(firstPlace);
+
+    const Top3Div = document.createElement('div');
+    Top3Div.classList.add('top3');
+    companys.forEach((company, index) => {
+        let position;
+        if (index === 0) {
+            position = '2';
+        } else if (index === 1) {
+            position = '1';
+        } else {
+            position = '3';
+        }
+        const medalIcon = setMedal(index + 1);
+        const place = document.createElement('div');
+        place.classList.add(`place-${position}`);
+        place.innerHTML = `
+            <h2 class="company-name">${company.empresaNome}</h2>
+            <h1 class="place-${position}-title">${position}º lugar - ${company.pontuacaoFinal} pontos</h1>
+            <p class="branch">${company.ramo}</p>
+            <img src="${medalIcon}" alt="Medal" class="medal-icon">
+        `;
+
+        place.addEventListener('click', () => 
+            exportPDF(company.id, company.empresaNome)
+        );
+
+        Top3Div.appendChild(place);
+    });
+    content.appendChild(Top3Div);
 }
 
 const createRanking = (companys, content) => {
@@ -33,14 +52,24 @@ const createRanking = (companys, content) => {
 
     const tbody = document.createElement('tbody');
     companys.forEach((company) => {
-        if (company.ranking === 1) return;
+        if (company.ranking === 1 || company.ranking === 2 || company.ranking === 3) return;
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="ranking">${company.ranking}º - ${company.empresaNome}</td>
             <td class="branch">${company.ramo}</td>
             <td class="size">${company.pontuacaoFinal} pontos</td>
+            <td class="pdf-img">
+                <img src="/icons/file-link.svg" alt="BaixarPdf">
+            </td>
         `;
         tr.classList.add(tbody.children.length % 2 === 0 ? 'even-row' : 'odd-row');
+
+        const pdfBtn = tr.querySelector('.pdf-img')
+        
+        pdfBtn.addEventListener('click', () =>
+            exportPDF(company.id, company.empresaNome)
+        );
+
         tbody.appendChild(tr);
     });
 
@@ -59,7 +88,7 @@ const addOptions = async (content) => {
     const ramoOptions = new Set();
     const porteOptions = new Set(['Pequeno', 'Médio', 'Grande']);
 
-    await fetch(`${URL}/ranking/ramos/list`)
+    await fetch(`${URL}/ranking/ramos/list`, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erro ao buscar ramos');
@@ -170,23 +199,25 @@ const onOpenRanking = async () => {
 
     const sideContent = document.createElement('div');
     sideContent.classList.add('side-content');
+    const optionsDiv = document.createElement('div');
+    optionsDiv.classList.add('options');
     const rankingContent = document.createElement('div');
     rankingContent.classList.add('ranking-content');
     const rankingTableContainer = document.createElement('div');
     rankingTableContainer.classList.add('ranking-content');
 
     const queryParams = new URLSearchParams();
-    queryParams.append('size', 10);
     await fetch(`${URL}/ranking/pontuacao?${queryParams.toString()}`, options)
         .then(response => {
             if (!response.ok) throw new Error('Erro ao buscar ranking');
             return response.json();
         })
         .then(async response => {
-            createFirstPlace(response[0], sideContent);
+            createTop3([response[1], response[0], response[2]], sideContent);
             createRanking(response, rankingTableContainer);
-            await addOptions(sideContent);
-            createSearch(sideContent);
+            await addOptions(optionsDiv);
+            createSearch(optionsDiv);
+            sideContent.appendChild(optionsDiv);
         });
 
     const btnPrev = document.createElement('button');

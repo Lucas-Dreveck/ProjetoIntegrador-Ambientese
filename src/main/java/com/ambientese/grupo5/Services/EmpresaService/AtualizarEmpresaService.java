@@ -10,19 +10,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class AtualizarEmpresaService {
 
-    private final EmpresaRepository empresaRepository;
-    private final ValidacaoCamposObrigatoriosService validacaoCamposObrigatoriosService;
-    private final ValidacaoCNPJService validacaoCNPJService;
-    private final MapearEmpresaService mapearEmpresaService;
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     @Autowired
-    public AtualizarEmpresaService(EmpresaRepository empresaRepository, ValidacaoCamposObrigatoriosService validacaoCamposObrigatoriosService,
-                                   ValidacaoCNPJService validacaoCNPJService, MapearEmpresaService mapearEmpresaService) {
-        this.empresaRepository = empresaRepository;
-        this.validacaoCamposObrigatoriosService = validacaoCamposObrigatoriosService;
-        this.validacaoCNPJService = validacaoCNPJService;
-        this.mapearEmpresaService = mapearEmpresaService;
-    }
+    private ValidacaoCamposObrigatoriosService validacaoCamposObrigatoriosService;
+
+    @Autowired
+    private ValidacaoCNPJService validacaoCNPJService;
+
+    @Autowired
+    private MapearEmpresaService mapearEmpresaService;
 
     public EmpresaModel atualizarEmpresa(Long id, EmpresaRequest empresaRequest) {
         EmpresaModel empresaModel = empresaRepository.findById(id)

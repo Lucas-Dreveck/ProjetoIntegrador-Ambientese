@@ -10,16 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/Usuarios")
+@RequestMapping("/auth/Usuarios")
 public class CriarUsuarioController {
 
-    private final CriarUsuarioService usuarioService;
-
     @Autowired
-    public CriarUsuarioController(CriarUsuarioService usuarioService) {
-
-        this.usuarioService = usuarioService;
-    }
+    private CriarUsuarioService usuarioService;
 
     @PostMapping("/Add")
     public ResponseEntity<UsuarioModel> createUsuario(@Valid @RequestBody UsuarioModel usuarioModel) {

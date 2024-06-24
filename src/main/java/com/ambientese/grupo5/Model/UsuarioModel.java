@@ -23,6 +23,9 @@ public class UsuarioModel {
     @NotBlank
     private Boolean isAdmin;
 
+    @Column(name = "recovery_code")
+    private String recoveryCode;
+
     public Long getId() {
         return id;
     }
@@ -53,5 +56,13 @@ public class UsuarioModel {
 
     public void setIsAdmin(Boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public String getRecoveryCode() {
+        return recoveryCode;
+    }
+
+    public void setRecoveryCode(String recoveryCode) {
+        this.recoveryCode = recoveryCode;
     }
 }
