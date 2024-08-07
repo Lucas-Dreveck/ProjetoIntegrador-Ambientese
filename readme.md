@@ -3,8 +3,8 @@
 ## Passos inciais
 - Clone o repositório e acesse a pasta criada:
   ~~~sh
-  git clone https://github.com/Lucas-Dreveck/Projeto-Integrador3/edit/main/readme.md
-  cd Projeto-Integrador3
+  git clone https://github.com/Lucas-Dreveck/ProjetoIntegrador-Ambientese.git
+  cd ProjetoIntegrador-Ambientese
   ~~~
 - Acesse o arquivo env.properties.example que vai estar no caminho src/main/resources/env.properties.example;
 - Duplique ele e coloque o nome env.properties;
@@ -34,14 +34,6 @@
 ## Changelog
 Informações sobre as versões e mudanças do projeto.
 
-## Versão 1.0.0 - 2024-05-24
-### Adicionado
-- Sistema de login com salvamento do usuario ativo;
-- Tela de ranking 100% funcional, podendo filtrar todas as empresas doranking;
-- Tela de avaliação completa das empresas com tela para selecionar a empresa destinada, avalia-la com perguntas salvas randomizadas e após isso visualizar o resultado da empresa;
-- Tela de cadastro de empresa (CRUD) funcional;
-- Tela de cadastro de funcionários (CRUD) funcional;
-
 ## Versão 2.0.0 - 2024-06-23
 ### Adicionado
 - Autenticação por token JWT com validação por front e back end;
@@ -54,3 +46,11 @@ Informações sobre as versões e mudanças do projeto.
 - Update de interface em todas as telas;
 - Melhoria de feedback de erro em todos os tipos de formulários;
 - Configurações docker para melhoria de testes e portabilidade.
+
+## Versão 1.0.0 - 2024-05-24
+### Adicionado
+- Sistema de login com salvamento do usuario ativo;
+- Tela de ranking 100% funcional, podendo filtrar todas as empresas doranking;
+- Tela de avaliação completa das empresas com tela para selecionar a empresa destinada, avalia-la com perguntas salvas randomizadas e após isso visualizar o resultado da empresa;
+- Tela de cadastro de empresa (CRUD) funcional;
+- Tela de cadastro de funcionários (CRUD) funcional;
