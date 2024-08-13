@@ -25,6 +25,13 @@ const options = {
     headers: headers
 };
 
+const freeInputs = () => {
+    const inputs = document.querySelectorAll('input');
+    const textareas = document.querySelectorAll('textarea');
+    inputs.forEach(input => input.value = '');
+    textareas.forEach(textarea => textarea.value = '');
+}
+
 function updateMenuButtons() {
     const userInfo = token ? jwt_decode(token) : null;
     const cargo = userInfo ? userInfo.cargo : "Guest";
