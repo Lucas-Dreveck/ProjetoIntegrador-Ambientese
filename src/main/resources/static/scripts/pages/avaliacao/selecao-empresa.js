@@ -5,7 +5,7 @@ let settedCompany = null;
 const fetchEmpresas = (input, dropdown) => {
     const filter = input.value.toLowerCase();
     const queryParams = new URLSearchParams();
-    queryParams.append('nomeFantasia', filter ? filter : 'a')
+    queryParams.append('nome', filter ? filter : 'a')
     const fullUrl = `${URL}/auth/Empresa/avaliacao/search?${queryParams.toString()}`;
     fetch(fullUrl, options)
         .then (response => {

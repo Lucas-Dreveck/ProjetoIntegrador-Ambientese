@@ -166,6 +166,7 @@ function onOpenFuncionario() {
                 divAdd.style.display = 'none';
                 overlay.style.display = 'none';
                 currentPageFuncionario = 0;
+                freeInputs();
                 nextDataPageFuncionarios();
             })
             .catch(error => {

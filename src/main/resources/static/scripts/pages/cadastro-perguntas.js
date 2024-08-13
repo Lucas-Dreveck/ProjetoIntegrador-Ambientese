@@ -99,6 +99,7 @@ function onOpenPerguntas() {
                 toastAlert('Pergunta adicionada com sucesso!', 'success');
                 divAdd.style.display = 'none';
                 overlay.style.display = 'none';
+                freeInputs();
                 nextDataPagePerg();
             })
             .catch(error => {
@@ -158,7 +159,7 @@ function onOpenPerguntas() {
                 return response.text();
             })
             .then(data => {
-                if (data.status !== 200) {
+                if (data.status !== 200 && data.status !== 204 && data.status !== undefined) {
                     throw new Error(data.text);
                 }
                 toastAlert('Pergunta deletada com sucesso!', 'success');
